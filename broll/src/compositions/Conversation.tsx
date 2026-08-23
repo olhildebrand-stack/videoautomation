@@ -4,7 +4,7 @@ import { Frame } from '../components/Frame';
 import { MessageRow } from '../components/MessageRow';
 import { Mono } from '../components/Text';
 import { fadeIn, fadeInOut, stateChange } from '../motion';
-import { beatInFrames, holdInFrames, spacing, space, tempoFrames } from '../tokens';
+import { beatInFrames, holdInFrames, space, tempoFrames } from '../tokens';
 
 export type Message = {
   text: string;
@@ -37,9 +37,9 @@ export const Conversation: React.FC<{
           display: 'flex',
           flexDirection: 'column',
           gap: space['2'],
-          // A thread reads as two people talking only when both sides share a
-          // column. Full-frame width puts them at opposite ends of a 16:9 crop.
-          width: spacing(88),
+          // Both sides share one column, so the thread reads as two people
+          // talking rather than two edges of the frame.
+          width: '100%',
           opacity: fadeInOut(frame, 0, durationInFrames),
         }}
       >

@@ -4,7 +4,8 @@ import { Frame } from '../components/Frame';
 import { Divider } from '../components/Divider';
 import { Display, Mono } from '../components/Text';
 import { fadeInOut } from '../motion';
-import { beatInFrames, space } from '../tokens';
+import { beatInFrames, displayLineHeight, space } from '../tokens';
+import type { FontSizeToken } from '../tokens';
 
 /**
  * One headline, one label, one hairline. Each beat lands on its own — the
@@ -13,7 +14,13 @@ import { beatInFrames, space } from '../tokens';
 export const TitleCard: React.FC<{
   kicker: string;
   headline: string;
-}> = ({ kicker, headline }) => {
+  /**
+   * At 1080 wide a single long word sets the ceiling: `4xl` overruns the frame
+   * padding on anything longer than about nine characters. `3xl` is the safe
+   * default — raise it for short headlines.
+   */
+  size?: FontSizeToken;
+}> = ({ kicker, headline, size = '3xl' }) => {
   const frame = useCurrentFrame();
   const { durationInFrames } = useVideoConfig();
 
@@ -30,7 +37,9 @@ export const TitleCard: React.FC<{
           <Divider />
         </div>
         <div style={{ opacity: beat(2) }}>
-          <Display size="4xl">{headline}</Display>
+          <Display size={size} style={{ lineHeight: displayLineHeight }}>
+            {headline}
+          </Display>
         </div>
       </div>
     </Frame>

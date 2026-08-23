@@ -73,8 +73,13 @@ export const font = {
 
 export type FontRole = keyof typeof font;
 
-/** The whole type scale, in px. Stay on it. */
-export const fontSize = {
+/**
+ * The type scale exactly as CYANVOID.md writes it, in design px.
+ *
+ * These are the reference values. Nothing renders them directly — see
+ * `videoScale` below for why, and `fontSize` for what components actually use.
+ */
+export const fontSizeSpec = {
   xs: 11,
   sm: 12,
   md: 14,
@@ -86,9 +91,35 @@ export const fontSize = {
   '5xl': 104,
 } as const;
 
-export type FontSizeToken = keyof typeof fontSize;
+export type FontSizeToken = keyof typeof fontSizeSpec;
 
-/** The mono layer is restricted to 11–12px. */
+/**
+ * CYANVOID.md's scale is sized for a 1440x900 design surface read at desk
+ * distance. This project renders 1080x1920 short-form, watched on a phone
+ * roughly 390pt wide — a 2.77x downscale, which puts the 12px mono layer at
+ * about 4pt and body text at about 7pt on the actual device. Unreadable.
+ *
+ * So the scale is multiplied by one uniform factor for the video medium. Every
+ * ratio in the spec is preserved exactly and the scale stays closed — this is a
+ * change of viewing distance, not a new set of sizes. Set to 1 for
+ * pixel-exact spec values on a desktop-sized surface.
+ */
+export const videoScale = 2;
+
+/** The scale as rendered. This is what components consume. */
+export const fontSize = {
+  xs: fontSizeSpec.xs * videoScale,
+  sm: fontSizeSpec.sm * videoScale,
+  md: fontSizeSpec.md * videoScale,
+  lg: fontSizeSpec.lg * videoScale,
+  xl: fontSizeSpec.xl * videoScale,
+  '2xl': fontSizeSpec['2xl'] * videoScale,
+  '3xl': fontSizeSpec['3xl'] * videoScale,
+  '4xl': fontSizeSpec['4xl'] * videoScale,
+  '5xl': fontSizeSpec['5xl'] * videoScale,
+} as const;
+
+/** The mono layer is restricted to the spec's 11–12px steps. */
 export const monoFontSize = {
   xs: fontSize.xs,
   sm: fontSize.sm,
@@ -179,10 +210,10 @@ export const tempoMs = brollTempoMs;
 /** Frame rate for every composition. Durations convert against this. */
 export const fps = 30;
 
-/** Landscape b-roll insert. */
+/** Vertical short-form. */
 export const dimensions = {
-  width: 1920,
-  height: 1080,
+  width: 1080,
+  height: 1920,
 } as const;
 
 /** Clips are on screen for two or three seconds total. */
@@ -216,6 +247,13 @@ export const beatInFrames = Math.round(fps * 0.35);
 
 /** How long a landed state holds on screen before the exit begins. */
 export const holdInFrames = Math.round(fps * 0.6);
+
+/**
+ * Leading for the display face. CYANVOID.md fixes line-height for body text
+ * only; at 1080 wide a headline wraps, so it needs a defined one. Tight, so a
+ * two-line headline still reads as a single block.
+ */
+export const displayLineHeight = 1.05;
 
 /* ----------------------------------------------------------- the one gesture */
 
@@ -254,6 +292,8 @@ export const tokens = {
   color,
   accent,
   font,
+  fontSizeSpec,
+  videoScale,
   fontSize,
   monoFontSize,
   fontFamilies,
@@ -271,6 +311,7 @@ export const tokens = {
   tempoFrames,
   beatInFrames,
   holdInFrames,
+  displayLineHeight,
   fps,
   dimensions,
   clipDurationInFrames,

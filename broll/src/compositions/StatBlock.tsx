@@ -12,8 +12,12 @@ export type Stat = {
 };
 
 /**
- * Divided rectangles, numbers in the mono layer, hairlines between. Each column
- * fades in one beat after the last — nothing slides.
+ * Stacked rows, divided by hairlines, numbers in the mono layer. Each row fades
+ * in one beat after the last — nothing slides.
+ *
+ * Vertical stacking is not just a fit constraint: read top-to-bottom, the rows
+ * scan in the same direction as the frame, and each value gets the full column
+ * width instead of a third of it.
  */
 export const StatBlock: React.FC<{ stats: Stat[] }> = ({ stats }) => {
   const frame = useCurrentFrame();
@@ -21,16 +25,19 @@ export const StatBlock: React.FC<{ stats: Stat[] }> = ({ stats }) => {
 
   return (
     <Frame>
-      <div style={{ display: 'flex', alignItems: 'stretch', gap: space['6'] }}>
+      <div style={{ display: 'flex', flexDirection: 'column' }}>
         {stats.map((stat, index) => (
-          <React.Fragment key={stat.label}>
-            {index > 0 ? <Divider orientation="vertical" /> : null}
+          <div
+            key={stat.label}
+            style={{ opacity: fadeInOut(frame, index * beatInFrames, durationInFrames) }}
+          >
+            {index > 0 ? <Divider /> : null}
             <div
               style={{
                 display: 'flex',
                 flexDirection: 'column',
-                gap: space['2'],
-                opacity: fadeInOut(frame, index * beatInFrames, durationInFrames),
+                gap: space['1'],
+                paddingBlock: space['4'],
               }}
             >
               <Mono>{stat.label}</Mono>
@@ -38,7 +45,7 @@ export const StatBlock: React.FC<{ stats: Stat[] }> = ({ stats }) => {
                 {stat.value}
               </Display>
             </div>
-          </React.Fragment>
+          </div>
         ))}
       </div>
     </Frame>

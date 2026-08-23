@@ -41,9 +41,9 @@ npx remotion still  TitleCard    out/TitleCard.png --frame=45
 | `Conversation` | Message rows; the last one lands on the flare inversion. |
 | `StatBlock` | Divided columns, numerals in the mono layer. |
 
-All three are 1920×1080 at 30fps, three seconds long — change `dimensions`,
-`fps`, and `clipDurationInFrames` in `src/tokens.ts` to retarget every
-composition at once (1080×1920 for vertical).
+All three are **1080×1920 vertical** at 30fps, three seconds long — change
+`dimensions`, `fps`, and `clipDurationInFrames` in `src/tokens.ts` to retarget
+every composition at once.
 
 ## Structure
 
@@ -63,10 +63,33 @@ subset. Renders are deterministic and work offline; they never depend on a CDN
 round-trip or fall back to a system face mid-frame. To refresh them, re-download
 the woff2 for the weight named in `src/tokens.ts` (`font.<role>.fontWeight`).
 
-## Two values that are not from CYANVOID.md
+## Where this departs from CYANVOID.md, and why
 
-The spec fixes how long a transition takes, but not how long to wait between
-beats or how long a landed state holds before the cut. Those are editorial, so
-they live in a separately labelled block in `src/tokens.ts` as `beatInFrames`
-and `holdInFrames`. They are gaps between beats, never transition durations —
-the brand tempo is untouched.
+Three additions live in a separately labelled block in `src/tokens.ts`. The
+colours, the four font roles, the scale ratios, the radius rule, the 8px grid,
+the easing curve, and the tempos are all untouched.
+
+**`videoScale = 2`.** The spec's type scale is sized for a 1440×900 surface read
+at desk distance. A 1080×1920 clip is watched on a phone about 390pt wide — a
+2.77× downscale that puts the 12px mono layer at roughly 4pt and body text at
+7pt on the actual device. Unreadable. The scale is therefore multiplied by one
+uniform factor, preserving every ratio exactly; `fontSizeSpec` keeps the literal
+spec values alongside it. Set `videoScale` to 1 for pixel-exact spec sizes on a
+desktop-sized surface.
+
+**`beatInFrames` / `holdInFrames`.** The spec fixes how long a transition takes,
+but not how long to wait between beats or how long a landed state holds before
+the cut. These are gaps between beats, never transition durations — the brand
+tempo is untouched.
+
+**`displayLineHeight`.** CYANVOID fixes line-height for body text only. At 1080
+wide a headline wraps, so the display face needs a defined one.
+
+## Vertical sizing note
+
+At 1080 wide, a single long word sets the ceiling for the display face: `4xl`
+overruns the frame padding on anything longer than about nine characters, so
+`TitleCard` defaults to `3xl` and takes a `size` prop for short headlines.
+`StatBlock` stacks its rows rather than placing them side by side — read
+top-to-bottom they scan with the frame, and each value gets the full column
+width instead of a third of it.
