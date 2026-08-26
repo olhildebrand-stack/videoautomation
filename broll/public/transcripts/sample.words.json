@@ -1,0 +1,211 @@
+{
+  "_note": "SYNTHETIC timings for demo purposes. Real text, invented timing.",
+  "language": "sv",
+  "word_count": 34,
+  "words": [
+    {
+      "word": " Min",
+      "start": 0.3,
+      "end": 0.588,
+      "probability": 0.95
+    },
+    {
+      "word": " Claude",
+      "start": 0.668,
+      "end": 1.245,
+      "probability": 0.95
+    },
+    {
+      "word": " kan",
+      "start": 1.325,
+      "end": 1.614,
+      "probability": 0.95
+    },
+    {
+      "word": " nu",
+      "start": 1.694,
+      "end": 1.886,
+      "probability": 0.95
+    },
+    {
+      "word": " göra",
+      "start": 1.966,
+      "end": 2.351,
+      "probability": 0.95
+    },
+    {
+      "word": " custom",
+      "start": 2.431,
+      "end": 3.008,
+      "probability": 0.95
+    },
+    {
+      "word": " formulär",
+      "start": 3.088,
+      "end": 3.857,
+      "probability": 0.95
+    },
+    {
+      "word": " med",
+      "start": 3.937,
+      "end": 4.225,
+      "probability": 0.95
+    },
+    {
+      "word": " designen",
+      "start": 4.305,
+      "end": 5.075,
+      "probability": 0.95
+    },
+    {
+      "word": " av",
+      "start": 5.155,
+      "end": 5.347,
+      "probability": 0.95
+    },
+    {
+      "word": " min",
+      "start": 5.427,
+      "end": 5.715,
+      "probability": 0.95
+    },
+    {
+      "word": " brand",
+      "start": 5.795,
+      "end": 6.276,
+      "probability": 0.95
+    },
+    {
+      "word": " consistently.",
+      "start": 6.356,
+      "end": 7.606,
+      "probability": 0.95
+    },
+    {
+      "word": " Det",
+      "start": 8.056,
+      "end": 8.345,
+      "probability": 0.95
+    },
+    {
+      "word": " är",
+      "start": 8.425,
+      "end": 8.617,
+      "probability": 0.95
+    },
+    {
+      "word": " faktiskt",
+      "start": 8.697,
+      "end": 9.466,
+      "probability": 0.95
+    },
+    {
+      "word": " jättelätt",
+      "start": 9.546,
+      "end": 10.412,
+      "probability": 0.95
+    },
+    {
+      "word": " att",
+      "start": 10.492,
+      "end": 10.78,
+      "probability": 0.95
+    },
+    {
+      "word": " sätta",
+      "start": 10.86,
+      "end": 11.341,
+      "probability": 0.95
+    },
+    {
+      "word": " upp",
+      "start": 11.421,
+      "end": 11.709,
+      "probability": 0.95
+    },
+    {
+      "word": " det",
+      "start": 11.789,
+      "end": 12.078,
+      "probability": 0.95
+    },
+    {
+      "word": " också.",
+      "start": 12.158,
+      "end": 12.735,
+      "probability": 0.95
+    },
+    {
+      "word": " Alla",
+      "start": 13.185,
+      "end": 13.569,
+      "probability": 0.95
+    },
+    {
+      "word": " svaren",
+      "start": 13.649,
+      "end": 14.226,
+      "probability": 0.95
+    },
+    {
+      "word": " hamnar",
+      "start": 14.306,
+      "end": 14.883,
+      "probability": 0.95
+    },
+    {
+      "word": " i",
+      "start": 14.963,
+      "end": 15.059,
+      "probability": 0.95
+    },
+    {
+      "word": " Google",
+      "start": 15.139,
+      "end": 15.716,
+      "probability": 0.95
+    },
+    {
+      "word": " Sheets.",
+      "start": 15.796,
+      "end": 16.469,
+      "probability": 0.95
+    },
+    {
+      "word": " Alla",
+      "start": 16.919,
+      "end": 17.304,
+      "probability": 0.95
+    },
+    {
+      "word": " bilder",
+      "start": 17.384,
+      "end": 17.961,
+      "probability": 0.95
+    },
+    {
+      "word": " hamnar",
+      "start": 18.041,
+      "end": 18.618,
+      "probability": 0.95
+    },
+    {
+      "word": " i",
+      "start": 18.698,
+      "end": 18.794,
+      "probability": 0.95
+    },
+    {
+      "word": " Google",
+      "start": 18.874,
+      "end": 19.451,
+      "probability": 0.95
+    },
+    {
+      "word": " Drive.",
+      "start": 19.531,
+      "end": 20.108,
+      "probability": 0.95
+    }
+  ]
+}

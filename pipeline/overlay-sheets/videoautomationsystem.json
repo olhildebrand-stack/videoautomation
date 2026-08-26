@@ -1,0 +1,75 @@
+[
+  {
+    "kind": "wordStack",
+    "cue": "short form content editor",
+    "words": [
+      "SHORT",
+      "FORM",
+      "CONTENT",
+      "EDITOR"
+    ],
+    "colour": "green",
+    "line": "falling",
+    "lineColour": "red",
+    "hold": 0.4
+  },
+  {
+    "kind": "image",
+    "cue": "det här kontot",
+    "src": "instagram.png",
+    "hold": 0.9
+  },
+  {
+    "kind": "flash",
+    "cue": "bara filma en video"
+  },
+  {
+    "kind": "chat",
+    "cue": "bara filma en video",
+    "prompt": "Redigera min video",
+    "typesCue": "skicka in den",
+    "repliesCue": "fullbordad video",
+    "replyVideo": "reply.mp4",
+    "hold": 1.0
+  },
+  {
+    "kind": "emojiRow",
+    "emoji": [
+      {
+        "emoji": "✂️",
+        "cue": "klipp"
+      },
+      {
+        "emoji": "🔤",
+        "cue": "captions"
+      },
+      {
+        "emoji": "🎨",
+        "cue": "color correction"
+      },
+      {
+        "emoji": "🎥",
+        "cue": "b-roll"
+      }
+    ],
+    "hold": 0.7
+  },
+  {
+    "kind": "dualGraph",
+    "until": "end",
+    "series": [
+      {
+        "label": "K",
+        "direction": "rising",
+        "colour": "green",
+        "cue": "kvaliteten på min content höjas"
+      },
+      {
+        "label": "A",
+        "direction": "falling",
+        "colour": "lightBlue",
+        "cue": "behöva göra mycket mindre"
+      }
+    ]
+  }
+]

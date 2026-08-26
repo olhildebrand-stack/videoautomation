@@ -1,0 +1,17 @@
+{
+  "title": "Upcoming steps, blurred",
+  "what": "Every box on screen from the first frame, unreadable, and each one sharpens as you name it. The row holds its layout, so a box coming into focus never shifts its neighbours.",
+  "when": "A list the video is about to walk through, one item per section. The viewer can see that three topics are coming and cannot read ahead to what they are -- which is the reason to show them early rather than one at a time.",
+  "seen_in": "vas3 -- planering / struktur / utforande, held across the whole clip",
+  "cue": {
+    "kind": "chipRow",
+    "cue": "the phrase that puts the row on screen, blurred",
+    "until": "end",
+    "chips": [
+      {"text": "PLANERING", "cue": "planering"},
+      {"text": "STRUKTUR", "cue": "struktur"},
+      {"text": "UTFÖRANDE", "cue": "utförande"}
+    ]
+  },
+  "preview": {"enter": 6, "leave": null, "children": [18, 42, 66], "frames": 100}
+}

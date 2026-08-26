@@ -1,0 +1,15 @@
+{
+  "title": "Process terminal",
+  "what": "A terminal card in the middle third of the frame, output arriving line by line. The lines are paced to finish on a word you choose, then the card holds until a later phrase and goes. The face stays visible around it.",
+  "when": "A sentence describing a process with steps -- raw file in, edit out. Generated rather than captured, so it costs no screen recording. Reference only: it was built for one video and has not been reused yet, so treat it as a starting point rather than a proven look.",
+  "seen_in": "aieditoradvancing -- 'du bara slänger in din RAW-file och så gör den om den till en edit'",
+  "cue": {
+    "kind": "terminal",
+    "cue": "the phrase it appears on",
+    "finishBy": "the word its output should finish on",
+    "until": "the phrase it leaves on",
+    "lines": ["raw_footage.mp4", "→ analyserar", "→ klipper", "→ captions", "edit.mp4 ✓"]
+  },
+  "preview": {"enter": 5, "leave": 92, "children": [], "frames": 100,
+              "finishes": 60}
+}

@@ -1,0 +1,17 @@
+{
+  "title": "Files, named one at a time",
+  "what": "Each box fades in rising as you name it, and nothing is shown before. They leave together, falling, on a phrase you choose. The first box sits where it will sit once they are all there, not centred alone, so nothing slides sideways when the second arrives.",
+  "when": "Boxes naming things that do not exist yet when the sentence starts -- two files being written, one after the other. Showing a waiting slot would promise something the viewer has no way to guess.",
+  "seen_in": "vas3 -- Claude.md then Prompts.md, through the structure section",
+  "cue": {
+    "kind": "chipRow",
+    "reveal": "enter",
+    "row": 1,
+    "until": "the phrase they all leave on",
+    "chips": [
+      {"text": "Claude.md", "cue": "brief"},
+      {"text": "Prompts.md", "cue": "prompt-dokument"}
+    ]
+  },
+  "preview": {"enter": 10, "leave": 72, "children": [10, 38], "frames": 100}
+}

@@ -1,0 +1,21 @@
+# Terms Whisper gets wrong in Swedish speech, one per line.
+# Blank lines and # comments are ignored. Applied automatically as hotwords.
+#
+# Add anything that recurs in your content and comes back misheard. Proper
+# nouns and English technical terms inside Swedish speech are the usual
+# offenders -- Whisper reaches for a Swedish-sounding word instead.
+
+# Observed misrecognitions
+Claude
+Claude Skills
+jättelätt
+
+# Tools and brands
+Anthropic
+Remotion
+Whisper
+faster-whisper
+TypeScript
+React
+GitHub
+Cyan Void

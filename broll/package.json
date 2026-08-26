@@ -1,0 +1,28 @@
+{
+  "name": "broll",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Cyan Void b-roll clips, rendered with Remotion",
+  "scripts": {
+    "start": "remotion studio",
+    "build": "remotion render",
+    "upgrade": "remotion upgrade",
+    "typecheck": "tsc --noEmit",
+    "lint:tokens": "node scripts/check-tokens.mjs",
+    "check": "npm run typecheck && npm run lint:tokens && npm test",
+    "test": "node --experimental-strip-types --test src/**/*.test.ts"
+  },
+  "dependencies": {
+    "@remotion/cli": "4.0.515",
+    "@remotion/fonts": "^4.0.515",
+    "@remotion/google-fonts": "4.0.515",
+    "react": "19.2.0",
+    "react-dom": "19.2.0",
+    "remotion": "4.0.515"
+  },
+  "devDependencies": {
+    "@types/react": "19.2.2",
+    "@types/react-dom": "19.2.1",
+    "typescript": "5.9.3"
+  }
+}

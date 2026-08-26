@@ -1,0 +1,9 @@
+# What tresteginnanprojekt.mp4 is about. Hook matching reads this.
+
+tools    :
+subject  : projekt | projects
+makes    : planering, struktur och utförande | planning, structure and execution
+replaces : slarv och gissningar | guesswork
+about    : the three steps behind every project that people skip -- planning,
+about    : structure, execution. Method and process, not tools. How to prepare
+about    : a project properly before you start building it.

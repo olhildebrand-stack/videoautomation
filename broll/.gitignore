@@ -1,0 +1,11 @@
+node_modules/
+out/
+build/
+.env
+
+# Render inputs the pipeline copies in per project, not source.
+# props.generated.json sits at the project root, not under public/.
+props.generated.json
+public/video/
+public/transcripts/*
+!public/transcripts/sample.words.json

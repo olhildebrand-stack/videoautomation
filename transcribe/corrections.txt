@@ -1,0 +1,81 @@
+# Deterministic find/replace applied after transcription.
+#   WRONG => RIGHT
+# Blank lines and # comments ignored.
+#
+# Matching is case-SENSITIVE and whole-word, so "Cloud => Claude" rewrites the
+# proper noun without touching a legitimate lowercase "cloud". Every applied
+# correction is recorded in the JSON under "corrections_applied", so you can
+# always see what was changed.
+#
+# Use this for terms hotword biasing keeps getting wrong. Prefer adding to
+# vocabulary.txt first -- that steers the model. This overrides it outright.
+
+# Whisper hears the assistant's name as the English word "cloud", in lower
+# case, mid-sentence: "skicka den till cloud direkt". The lowercase rule below
+# is therefore the one that does the work.
+#
+# TRADE-OFF: this also rewrites a genuine lowercase "cloud" (as in cloud
+# computing). In Swedish speech that sense is usually "molnet", so the risk is
+# low -- but if you ever discuss cloud infrastructure in English loanwords,
+# delete the lowercase rule and fix those occurrences by hand.
+cloud => Claude
+Cloud => Claude
+Clouden => Claude
+clouden => Claude
+
+jätterätt => jättelätt
+Jätterätt => Jättelätt
+
+# Wrong grammatical gender. "formulär" is an ett-word, so "en formulär" is
+# never correct. Multi-word rules merge the two tokens into one entry.
+en formulär => ett formulär
+En formulär => Ett formulär
+
+# videoautomationsystem.mp4: "fullbordad" heard as "bullbordad".
+bullbordad => fullbordad
+Bullbordad => Fullbordad
+
+# Whisper writes "mer. Och" that was never spoken, splitting one sentence in
+# two. The audio is clean -- this is a mistranscription, not a stumble, so
+# nothing is cut: only the phantom words are removed from the text.
+göra mer. Och mycket mindre => göra mycket mindre
+
+# treclaudeskills.mp4: "Claude Skills" comes back as one Swedish-looking token.
+# The replacement is two words in one entry, which is correct rather than a
+# compromise -- it was spoken as a single token, so it has a single span, and
+# splitting it would mean inventing a boundary the audio does not contain.
+klatskills => Claude Skills
+Klatskills => Claude Skills
+klattskills => Claude Skills
+klaudskills => Claude Skills
+
+# aieditoradvancing.mp4: "Min Claude" comes back as "Min kladd" -- and this one
+# is in the HOOK, where a wrong caption is the first thing anyone reads.
+#
+# TRADE-OFF: "kladd" is a real Swedish word (a scribble, a mess). In this
+# content the assistant's name is the overwhelmingly likelier reading, but if
+# a video ever genuinely talks about a kladd, delete these four lines.
+kladd => Claude
+Kladd => Claude
+kladden => Claude
+Kladden => Claude
+
+# aieditoradvancing.mp4: "när det kom till cut" comes back as "kutt". Every
+# other English term in this recording arrives as one -- one-shotta, RAW-file,
+# captions, edit -- so the loanword is the reading, not a Swedish word.
+#
+# TRADE-OFF: "kutt" exists in Norwegian and in Swedish dialect. Delete these
+# two lines if it is ever meant.
+kutt => cut
+Kutt => Cut
+
+# aivoiceagents.mp4: "alla hoppar på att designa hemsidor" comes back as "alla
+# hoppar på dess hemsidor". Two words heard where three were said.
+#
+# This rule GROWS, so the three words merge into one entry spanning the two
+# original ones and the caption shows them together rather than one at a time.
+# That is the lesser fault: the alternative is the wrong words on screen, and
+# splitting the span three ways would invent boundaries the audio does not
+# give us.
+dess hemsidor => att designa hemsidor
+Dess hemsidor => Att designa hemsidor

@@ -1,0 +1,13 @@
+# What videoautomationsystem.mp4 is ABOUT. Hook matching reads this.
+#
+# The recording never names a single tool -- it talks about "ett system" for
+# ninety seconds -- so without this file the ranking has only the transcript to
+# go on, and the transcript does not know what the system is built from.
+
+tools    : Claude Code, Remotion
+subject  : videoredigering | video editing
+makes    : klipp | Videos
+replaces : videoredigerare | Video Editor
+about    : automating short form video editing end to end -- cuts, silence
+about    : removal, captions, colour correction and b-roll, so filming is the
+about    : only step left by hand

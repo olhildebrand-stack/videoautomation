@@ -1,0 +1,76 @@
+[
+  {
+    "beat": "HOOK",
+    "line": "Det här är de tre viktigaste stegen bakom varenda projekt och det är så många som glömmer att göra dem.",
+    "start": 19.679,
+    "end": 24.345
+  },
+  {
+    "beat": "LIST",
+    "line": "Det är planering, struktur och utförande."
+  },
+  {
+    "beat": "P.INTRO",
+    "line": "Den första är planering."
+  },
+  {
+    "beat": "P.WHAT",
+    "line": "Det är då du tar idén av absolut hela projektet, du sammanfattar det i egna ord och så diskuterar du det med AI."
+  },
+  {
+    "beat": "P.WHY",
+    "line": "Det är för att måla upp en tydlig bild av vad slutversionen kommer se ut som."
+  },
+  {
+    "beat": "P.TOOLS",
+    "line": "Det är för att se till att du har tillgång till alla verktyg du behöver och att du vet vilka verktyg du behöver."
+  },
+  {
+    "beat": "P.COST",
+    "line": "Det är också så att du ska veta vilka verktyg du kommer behöva och hur mycket det kostar."
+  },
+  {
+    "beat": "P.LAND",
+    "line": "Men poängen är att måla upp en glasklar bild av projektet."
+  },
+  {
+    "beat": "S.INTRO",
+    "line": "Det andra är struktur."
+  },
+  {
+    "beat": "S.WHAT",
+    "line": "Det är här du förbereder allting."
+  },
+  {
+    "beat": "S.BRIEF",
+    "line": "Du bygger upp en brief baserad på den informationen du har fått av idén."
+  },
+  {
+    "beat": "S.PROMPT",
+    "line": "Och så bygger du upp ett prompt-dokument."
+  },
+  {
+    "beat": "S.LAND",
+    "line": "Det viktiga i den här fasen är att du har en tydlig bild av hur du ska utföra arbetet."
+  },
+  {
+    "beat": "U.INTRO",
+    "line": "Den sista är utförande."
+  },
+  {
+    "beat": "U.WHY",
+    "line": "Och det här är den roligaste delen för att det är nu du faktiskt använder dig av redskapen du fick av de förra faserna."
+  },
+  {
+    "beat": "U.SEE",
+    "line": "Och du faktiskt ser grejer hända."
+  },
+  {
+    "beat": "U.HOW",
+    "line": "Se till att du gör den baserat på allting du fick av de förra faserna och så gör du ändringar i slutet."
+  },
+  {
+    "beat": "U.LAND",
+    "line": "För gör du ändringar mitt i allting så kan det skapa problem för de andra delarna av strukturen."
+  }
+]

@@ -1,0 +1,12 @@
+[
+  {
+    "kind": "chipRow",
+    "cue": "Det är planering, struktur och utförande",
+    "until": "end",
+    "chips": [
+      { "text": "Planering",  "cue": "Den första är planering" },
+      { "text": "Struktur",   "cue": "Det andra är struktur" },
+      { "text": "Utförande",  "cue": "Den sista är utförande" }
+    ]
+  }
+]

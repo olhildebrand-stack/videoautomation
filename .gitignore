@@ -1,0 +1,20 @@
+# Raw footage and renders. These are large, regenerable, and belong on the
+# machine that has the camera -- not in the history.
+videos/
+projects/
+previews/
+broll/out/
+broll/public/video/
+broll/public/transcripts/
+broll/public/overlay-assets/
+broll/props.generated.json
+
+# Reference reels are NOT ignored: reference/ and howtocutvideo/ are meant to
+# be committed, since analysing them is a job for the session, which only sees
+# what the repository carries.
+
+.venv-check/
+node_modules/
+__pycache__/
+.pytest_cache/
+*.pyc

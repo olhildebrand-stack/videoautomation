@@ -1,0 +1,2 @@
+# CPU wheels. For CUDA, see README.md — ctranslate2 needs cuBLAS + cuDNN on PATH.
+faster-whisper==1.2.1
