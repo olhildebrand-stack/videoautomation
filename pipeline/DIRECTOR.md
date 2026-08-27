@@ -132,22 +132,17 @@ rewriting it: each entry is a mistake that is now impossible to repeat.
   it is not to come back without the operator asking for it by name, and any
   future graph will be designed from scratch rather than from that one.
 
-- **2026-08-26 -- `push` is for a hook and nothing else, and it must say when
-  it ends.** It scales the footage itself rather than drawing over it, so it is
-  the one effect that changes the picture. On the opening claim it makes a
-  vocal hook land harder. Anywhere else it stops reading as emphasis and starts
-  reading as a camera drifting. One per video, on the first beat.
+- **2026-08-27 -- `push` is retired. Never cue it.** The zoom on the opening
+  claim was the standard opener for two videos and then read as corny on the
+  third -- the effect draws attention to itself rather than to the sentence,
+  which on a talking head is the whole objection. It is gone from the kinds you
+  may name, out of the catalogue, and the rule that used to say how to end it
+  is this paragraph instead. The component is still in the renderer; that is
+  not an invitation.
 
-  Anchor it `from: "start"` -- the clip's first frame, not a phrase, because
-  the first word is said a moment in and cueing on it puts the effect a moment
-  late. Then give it `untilEndOf`: the hook's own LAST WORD. A push with no
-  ending holds the picture cropped for the whole video, and `until: "end"`
-  does the same thing on purpose. Both are rejected.
-
-  Not `until` naming the next sentence: `until` leaves as a phrase begins, so
-  that ends the zoom a fraction INTO the sentence after the hook, which reads
-  as the effect overstaying rather than as the hook closing. `untilEndOf`
-  leaves as its phrase ends, so the zoom is over exactly when the sentence is.
+  What the hook gets instead is nothing. A claim delivered straight, with the
+  captions doing the work, is the reference reels' own answer -- three of the
+  ten open on a static frame.
 
 - **2026-08-26 -- a generated clip is paced by the sentence, not by a rate.**
   A `terminal` cued on "RAW-file" ran its whole output inside the first second

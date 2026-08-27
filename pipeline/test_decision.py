@@ -165,7 +165,7 @@ def test_the_schema_forbids_the_director_writing_hook_text():
 # Kinds the renderer can draw but the director may not name. Each one is here
 # because it was watched in a finished video and ruled out, not because it is
 # broken -- so the component stays and the permission goes.
-RETIRED = {"wordStack"}
+RETIRED = {"wordStack", "push"}
 
 
 def test_every_overlay_kind_the_renderer_knows_is_offered_unless_retired():
@@ -201,33 +201,8 @@ def full(overlays):
     return decide([beat("ALL", [t.index for t in TAKES])], [], overlays)
 
 
-def test_a_push_with_no_end_is_rejected():
-    """It scales the footage. One that never releases leaves the whole video
-    cropped, and nothing in the sheet says it was meant to be a moment."""
-    problems = validate(full([{"kind": "push", "from": "start", "why": "w"}]), TAKES)
-    assert any("never where it ends" in p for p in problems)
-
-
-def test_a_push_until_the_end_of_the_clip_is_rejected():
-    problems = validate(full([
-        {"kind": "push", "from": "start", "until": "end", "why": "w"}]), TAKES)
-    assert any("crops the whole" in p for p in problems)
-
-
-def test_a_push_that_releases_passes():
-    assert validate(full([
-        {"kind": "push", "from": "start", "until": "planering", "why": "w"}]),
-        TAKES) == []
-
-
-def test_a_hold_counts_as_an_ending():
-    assert validate(full([
-        {"kind": "push", "from": "start", "hold": 1.5, "why": "w"}]), TAKES) == []
-
-
-def test_other_kinds_may_stay_to_the_end():
-    """Only the push crops the picture; a row of chips holding to the end is
-    an ordinary choice."""
+def test_a_kind_may_stay_to_the_end():
+    """A row of chips holding to the end is an ordinary choice."""
     assert validate(full([
         {"kind": "chipRow", "until": "end", "why": "w",
          "chips": [{"text": "P", "cue": "planering"}]}]), TAKES) == []

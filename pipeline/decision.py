@@ -31,8 +31,11 @@ COLOURS = ["green", "red", "lightBlue", "ink"]
 # for good ("that was a horrible idea from my end"). The component is still in
 # the renderer -- it is not dead until something else needs deleting -- but a
 # kind the director cannot name is a kind that cannot come back by accident.
+# `push` was retired on 2026-08-27: it reads as corny on a talking head, and a
+# kind the director cannot name is a kind it cannot reach for. The component
+# and its tokens are still in the renderer.
 KINDS = ["emojiRow", "image", "chat", "dualGraph", "chipRow",
-         "html", "iconRow", "terminal", "clip", "push", "flash"]
+         "html", "iconRow", "terminal", "clip", "flash"]
 
 # Keys the director may set on a cue. Deliberately not `enter`/`leave`/`types`
 # /`replies`: those are frame numbers, and a director who writes a frame number
@@ -80,9 +83,10 @@ OVERLAY_SCHEMA = {
                                  'it leaves as that phrase BEGINS'},
         "untilEndOf": {"type": "string",
                        "description": "a phrase it stays through, leaving as "
-                                      "that phrase ends. What the push wants: "
-                                      "naming the next sentence's first word "
-                                      "instead ends it inside that sentence"},
+                                      "that phrase ends -- for an effect that "
+                                      "should be over by the time a sentence "
+                                      "is, where `until` would end it a beat "
+                                      "into the next one"},
         "from": {"enum": ["start"],
                  "description": "anchor to the clip's first frame instead of "
                                 "a phrase -- for an effect that fires the "
@@ -107,8 +111,6 @@ OVERLAY_SCHEMA = {
         "src": {"type": "string"},
         "htmlFile": {"type": "string"},
         "full": {"type": "boolean"},
-        "scale": {"type": "number",
-                  "description": "push: how far in, e.g. 1.08"},
         "lines": {"type": "array", "items": {"type": "string"}},
         "finishBy": {"type": "string",
                      "description": "terminal: the phrase its output should "
@@ -242,25 +244,6 @@ def validate(decision: dict, takes: list[Take], fps: int = 30) -> list[str]:
                 f"Overlay {problem.kind}: the phrase \"{problem.cue}\" -- "
                 f"{problem.reason}. A cue has to quote words you kept, "
                 "exactly as they were said.")
-
-    # A push scales the footage. One that never releases leaves the whole
-    # video cropped at 1.2 with no way to tell from the sheet that it was
-    # meant to be a moment. Every other kind can reasonably stay to the end.
-    for cue in decision.get("overlays") or []:
-        if cue.get("kind") != "push":
-            continue
-        if (not cue.get("until") and not cue.get("untilEndOf")
-                and cue.get("hold") is None):
-            problems.append(
-                "The `push` says where it starts and never where it ends, so "
-                "it would hold the picture zoomed for the rest of the video. "
-                "Give it `untilEndOf` — the hook's last word, so it is over "
-                "as the sentence is — or a `hold` in seconds.")
-        elif cue.get("until") == "end":
-            problems.append(
-                "The `push` runs `until: \"end\"`, which crops the whole "
-                "video rather than emphasising one line. It belongs on the "
-                "hook and should release when the hook does.")
 
     hook = decision.get("hook") or {}
     pick = hook.get("pick", 0)

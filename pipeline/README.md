@@ -620,9 +620,9 @@ captured. A mockup of a real docs page is worse than the real docs page.
 Timing keys are `hold` (seconds after the phrase ends, the default),
 `until: "end"`, `until: "<another phrase>"` -- which leaves as that phrase
 BEGINS, for handing the screen to what comes next -- or
-`untilEndOf: "<a phrase>"`, which stays through it and leaves as it ends. The
-push wants the second: ending on the next sentence's first word puts the zoom
-a fraction inside that sentence.
+`untilEndOf: "<a phrase>"`, which stays through it and leaves as it ends. Reach
+for the second where the effect should be over by the time a sentence is:
+naming the next sentence's first word ends it a fraction inside that sentence.
 
 **Files** — `src` and `replyVideo` name a file in `<project>/assets/`. They are
 staged into `broll/public` at render time; assets belong with the project, not
