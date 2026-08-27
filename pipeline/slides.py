@@ -67,17 +67,25 @@ def frame_size(image: Path) -> tuple[int, int]:
     return int(width), int(height)
 
 
-def composite(video: Path, overlay: Path, out: Path) -> None:
+def composite(video: Path, overlay: Path, out: Path,
+              crop: str | None = None) -> None:
     """Lay the clip into the overlay's hole, cropped to fill it.
 
     Filling the hole rather than the frame is the whole point: a document
     scrolling past should be the size of the card, not a strip cut out of a
     full-frame scale. Silent by design -- these play muted in the feed.
+
+    `crop` is ffmpeg's `W:H:X:Y`, taken out of the clip before anything else.
+    A phone held up to a monitor spends most of its frame on the room, and
+    scaling that to fill the card would leave the screen a sliver in the
+    middle. `ffmpeg -i clip -vf cropdetect=limit=60 -f null -` names the lit
+    part.
     """
     w, h, x, y = hole_in(overlay)
     canvas_w, canvas_h = frame_size(overlay)
+    taken = f"crop={crop}," if crop else ""
     graph = (
-        f"[0:v]scale={w}:{h}:force_original_aspect_ratio=increase,"
+        f"[0:v]{taken}scale={w}:{h}:force_original_aspect_ratio=increase,"
         f"crop={w}:{h},pad={canvas_w}:{canvas_h}:{x}:{y}[bed];"
         # shortest=1 on the overlay filter itself, not the -shortest
         # flag: the still is a looped input, so without it the graph
@@ -156,7 +164,7 @@ def render(story: Path) -> int:
                 return 2
             moving = out / f"{index:02d}.mp4"
             print(f"  laying {clip.name} into the hole ...", flush=True)
-            composite(clip, target, moving)
+            composite(clip, target, moving, entry.get("crop"))
             print(f"  {moving}  ({moving.stat().st_size // 1024}kb)")
 
     props_file.unlink(missing_ok=True)

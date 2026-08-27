@@ -23,7 +23,8 @@
       "headline": "Och den kommer\nihåg rättningen",
       "body": "Säger jag att den valde fel hamnar regeln i en fil som följer med nästa gång.",
       "emphasis": "Samma misstag görs aldrig två gånger.",
-      "video": "03video.mp4"
+      "video": "03video.mp4",
+      "crop": "474:340:6:256"
     }
   ]
 }
