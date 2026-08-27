@@ -1,20 +1,22 @@
 /**
- * CYAN VOID — brand invariants, machine-readable.
+ * Every colour, duration and spacing this project draws with.
  *
- * This file is the ONLY place in this project permitted to contain a raw hex
- * value, a raw duration, or a raw spacing number. Every component imports from
- * here. `npm run lint:tokens` enforces that mechanically.
+ * This file is the ONLY place permitted to contain a raw hex value, a raw
+ * duration, or a raw spacing number. Every component imports from here.
+ * `npm run lint:tokens` enforces that mechanically.
  *
- * Everything below is a hard constraint, not a preference. Do not extend,
- * alias, or interpolate these values.
+ * The point is consistency between videos, not a brand to obey: the values
+ * below were arrived at by watching renders, and a new one is added here when
+ * a clip needs it rather than written inline. This file began as CYAN VOID's
+ * invariants; those limits were dropped, and only the discipline stayed.
  */
 
 /* ------------------------------------------------------------------ colour */
 
 /**
- * Hierarchy is brightness, never hue. `flare` reads first, `bone` second,
- * `ash` recedes. Never signal importance with a colour change — only with a
- * position on that ladder.
+ * The ground and the text ladder every clip starts from: `flare` reads first,
+ * `bone` second, `ash` recedes. Colour beyond this -- a green line, a red one,
+ * a logo's own -- is added where a clip needs it, not withheld.
  */
 export const color = {
   /** Ground. Every frame starts here. */
@@ -31,7 +33,7 @@ export const color = {
   flare: '#DAF5FF',
 } as const;
 
-/** `--accent` is an alias of `--flare`. There is no second accent colour. */
+/** `--accent` is an alias of `--flare`: the default emphasis, not the only one. */
 export const accent = color.flare;
 
 export type ColorToken = keyof typeof color;

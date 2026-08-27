@@ -48,46 +48,33 @@ the pipeline that needs judgement, and it now accumulates:
 - The rules are prose for a reader, not a config. Say what went wrong and what
   to do instead, and keep the entry that made it necessary.
 
-## Precedence: CYANVOID.md outranks the motion-design skill
+## The motion-design skill is guidance, and nothing overrules it
 
 `.claude/skills/motion-design/` is the LottieFiles motion-design skill, vendored
-from `github.com/lottiefiles/motion-design-skill` @ `f9a8a04` (MIT).
+from `github.com/lottiefiles/motion-design-skill` @ `f9a8a04` (MIT). Follow it.
 
-It is good general guidance, but it was written for interactive UI and it
-contradicts `CYANVOID.md` on several points where both documents call their own
-side inviolable. **`CYANVOID.md` wins every time.** Apply the skill only where
-it does not conflict.
+It used to be overruled by `CYANVOID.md` on colour, easing, overshoot and what
+may appear on screen. **Those brand limits were removed** -- the vocabulary this
+project actually needs is green and red graph lines, emoji, screenshots, chat
+mockups and logos, all of which CYANVOID forbade outright. `CYANVOID.md` is kept
+as history. It does not govern anything, and no design question should be
+answered by quoting it.
 
-### Where the skill is overruled — do not apply these
+What survived that decision is the token rule below, which is not brand policing:
+it is what makes one video look like the last one.
 
-| Skill rule | Overruled by CYANVOID.md |
-| --- | --- |
-| "Never opacity-only for important state changes — combine with position or scale" (CRITICAL) | "Fade, do not travel. Transitions cross-fade. Movement is reserved for objects being directly dragged, never for reveals." |
-| "Always three motion layers — primary + secondary + ambient" (CRITICAL) | "One idea per beat. A single property changes at a time. Never fade and slide and scale together." |
-| Four personality archetypes; the seven-row easing table | "cubic-bezier(0.32, 0.72, 0, 1) — The curve never changes." |
-| Overshoot 3–30% by archetype; bounce-settle; Disney anticipation and follow-through | "No overshoot, no bounce, no spring — at any duration." |
-| Ambient layer of gradients and pulses; shadow trailing a card; parallax | "Never: glows, drop shadows, gradients on surfaces… parallax" |
-| Duration tables (card 200–350ms, modal 300–400ms, page 400–600ms) | b-roll tempo: 90ms out / 120ms in / 100ms state |
+The parts of the skill worth naming, because the components are built to them:
 
-### Where the skill governs — CYANVOID.md is silent, so follow it
+- **Stagger budget.** Total stagger under 500ms. `beatInFrames` is derived from
+  this.
+- **The 1/3 rule (elements).** With three or more elements, at most one third
+  may be in active motion at once -- which is why `beatInFrames` equals the
+  enter duration: each element settles as the next starts.
+- **The 8-step checklist and decision framework** for planning a new clip, and
+  its **narrative structure** -- setup, action, resolution within a clip.
 
-- **Stagger budget.** Total stagger under 500ms (the skill rates more a CRITICAL
-  fault). `beatInFrames` is derived from this.
-- **The 1/3 rule (elements).** With three or more elements, at most one third may
-  be in active motion at once. This is why `beatInFrames` equals the enter
-  duration — each element settles as the next starts.
-- **The 1/3 rule (distance).** No motion crosses more than a third of the frame
-  without a keyframe change. Trivially satisfied while nothing travels.
-- **The 8-step checklist and decision framework** for planning a new clip.
-- **Narrative structure** — setup, action, resolution within a clip.
-- **The quality checklist**, minus the rules listed as overruled above.
-
-### Where they already agree
-
-- Entrances longer than exits: the skill wants 30–50%, CYANVOID's 120/90 is 33%.
-- Never linear easing for spatial movement.
-- A defined reduced-motion path (CYANVOID: collapse to a cross-fade, never to
-  nothing).
+The durations and the easing curve in `tokens.ts` are this project's, arrived at
+by watching renders. They are defaults to design with, not laws to cite.
 
 ## The token rule
 
