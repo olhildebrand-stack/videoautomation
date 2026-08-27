@@ -833,7 +833,13 @@ export const slideFormat = {
    */
   collage: {
     align: 'center',
-    scrim: '#00000040',
+    /**
+     * The ground is blurred here, where in the other photo formats it is not:
+     * the screenshots are the subject, and a sharp photograph behind them
+     * competes with every one of them at once.
+     */
+    blurPx: 18,
+    scrim: '#00000059',
     accent: null,
     /** Black on white, the inverse of every other format's caption. */
     caption: {

@@ -741,14 +741,20 @@ const Stamp: React.FC<{ text: string; y: number }> = ({ text, y }) => (
 const LongArrow: React.FC<{ from: number; to: number }> = ({ from, to }) => {
   const x = slide.side + BA.arrow.offset;
   const head = BA.arrow.head;
+  // A round cap and a mitred point both paint past the coordinate they are
+  // drawn at, so the box is grown by the stroke on every side and the path
+  // inset into it. Drawn flush, the tip of the arrow gets shaved off.
+  const pad = BA.arrow.weight;
+  const span = to - from;
   return (
     <svg
-      width={slide.width} height={to - from}
-      style={{ position: 'absolute', left: 0, top: from }}
+      width={slide.width} height={span + pad * 2}
+      style={{ position: 'absolute', left: 0, top: from - pad }}
     >
       <path
-        d={`M${x},0 V${to - from}` +
-           ` M${x - head},${to - from - head} L${x},${to - from} L${x + head},${to - from - head}`}
+        d={`M${x},${pad} V${span + pad}` +
+           ` M${x - head},${span + pad - head} L${x},${span + pad}` +
+           ` L${x + head},${span + pad - head}`}
         stroke={slide.ink}
         strokeWidth={BA.arrow.weight}
         fill="none"
@@ -778,7 +784,7 @@ const Collage: React.FC<SlideProps> = ({
   const lines = [headline, body].filter(Boolean) as string[];
   return (
     <AbsoluteFill style={{ backgroundColor: slide.ground }}>
-      <Fill src={image ?? background} focus={focus} />
+      <Fill src={image ?? background} focus={focus} blur={Co.blurPx} />
       <AbsoluteFill style={{ backgroundColor: Co.scrim }} />
 
       {shots.map((src, index) => (
