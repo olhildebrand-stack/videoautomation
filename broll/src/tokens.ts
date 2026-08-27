@@ -533,7 +533,13 @@ export const fps = 30;
  */
 export const slide = {
   width: 1080,
-  height: 1339,
+  /**
+   * A true 4:5, and Instagram's largest portrait. The reference slides come
+   * back 1339 tall, which is what a download did to them -- and an odd number
+   * of rows cannot be encoded as yuv420p, so a slide carrying video would come
+   * out a pixel shorter than its neighbours and the set would be letterboxed.
+   */
+  height: 1350,
   /** Type never comes closer than this to an edge. */
   side: 76,
   ground: color.void,
