@@ -79,3 +79,17 @@ Kutt => Cut
 # give us.
 dess hemsidor => att designa hemsidor
 Dess hemsidor => Att designa hemsidor
+
+# aivoiceagents.mp4: the same phrase again, as the CUT transcript hears it.
+# The cut is a second Whisper pass over the assembled audio and does not
+# always agree with the first: the raw pass wrote "dess hemsidor", the cut
+# wrote "dessamma hemsidor". Captions come from the cut, so a rule for the raw
+# spelling alone leaves the wrong words on screen.
+dessamma hemsidor => att designa hemsidor
+Dessamma hemsidor => Att designa hemsidor
+
+# "chattbottar" comes back as "chatbotar" -- one t in each half. Both spellings
+# appeared in one recording, so this is the decoder wavering rather than a
+# choice. "chatbotar" is not a Swedish word either way.
+chatbotar => chattbottar
+Chatbotar => Chattbottar
