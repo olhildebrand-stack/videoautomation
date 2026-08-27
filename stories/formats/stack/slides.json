@@ -1,0 +1,14 @@
+{
+  "shape": "story",
+  "format": "stack",
+  "slides": [
+    {
+      "kind": "body",
+      "image": "01-cover.jpg",
+      "focus": "50% 30%",
+      "headline": "DU HAR INTE SLUT PÅ TID.",
+      "body": "Råmaterial att leta igenom — 40 min\nKlippa om samma mening — 25 min\nHitta rätt take — 35 min\nExportera, ångra, exportera — 30 min\nSe igenom det igen — 20 min",
+      "emphasis": "= 150 minuter. Per video. |Varje gång."
+    }
+  ]
+}

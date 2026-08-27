@@ -37,6 +37,11 @@ STAGED = "slides"
 # Every optional word on a slide, so none of them can fall back to a default.
 OPTIONAL = {"kicker": "", "body": "", "emphasis": "", "focus": ""}
 
+# The textured format holds its picture at a fixed place, so its words have a
+# fixed slot above it: roughly three lines of about this many characters. Copy
+# past that used to slide under the card and get cut in half.
+TEXTURED_BUDGET = 3 * 38
+
 
 def hole_in(overlay: Path) -> tuple[int, int, int, int]:
     """Where the ground is missing from an overlay: width, height, x, y.
@@ -139,20 +144,34 @@ def render(story: Path) -> int:
         shutil.copy2(source, public / source.name)
         ground = f"{STAGED}/{source.name}"
 
+    if fmt == "textured":
+        for index, entry in enumerate(slides, start=1):
+            words = len(entry.get("body", "")) + len(entry.get("emphasis", ""))
+            if words > TEXTURED_BUDGET:
+                print(f"error: slide {index} has {words} characters of body, and"
+                      f" the textured format holds about {TEXTURED_BUDGET} above"
+                      " the picture. Cut it, or use a format whose words are not"
+                      " bounded by a card.", file=sys.stderr)
+                return 2
+
     for index, entry in enumerate(slides, start=1):
         # Stated, not omitted. Remotion merges the composition's defaultProps
         # over anything the props file leaves out, so a key a slide does not
         # set does not come out empty -- it comes out holding the studio's
         # placeholder text.
         props = {**OPTIONAL, **entry, "shape": shape, "format": fmt,
-                 "step": index, "of": len(slides),
+                 "step": entry.get("step", index),
+                 "of": entry.get("of", len(slides)),
                  "handle": entry.get("handle", data.get("handle", ""))}
         if ground:
             props["background"] = ground
-        # A slide naming no image is one whose picture is a video: the still is
-        # the overlay to lay over it, with the card punched out of the ground.
-        overlay = not entry.get("image")
-        if overlay:
+        # The punch is for a video, and only for a video. Keying it on a missing
+        # image instead meant a slide could not simply have no card -- and the
+        # first slide of a set usually should not, since there is nothing to
+        # show yet.
+        overlay = bool(entry.get("video"))
+        props["punch"] = overlay
+        if not entry.get("image"):
             props["image"] = ""
         else:
             source = story / entry["image"]
@@ -162,6 +181,19 @@ def render(story: Path) -> int:
                 return 2
             shutil.copy2(source, public / source.name)
             props["image"] = f"{STAGED}/{source.name}"
+
+        # The formats that scatter or stack screenshots name more than one.
+        staged = []
+        for name in entry.get("images", []):
+            source = story / name
+            if not source.is_file():
+                print(f"error: slide {index} names {source}, which is not there",
+                      file=sys.stderr)
+                return 2
+            shutil.copy2(source, public / source.name)
+            staged.append(f"{STAGED}/{source.name}")
+        if staged:
+            props["images"] = staged
 
         props_file.write_text(json.dumps(props, ensure_ascii=False),
                               encoding="utf-8")

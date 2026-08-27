@@ -724,6 +724,132 @@ export const slideFormat = {
       size: 44,
     },
   },
+  /**
+   * F: a dim moving background and a stack of text over it, no boxes at all.
+   * From the five `bdp-frame-*.jpg` -- frames lifted out of the BDP reels,
+   * which are only videos because they had music on them.
+   *
+   * The whole format is the weight ladder: a tight bold headline, a light
+   * list under it, a bold payoff with one word in the accent and underlined.
+   * It carries far more text than a still slide would, which works because
+   * the background moves and the reader has the clip to read it.
+   */
+  stack: {
+    align: 'left',
+    /** Warm light has to survive this, so it darkens rather than desaturates. */
+    scrim: 'linear-gradient(#000000D9, #00000099 30%, #000000A6 70%, #000000E6)',
+    accent: '#F0562E',
+    headline: {
+      family: 'Inter', weight: 800, size: 62,
+      tracking: '-0.03em', leading: 1.1,
+    },
+    body: {
+      family: 'Inter', weight: 400, size: 50,
+      tracking: '0em', leading: 1.22,
+    },
+    /** The payoff, back in bold, with the accent word underlined. */
+    payoff: {
+      family: 'Inter', weight: 800, size: 50,
+      tracking: '-0.02em', leading: 1.2,
+    },
+    top: 0.17,
+    gap: 54,
+  },
+  /**
+   * The cover of a carousel, from `Comment GUIDE and I'll send it.jpg`.
+   *
+   * The photograph is sharp -- the blurring starts on the slide after this
+   * one -- and the title is a ladder of four different cuts, each line set
+   * differently from the last: bold, bold italic, serif, bracketed italic.
+   * Two cards sit under it at slight angles, overlapping.
+   */
+  titled: {
+    align: 'left',
+    scrim: 'linear-gradient(#0A0F1459, #0A0F1426 40%, #0A0F1473)',
+    accent: null,
+    headline: {
+      family: 'Inter', weight: 800, size: 86,
+      tracking: '-0.035em', leading: 1.04,
+    },
+    /** Second line, indented, italic. */
+    kicker: {
+      family: 'Inter', weight: 800, size: 62,
+      tracking: '-0.02em', leading: 1.1,
+    },
+    /** Third line. The one serif in the project. */
+    serif: {
+      family: 'Playfair Display', weight: 700, size: 84,
+      tracking: '0em', leading: 1.06,
+    },
+    /** Fourth line, in brackets. */
+    body: {
+      family: 'Inter', weight: 400, size: 38,
+      tracking: '0em', leading: 1.2,
+    },
+    card: { radius: 18, tilt: -5, width: 0.4, height: 0.16 },
+  },
+  /**
+   * B's before/after variant, from `Comment GUIDE and I'll send it over(4).jpg`.
+   *
+   * An italic line, a huge accent number, a parenthetical, then two cards
+   * stacked down the right with a circle drawn round the number on each --
+   * red on the before, green on the after -- and the two dates down the left
+   * with an arrow between them. The drawn-on quality is the point: it reads
+   * as annotated rather than designed.
+   */
+  beforeafter: {
+    align: 'center',
+    scrim: 'linear-gradient(#000000B3, #00000073 45%, #000000CC)',
+    accent: '#CE6A4C',
+    /** The italic line above the number. */
+    kicker: {
+      family: 'Inter', weight: 800, size: 66,
+      tracking: '-0.02em', leading: 1.1,
+    },
+    headline: {
+      family: 'Inter', weight: 800, size: 108,
+      tracking: '-0.03em', leading: 1,
+    },
+    body: {
+      family: 'Inter', weight: 400, size: 38,
+      tracking: '0em', leading: 1.2,
+    },
+    /** The two dates down the left, either side of the arrow. */
+    label: {
+      family: 'Inter', weight: 800, size: 54,
+      tracking: '0em', leading: 1,
+    },
+    card: { radius: 22, width: 0.56, height: 0.16, gap: 34 },
+    /** Drawn round the number that changed: what it was, what it became. */
+    ring: { was: '#EF4444', became: '#22C55E', weight: 9 },
+  },
+  /**
+   * E's blob variant, from `639735492_...jpg`.
+   *
+   * Screenshots scattered at slight angles behind an irregular black mask,
+   * over a photograph, with white caption boxes carrying black text at the
+   * bottom. The mask is drawn rather than aligned -- a neat grid would say
+   * "here is my evidence, arranged", and the scatter says "there is more
+   * where this came from".
+   */
+  collage: {
+    align: 'center',
+    scrim: '#00000040',
+    accent: null,
+    blob: '#000000',
+    /** Black on white, the inverse of every other format's caption. */
+    caption: {
+      family: 'Inter', weight: 800, size: 46,
+      tracking: '-0.01em', leading: 1.18,
+    },
+    box: '#FFFFFF',
+    onBox: '#111111',
+    radius: 16,
+    paddingBlock: 20,
+    paddingInline: 30,
+    gap: 18,
+    shot: { radius: 14, shadow: '#00000073', tilts: [-3, 2, -1.5] },
+  },
 } as const;
 
 export type SlideFormat = keyof typeof slideFormat;

@@ -1,0 +1,14 @@
+{
+  "shape": "story",
+  "format": "collage",
+  "slides": [
+    {
+      "kind": "body",
+      "image": "01-cover.jpg",
+      "focus": "50% 40%",
+      "images": ["02.jpg", "03.jpg", "01-cover.jpg"],
+      "headline": "Tre videor klippta på en kväll,\nalla av samma pipeline",
+      "body": "Svara på storyn med \"KLIPP\"\nså skickar jag hur"
+    }
+  ]
+}

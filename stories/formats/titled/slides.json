@@ -1,0 +1,17 @@
+{
+  "format": "titled",
+  "slides": [
+    {
+      "kind": "cover",
+      "image": "01-cover.jpg",
+      "focus": "50% 25%",
+      "images": ["02.jpg", "03.jpg"],
+      "headline": "Så gör du Claude",
+      "kicker": "till en riktig",
+      "emphasis": "Klippassistent.",
+      "body": "[hela råmaterialet, läst på en gång]",
+      "step": 1,
+      "of": 6
+    }
+  ]
+}

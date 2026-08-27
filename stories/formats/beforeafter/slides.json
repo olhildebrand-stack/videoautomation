@@ -1,0 +1,19 @@
+{
+  "format": "beforeafter",
+  "handle": "@student",
+  "slides": [
+    {
+      "kind": "cover",
+      "image": "01-cover.jpg",
+      "focus": "50% 30%",
+      "images": [
+        "02.jpg",
+        "03.jpg"
+      ],
+      "kicker": "Claude Code + Whisper",
+      "headline": "150 → 12 min",
+      "body": "(samma video, samma råmaterial, samma dag)",
+      "emphasis": "FÖRE/EFTER"
+    }
+  ]
+}

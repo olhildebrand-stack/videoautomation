@@ -86,7 +86,9 @@ collage, with the caption boxes reading as a caption under it.
 
 ## F. Video with a text stack
 
-all five `comment BDP` mp4s — 4:5, moving
+all five `comment BDP` mp4s — 4:5, moving. A frame is lifted out of each as
+`bdp-frame-0..4.jpg` beside them, since the layout is what matters and these
+are only videos because they had music on them.
 
 A dim, warm-lit moving background — the creator walking, a room, a bar — with a
 left-aligned text block over it: a bold headline where one or two words carry
@@ -116,3 +118,27 @@ Use one per sequence, never mixed.
 
 A background is optional. Formats B, C, D and E have none — the photograph is
 the ground. Only A wants one.
+
+---
+
+## What is built
+
+Seven formats, each named in `broll/src/tokens.ts` under `slideFormat` and
+rendered by `broll/src/compositions/Slide.tsx`. A format is chosen once per
+sequence in the folder's `slides.json`, never per slide.
+
+| `format` | from | what it is |
+| --- | --- | --- |
+| `textured` | A | centred, terracotta pill, card, texture ground |
+| `blurred` | C | the cover photo blurred behind the set, step numbers, dots |
+| `labels` | D | the photo untouched, small text in the app's black boxes |
+| `stack` | F | a weight ladder over a dim photo, no boxes at all |
+| `titled` | C's cover | a sharp photo and a four-cut title ladder over angled cards |
+| `beforeafter` | B's `over(4)` | a huge accent number, two cards, rings drawn on |
+| `collage` | E's `639735492` | screenshots on a torn black mask, white caption boxes |
+
+One of each is rendered into `stories/formats/out/`, built from the sources in
+`stories/formats/<name>/`.
+
+**What the words in the references say is not part of the format.** They are
+someone else's captions. Only the layout, the type and the colour carry over.

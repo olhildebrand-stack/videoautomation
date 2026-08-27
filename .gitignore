@@ -14,6 +14,11 @@ broll/props.generated.json
 # whatever `python pipeline/slides.py` last made of them.
 stories/*/out/
 
+# ...except the format samples. One render of each format, committed on
+# purpose: they are a catalogue to look at, like the references themselves,
+# and nobody should have to run a render to see what a format looks like.
+!stories/formats/out/
+
 # Reference reels are NOT ignored: reference/ and howtocutvideo/ are meant to
 # be committed, since analysing them is a job for the session, which only sees
 # what the repository carries.

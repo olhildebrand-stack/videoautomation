@@ -32,6 +32,14 @@ const faces = [
     file: 'Inter-ExtraBoldItalic.woff2',
     style: 'italic',
   },
+  {
+    role: { fontFamily: 'Inter', fontWeight: 400 },
+    file: 'Inter-Italic.woff2',
+    style: 'italic',
+  },
+  /** The one serif, for the title format's third line and nothing else. */
+  { role: { fontFamily: 'Playfair Display', fontWeight: 700 },
+    file: 'PlayfairDisplay-Bold.woff2' },
 ] as const;
 
 export const fontsReady = Promise.all(
