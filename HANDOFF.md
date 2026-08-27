@@ -1,13 +1,57 @@
 # Brief: taking over the `videoautomation` system
 
-**Paste this whole file into Claude Code in a fresh clone of this repository, as
-your first message.** It tells Claude what the system is, what state it is in,
-what is missing because it lived on the original author's machine, and what to
-do first. Everything below is written to be read by an agent and acted on.
+## Read this part before anything else
+
+**Where the code is:**
+
+```
+https://github.com/olhildebrand-stack/videoautomation
+git clone https://github.com/olhildebrand-stack/videoautomation.git
+```
+
+**The repository is private.** You cannot clone it until the owner adds you as a
+collaborator on GitHub. If `git clone` returns *"Repository not found"*, that is
+what it means — the repository exists, you just cannot see it yet. Ask for
+access; do not go looking for a public mirror, there isn't one.
+
+**Where to paste this brief: Claude Code, in a terminal, inside the clone.**
+
+```bash
+git clone https://github.com/olhildebrand-stack/videoautomation.git
+cd videoautomation
+claude          # then paste this file as your first message
+```
+
+Not claude.ai in a browser tab, and not any chat window without a filesystem.
+Everything below refers to real files — `pipeline/README.md`,
+`broll/src/tokens.ts`, `pipeline/DIRECTOR.md` — and a chat Claude has no way to
+open them. It will either say the folders do not exist or, worse, guess at what
+they contain. If you have hit that already, that is the whole explanation: the
+brief is fine, it was just read somewhere it cannot reach the code.
+
+### If you are reading this without the repository yet
+
+It is still worth reading. What survives without a filesystem:
+
+- §0–§2 — what the system is, how the pipeline runs, and **what you need
+  installed**. Work out now whether you have an NVIDIA GPU, a real ffmpeg, Node
+  and Python; those decide whether this is a weekend or a fortnight.
+- §3 — the warnings. Every one of these is true whether or not you can see the
+  code, and §3.1 (it is hardcoded to Swedish) may decide whether you want the
+  system at all.
+- §5, §8, §9 — failure modes, what to ask the author, and the honest summary.
+
+What does **not** work until you have the clone: §6, the first-run checklist.
+Every step there runs a command against a real file. Do not let a chat Claude
+walk you through it from memory — it will invent paths.
 
 ---
 
 ## 0. What you are looking at
+
+This brief tells Claude what the system is, what state it is in, what is missing
+because it lived on the original author's machine, and what to do first.
+Everything below is written to be read by an agent and acted on.
 
 This repository turns a raw talking-head recording into a finished vertical
 short — cut, graded, captioned, with motion-design overlays — in one pipeline
