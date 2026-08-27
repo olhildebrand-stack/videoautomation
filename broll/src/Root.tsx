@@ -124,7 +124,7 @@ export const RemotionRoot: React.FC = () => (
       height={slide.height}
       defaultProps={{
         kind: 'body' as const,
-        image: 'overlay-assets/02.jpg',
+        image: '',
         headline: 'Headline',
         body: 'Body copy.',
         emphasis: 'The point.',

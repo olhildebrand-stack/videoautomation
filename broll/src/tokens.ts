@@ -542,6 +542,16 @@ export const slide = {
   onAccent: color.void,
   headline: overlay.ink,
   body: color.flare,
+  /**
+   * Where the picture sits, the same on every body slide -- as it is on every
+   * reference slide. Fixed rather than flowed: a slide whose picture starts
+   * wherever its paragraph happened to end reads as a different template, and
+   * the hole punched for a video has to be somewhere nameable.
+   */
+  picture: {
+    top: 660,
+    bottom: 132,
+  },
   /** The screenshot sits on a light card, as every reference slide does. */
   card: {
     background: overlay.ink,

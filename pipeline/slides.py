@@ -5,6 +5,10 @@
 
 Stills, not clips, so nothing here is timed. The folder holds the pictures and
 the words; `out/` beside them holds what to post.
+
+A slide that names no `image` is one whose picture is a video. It renders as
+`NN-overlay.png` with the card punched clean out of the ground: put the clip
+behind the PNG in the editor, filling the frame, and the hole IS the card.
 """
 
 from __future__ import annotations
@@ -49,18 +53,26 @@ def render(story: Path) -> int:
     props_file = BROLL / "props.slide.json"
 
     for index, entry in enumerate(slides, start=1):
-        source = story / entry["image"]
-        if not source.is_file():
-            print(f"error: slide {index} names {source}, which is not there",
-                  file=sys.stderr)
-            return 2
-        shutil.copy2(source, public / source.name)
+        props = {**entry, "handle": entry.get("handle", data.get("handle", ""))}
+        # A slide naming no image is one whose picture is a video: the still is
+        # the overlay to lay over it, with the card punched out of the ground.
+        overlay = not entry.get("image")
+        if overlay:
+            # Stated, not omitted: Remotion merges defaultProps over anything
+            # a props file leaves out, so a missing key is not an empty one.
+            props["image"] = ""
+        else:
+            source = story / entry["image"]
+            if not source.is_file():
+                print(f"error: slide {index} names {source}, which is not there",
+                      file=sys.stderr)
+                return 2
+            shutil.copy2(source, public / source.name)
+            props["image"] = f"{STAGED}/{source.name}"
 
-        props = {**entry, "image": f"{STAGED}/{source.name}",
-                 "handle": entry.get("handle", data.get("handle", ""))}
         props_file.write_text(json.dumps(props, ensure_ascii=False),
                               encoding="utf-8")
-        target = out / f"{index:02d}.png"
+        target = out / (f"{index:02d}-overlay.png" if overlay else f"{index:02d}.png")
         print(f"Rendering {target.name} ...", flush=True)
         done = subprocess.run(
             remotion_command("still", "Slide", str(target),
