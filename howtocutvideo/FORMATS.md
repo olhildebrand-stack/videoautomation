@@ -84,6 +84,12 @@ collage, with the caption boxes reading as a caption under it.
 **Why it works.** The screenshots are evidence, and scattering them says
 "there's more where this came from" in a way a neat grid does not.
 
+**The screenshots are portrait**, at three different sizes, overlapping, and
+barely rotated -- the scatter comes from the offsets, not the angles. A phone
+screenshot is portrait, and a landscape box crops the evidence to a strip. The
+three boxes in `tokens.ts` are measured straight off `701537468`, which is the
+same 9:16 as the story canvas.
+
 **The green chip is the format.** `701537468` and `639800251` both lay a bright
 green chip with black text over the figure inside each screenshot -- `$3k week`,
 `$2k day`, `First $10k month`. Without it the reader has to find the number in

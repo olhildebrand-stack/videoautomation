@@ -792,21 +792,27 @@ const Collage: React.FC<SlideProps> = ({
       <Fill src={image ?? background} focus={focus} blur={Co.blurPx} />
       <AbsoluteFill style={{ backgroundColor: Co.scrim }} />
 
-      {shots.map((src, index) => (
-        <Card
-          key={src}
-          src={src}
-          radius={Co.shot.radius}
-          style={{
-            position: 'absolute',
-            left: slide.side * (0.9 + index * 1.5),
-            top: geometry.insetTop + geometry.height * (0.05 + index * 0.15),
-            width: slide.width * 0.46,
-            height: geometry.height * 0.18,
-            transform: `rotate(${Co.shot.tilts[index % Co.shot.tilts.length]}deg)`,
-          }}
-        />
-      ))}
+      {/* Three places, filled in order. A fourth screenshot has nowhere to go
+          that does not bury one of the first three, and the reference never
+          shows more than three. */}
+      {Co.shot.boxes.map((box, index) => {
+        const src = shots[index];
+        return src ? (
+          <Card
+            key={src}
+            src={src}
+            radius={Co.shot.radius}
+            style={{
+              position: 'absolute',
+              left: slide.width * box.x,
+              top: geometry.height * box.y,
+              width: slide.width * box.w,
+              height: geometry.height * box.h,
+              transform: `rotate(${box.tilt}deg)`,
+            }}
+          />
+        ) : null;
+      })}
 
       {/* Over the screenshots, under the captions: a chip is an annotation on
           the evidence, not part of the sentence about it. */}

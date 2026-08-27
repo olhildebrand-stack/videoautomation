@@ -852,7 +852,24 @@ export const slideFormat = {
     paddingBlock: 20,
     paddingInline: 30,
     gap: 18,
-    shot: { radius: 14, shadow: '#00000073', tilts: [-3, 2, -1.5] },
+    shot: {
+      radius: 14,
+      shadow: '#00000073',
+      /**
+       * Measured off `701537468`, which is the same 9:16 as this canvas, so
+       * the fractions carry over directly.
+       *
+       * Portrait, because a screenshot of a phone is portrait -- a landscape
+       * box crops the evidence to a strip. No two the same size and no two
+       * aligned: the overlap is what does the scattering, not the angle, so
+       * the tilts stay under two degrees.
+       */
+      boxes: [
+        { x: 0.06, y: 0.13, w: 0.48, h: 0.34, tilt: -1.5 },
+        { x: 0.47, y: 0.18, w: 0.44, h: 0.29, tilt: 1 },
+        { x: 0.18, y: 0.325, w: 0.43, h: 0.29, tilt: -0.5 },
+      ],
+    },
     /**
      * The green chip laid over the number inside a screenshot. It is the whole
      * difference between a collage and a proof collage: without it the reader

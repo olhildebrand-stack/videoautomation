@@ -14,18 +14,18 @@
       "chips": [
         {
           "text": "40s → 12 min",
-          "x": 0.07,
-          "y": 0.29
+          "x": 0.06,
+          "y": 0.275
         },
         {
-          "text": "31 regler lärda",
-          "x": 0.22,
-          "y": 0.44
+          "text": "31 regler",
+          "x": 0.52,
+          "y": 0.225
         },
         {
           "text": "3 videor, en kväll",
-          "x": 0.38,
-          "y": 0.545
+          "x": 0.19,
+          "y": 0.375
         }
       ],
       "headline": "Tre videor klippta på en kväll,\nalla av samma pipeline",
