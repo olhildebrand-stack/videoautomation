@@ -1,19 +1,20 @@
 import React from 'react';
 import { AbsoluteFill, Img, staticFile } from 'remotion';
-import { caption, slide, slideFormat, slideShapes } from '../tokens';
+import { slide, slideFormat, slideShapes } from '../tokens';
 import type { SlideFormat, SlideShape } from '../tokens';
 
 /**
  * One slide of a carousel or a story.
  *
- * Three formats, read off the reference sets in `howtocutvideo/FORMATS.md`.
- * They share the type, the margins and the accent -- that is what makes two
- * sequences in different formats still look like the same account -- and
- * differ only in what the type sits on and what furniture surrounds it.
+ * Three formats, each read off its own reference set in
+ * `howtocutvideo/FORMATS.md`. They are meant to look like different posts, so
+ * a format owns its palette, its weights, its alignment and its furniture --
+ * the only things all three share are white type and the side margin.
  *
- *   textured  a texture as the ground, a pill, and the picture on a light card
- *   blurred   the cover photograph, blurred, behind every slide in the set
- *   labels    the app's own black label boxes over the photograph itself
+ *   textured  black paper, centred, terracotta pill, semibold paragraph
+ *   blurred   the cover photo blurred behind the set, left and low, regular
+ *             paragraph under a tight extra-bold headline
+ *   labels    the photograph untouched, small text in the app's black boxes
  *
  * A format is chosen once per sequence, never per slide. So is a background.
  */
@@ -53,6 +54,24 @@ export const Slide: React.FC<SlideProps> = (props) => {
 
 /* ------------------------------------------------------------ shared parts */
 
+/** A format's type role, spread into a style. */
+type Role = {
+  family: string;
+  weight: number;
+  size: number;
+  tracking: string;
+  leading: number;
+};
+
+const typeOf = (role: Role): React.CSSProperties => ({
+  fontFamily: role.family,
+  fontWeight: role.weight,
+  fontSize: role.size,
+  letterSpacing: role.tracking,
+  lineHeight: role.leading,
+  whiteSpace: 'pre-line',
+});
+
 const Fill: React.FC<{ src?: string; focus?: string; blur?: number }> = ({
   src, focus, blur,
 }) => (src ? (
@@ -60,7 +79,7 @@ const Fill: React.FC<{ src?: string; focus?: string; blur?: number }> = ({
     src={staticFile(src)}
     style={{
       width: '100%', height: '100%',
-      objectFit: 'cover', objectPosition: focus ?? 'center',
+      objectFit: 'cover', objectPosition: focus || 'center',
       // Scaled up before blurring: a blur samples past the edges and would
       // otherwise leave a soft transparent border all the way round.
       ...(blur ? { filter: `blur(${blur}px)`, transform: 'scale(1.12)' } : {}),
@@ -72,21 +91,21 @@ const Handle: React.FC<{ handle?: string }> = ({ handle }) =>
   handle ? (
     <div
       style={{
-        fontFamily: caption.fontFamily, fontWeight: caption.fontWeight,
-        fontSize: slide.handleSize, color: slide.body,
+        fontFamily: 'Inter', fontWeight: 800,
+        fontSize: slide.handleSize, color: slide.ink,
       }}
     >
       {handle}
     </div>
   ) : null;
 
-const Card: React.FC<{ src?: string; focus?: string; style: React.CSSProperties }> = ({
-  src, focus, style,
-}) => (
+const Card: React.FC<{
+  src?: string; focus?: string; radius?: number; style: React.CSSProperties;
+}> = ({ src, focus, radius, style }) => (
   <div
     style={{
       ...style,
-      borderRadius: slide.card.radius,
+      borderRadius: radius ?? slide.card.radius,
       backgroundColor: slide.card.background,
       boxShadow: `0 ${slide.card.shadowDrop}px ${slide.card.shadowBlur}px ${slide.card.shadow}`,
       overflow: 'hidden',
@@ -96,7 +115,7 @@ const Card: React.FC<{ src?: string; focus?: string; style: React.CSSProperties 
       src={staticFile(src ?? '')}
       style={{
         width: '100%', height: '100%',
-        objectFit: 'cover', objectPosition: focus ?? 'center',
+        objectFit: 'cover', objectPosition: focus || 'center',
       }}
     />
   </div>
@@ -104,14 +123,27 @@ const Card: React.FC<{ src?: string; focus?: string; style: React.CSSProperties 
 
 /* ------------------------------------------------------- format: textured  */
 
+const T = slideFormat.textured;
+
+/**
+ * The cover of a textured set: the photograph, darkened top and bottom, with
+ * the claim centred over it. `over(4)` is the reference -- the headline is the
+ * whole slide, and the kicker under it is the parenthetical.
+ */
 const Cover: React.FC<SlideProps> = ({
   image, background, focus, headline, kicker, handle, shape,
 }) => (
   <AbsoluteFill style={{ backgroundColor: slide.ground }}>
     <Fill src={image ?? background} focus={focus} />
+    {/* Held, not faded, across the band the type sits in. A gradient that is
+        already transparent by the headline leaves white type on whatever the
+        photograph happens to be -- and a phone photo is as often a bright
+        kitchen as a dark beach. */}
     <AbsoluteFill
       style={{
-        background: `linear-gradient(${slide.scrim}, transparent 55%, ${slide.scrim})`,
+        background:
+          `linear-gradient(${slide.scrim}, ${slide.scrim} 42%,` +
+          ` transparent 64%, ${slide.scrim})`,
       }}
     />
     <AbsoluteFill
@@ -120,27 +152,43 @@ const Cover: React.FC<SlideProps> = ({
         paddingTop: slide.side + shapeOf(shape).insetTop,
         paddingBottom: slide.side + shapeOf(shape).insetBottom,
         display: 'flex', flexDirection: 'column', justifyContent: 'space-between',
+        textAlign: T.align,
       }}
     >
       <div>
-        <div style={{ ...headlineStyle, fontSize: slide.coverSize }}>{headline}</div>
+        <div style={{ ...typeOf(T.headline), fontSize: slide.coverSize, color: slide.ink }}>
+          {headline}
+        </div>
         {kicker ? (
           <div
             style={{
-              marginTop: slide.pill.paddingBlock,
-              ...bodyStyle, fontSize: slide.kickerSize, color: slide.accent,
-              textAlign: 'left',
+              marginTop: T.pill.paddingBlock,
+              ...typeOf(T.body), fontSize: T.pill.size, color: T.accent,
             }}
           >
             {kicker}
           </div>
         ) : null}
       </div>
-      <Handle handle={handle} />
+      <div
+        style={{
+          display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+        }}
+      >
+        <Handle handle={handle} />
+        {handle ? <NextArrow /> : null}
+      </div>
     </AbsoluteFill>
   </AbsoluteFill>
 );
 
+/**
+ * A body slide of a textured set.
+ *
+ * Everything centred, in this order and always in this place: pill, headline,
+ * paragraph, card. `over(1)` and `over(6)` are six slides of exactly this, and
+ * that is what makes them read as one document.
+ */
 const Body: React.FC<SlideProps> = ({
   image, background, focus, kicker, headline, body, emphasis, handle, shape,
 }) => (
@@ -148,7 +196,7 @@ const Body: React.FC<SlideProps> = ({
     {background ? (
       <>
         <Fill src={background} />
-        <AbsoluteFill style={{ backgroundColor: slideFormat.textured.scrim }} />
+        <AbsoluteFill style={{ backgroundColor: T.scrim }} />
       </>
     ) : null}
     {image || background ? null : <PunchedGround shape={shape} />}
@@ -158,29 +206,38 @@ const Body: React.FC<SlideProps> = ({
         padding: slide.side,
         paddingTop: slide.side + shapeOf(shape).insetTop,
         display: 'flex', flexDirection: 'column', alignItems: 'center',
+        textAlign: T.align,
       }}
     >
       {kicker ? (
         <div
           style={{
-            backgroundColor: slide.accent, color: slide.onAccent,
-            borderRadius: slide.pill.radius,
-            paddingBlock: slide.pill.paddingBlock,
-            paddingInline: slide.pill.paddingInline,
-            fontFamily: caption.fontFamily, fontWeight: caption.fontWeight,
-            fontSize: slide.pill.size, textTransform: 'uppercase',
+            backgroundColor: T.accent, color: T.onAccent,
+            borderRadius: T.pill.radius,
+            paddingBlock: T.pill.paddingBlock,
+            paddingInline: T.pill.paddingInline,
+            fontFamily: T.headline.family, fontWeight: T.headline.weight,
+            fontSize: T.pill.size,
           }}
         >
           {kicker}
         </div>
       ) : null}
-      <div style={{ marginTop: slide.pill.paddingInline, ...headlineStyle }}>
+      <div
+        style={{
+          marginTop: T.pill.paddingInline, ...typeOf(T.headline), color: slide.ink,
+        }}
+      >
         {headline}
       </div>
       {body ? (
-        <div style={{ marginTop: slide.pill.paddingBlock, ...bodyStyle }}>
+        <div
+          style={{
+            marginTop: T.pill.paddingBlock, ...typeOf(T.body), color: slide.ink,
+          }}
+        >
           {body}
-          {emphasis ? <span style={{ color: slide.accent }}> {emphasis}</span> : null}
+          {emphasis ? <span style={{ color: T.accent }}> {emphasis}</span> : null}
         </div>
       ) : null}
     </AbsoluteFill>
@@ -191,43 +248,67 @@ const Body: React.FC<SlideProps> = ({
       style={{
         position: 'absolute', left: slide.side, right: slide.side,
         bottom: slide.side + shapeOf(shape).insetBottom,
+        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
       }}
     >
       <Handle handle={handle} />
+      {handle ? <NextArrow /> : null}
     </div>
   </AbsoluteFill>
 );
 
+/** The swipe arrow the reference set draws in the bottom-right of every slide. */
+const NextArrow: React.FC = () => (
+  <svg width={slide.handleSize * 3} height={slide.handleSize} viewBox="0 0 90 30">
+    <path
+      d="M0 15 H78 M64 3 L78 15 L64 27"
+      stroke={slide.ink}
+      strokeWidth={5}
+      fill="none"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </svg>
+);
+
 /* -------------------------------------------------------- format: blurred  */
+
+const B = slideFormat.blurred;
 
 /**
  * The cover photograph, blurred, behind every slide in the set.
  *
  * It costs no asset -- the sequence already contains the picture -- and the
  * set reads as one piece because the ground literally is the same photograph
- * the cover used.
+ * the cover used. Everything sits left and low, under a card in the light half
+ * of the gradient.
  */
 const Blurred: React.FC<SlideProps> = ({
-  image, background, focus, kicker, headline, body, emphasis, handle, shape,
-  step, of,
+  image, background, focus, kicker, headline, body, handle, shape, step, of,
 }) => {
   const geometry = shapeOf(shape);
+  const cardTop = geometry.insetTop + slide.side * 1.4;
+  const cardHeight = geometry.height * B.card.height;
   return (
     <AbsoluteFill style={{ backgroundColor: slide.ground }}>
-      <Fill src={background ?? image} focus="center" blur={slideFormat.blurred.blurPx} />
-      <AbsoluteFill style={{ backgroundColor: slideFormat.blurred.scrim }} />
+      <Fill src={background ?? image} focus="center" blur={B.blurPx} />
+      <AbsoluteFill style={{ background: B.scrim }} />
 
       {image ? (
-        <Card
-          src={image}
-          focus={focus}
-          style={{
-            position: 'absolute',
-            left: slide.side, right: slide.side,
-            top: geometry.insetTop + slide.side,
-            height: geometry.height * 0.3,
-          }}
-        />
+        <>
+          <Card
+            src={image}
+            focus={focus}
+            radius={B.card.radius}
+            style={{
+              position: 'absolute',
+              left: slide.side * 1.8, right: slide.side * 1.8,
+              top: cardTop, height: cardHeight,
+            }}
+          />
+          <PageArrow side="left" centre={cardTop + cardHeight / 2} />
+          <PageArrow side="right" centre={cardTop + cardHeight / 2} />
+        </>
       ) : null}
 
       {/* Anchored to the bottom, not the top: the copy varies in length and
@@ -239,15 +320,18 @@ const Blurred: React.FC<SlideProps> = ({
           position: 'absolute',
           left: slide.side, right: slide.side,
           bottom: geometry.insetBottom + slide.side + slide.handleSize * 2.4,
+          textAlign: B.align,
         }}
       >
+        {/* The step number sits behind the headline's first line, overlapping
+            it, exactly as the reference does -- so it reads as a watermark on
+            the slide rather than as a line of its own. */}
         {kicker ? (
           <div
             style={{
-              fontFamily: caption.fontFamily, fontWeight: caption.fontWeight,
-              fontSize: slideFormat.blurred.stepSize,
-              color: slideFormat.blurred.stepColour,
-              lineHeight: 1, fontStyle: 'italic',
+              fontFamily: B.step.family, fontWeight: B.step.weight,
+              fontStyle: 'italic', fontSize: B.step.size, color: B.step.colour,
+              lineHeight: 1,
             }}
           >
             {kicker}
@@ -255,8 +339,9 @@ const Blurred: React.FC<SlideProps> = ({
         ) : null}
         <div
           style={{
-            ...headlineStyle, textAlign: 'left',
-            marginTop: kicker ? -slide.pill.size : 0,
+            ...typeOf(B.headline), color: slide.ink,
+            marginTop: kicker ? -B.step.size * 0.42 : 0,
+            marginLeft: kicker ? B.step.size * 0.34 : 0,
           }}
         >
           {headline}
@@ -264,17 +349,11 @@ const Blurred: React.FC<SlideProps> = ({
         {body ? (
           <div
             style={{
-              ...bodyStyle, textAlign: 'left',
-              marginTop: slide.pill.paddingInline,
+              ...typeOf(B.body), color: slide.ink,
+              marginTop: slide.side * 0.6,
             }}
           >
             {body}
-            {emphasis ? (
-              <>
-                {'\n\n'}
-                <span style={{ color: slide.accent }}>{emphasis}</span>
-              </>
-            ) : null}
           </div>
         ) : null}
       </div>
@@ -288,17 +367,18 @@ const Blurred: React.FC<SlideProps> = ({
       >
         <Handle handle={handle} />
         {of ? (
-          <div style={{ display: 'flex', gap: slideFormat.blurred.dotGap }}>
+          <div
+            style={{
+              position: 'absolute', left: 0, right: 0,
+              display: 'flex', justifyContent: 'center', gap: B.dotGap,
+            }}
+          >
             {Array.from({ length: of }, (_, index) => (
               <div
                 key={index}
                 style={{
-                  width: slideFormat.blurred.dotSize,
-                  height: slideFormat.blurred.dotSize,
-                  borderRadius: slideFormat.blurred.dotSize,
-                  backgroundColor: index + 1 === step
-                    ? slideFormat.blurred.dotOn
-                    : slideFormat.blurred.dot,
+                  width: B.dotSize, height: B.dotSize, borderRadius: B.dotSize,
+                  backgroundColor: index + 1 === step ? B.dotOn : B.dot,
                 }}
               />
             ))}
@@ -309,87 +389,80 @@ const Blurred: React.FC<SlideProps> = ({
   );
 };
 
+/** The simulated carousel chevrons the reference draws beside the card. */
+const PageArrow: React.FC<{ side: 'left' | 'right'; centre: number }> = ({
+  side, centre,
+}) => (
+  <div
+    style={{
+      position: 'absolute',
+      [side]: slide.side * 0.4,
+      top: centre - B.arrow.size / 2,
+      width: B.arrow.size, height: B.arrow.size,
+      borderRadius: B.arrow.size,
+      backgroundColor: B.arrow.background,
+      color: B.arrow.ink,
+      fontFamily: B.body.family, fontWeight: B.headline.weight,
+      fontSize: B.arrow.glyph,
+      display: 'flex', alignItems: 'center', justifyContent: 'center',
+    }}
+  >
+    {side === 'left' ? '<' : '>'}
+  </div>
+);
+
 /* --------------------------------------------------------- format: labels  */
+
+const L = slideFormat.labels;
 
 /**
  * The photograph, and the text in the app's own black label boxes.
  *
  * It reads as typed in the app rather than made in a design tool, which on a
- * story is the point. Each line is its own box, so a short line does not stretch
- * to the width of a long one.
+ * story is the point. Each line is its own box, so a short line does not
+ * stretch to the width of a long one, and the type is small -- the reference
+ * stories set it at a fraction of the size a designed slide would.
  */
 const Labels: React.FC<SlideProps> = ({
-  image, background, focus, headline, body, emphasis, handle, shape,
+  image, background, focus, headline, body, emphasis, shape,
 }) => {
   const geometry = shapeOf(shape);
   const lines = [headline, body, emphasis].filter(Boolean) as string[];
   return (
     <AbsoluteFill style={{ backgroundColor: slide.ground }}>
       <Fill src={image ?? background} focus={focus} />
-      <AbsoluteFill style={{ backgroundColor: slideFormat.labels.scrim }} />
+      <AbsoluteFill style={{ backgroundColor: L.scrim }} />
       <div
         style={{
           position: 'absolute',
           left: slide.side, right: slide.side,
           top: geometry.insetTop + slide.side,
           display: 'flex', flexDirection: 'column', alignItems: 'flex-start',
-          gap: slideFormat.labels.gap,
+          gap: L.gap,
         }}
       >
         {lines.map((line, index) => (
           <div
             key={index}
             style={{
-              backgroundColor: slideFormat.labels.box,
-              borderRadius: slideFormat.labels.radius,
-              paddingBlock: slideFormat.labels.paddingBlock,
-              paddingInline: slideFormat.labels.paddingInline,
-              fontFamily: caption.fontFamily, fontWeight: caption.fontWeight,
-              fontSize: index === 0 ? slide.bodySize : slide.kickerSize,
-              lineHeight: slide.bodyLineHeight,
-              color: index === lines.length - 1 && lines.length > 1
-                ? slide.accent : slide.headline,
-              whiteSpace: 'pre-line',
+              backgroundColor: L.box,
+              borderRadius: L.radius,
+              paddingBlock: L.paddingBlock,
+              paddingInline: L.paddingInline,
+              ...typeOf(index === 0 ? L.headline : L.body),
+              color: slide.ink,
+              textAlign: L.align,
             }}
           >
             {line}
           </div>
         ))}
       </div>
-      <div
-        style={{
-          position: 'absolute', left: slide.side,
-          bottom: slide.side + geometry.insetBottom,
-        }}
-      >
-        <Handle handle={handle} />
-      </div>
     </AbsoluteFill>
   );
 };
 
 /* ------------------------------------------------------------------ pieces */
-
-const headlineStyle: React.CSSProperties = {
-  fontFamily: caption.fontFamily,
-  fontWeight: caption.fontWeight,
-  fontSize: slide.headlineSize,
-  lineHeight: slide.lineHeight,
-  letterSpacing: caption.letterSpacing,
-  color: slide.headline,
-  textAlign: 'center',
-  whiteSpace: 'pre-line',
-};
-
-const bodyStyle: React.CSSProperties = {
-  fontFamily: caption.fontFamily,
-  fontWeight: caption.fontWeight,
-  fontSize: slide.bodySize,
-  lineHeight: slide.bodyLineHeight,
-  color: slide.body,
-  textAlign: 'center',
-  whiteSpace: 'pre-line',
-};
 
 /** The picture's place, shared by the card and the hole cut for a video. */
 const pictureBox = (shape?: SlideShape): React.CSSProperties => ({

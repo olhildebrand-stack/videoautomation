@@ -34,6 +34,9 @@ BROLL = ROOT / "broll"
 # Remotion serves assets from public/ and staticFile cannot reach outside it.
 STAGED = "slides"
 
+# Every optional word on a slide, so none of them can fall back to a default.
+OPTIONAL = {"kicker": "", "body": "", "emphasis": "", "focus": ""}
+
 
 def hole_in(overlay: Path) -> tuple[int, int, int, int]:
     """Where the ground is missing from an overlay: width, height, x, y.
@@ -137,7 +140,11 @@ def render(story: Path) -> int:
         ground = f"{STAGED}/{source.name}"
 
     for index, entry in enumerate(slides, start=1):
-        props = {**entry, "shape": shape, "format": fmt,
+        # Stated, not omitted. Remotion merges the composition's defaultProps
+        # over anything the props file leaves out, so a key a slide does not
+        # set does not come out empty -- it comes out holding the studio's
+        # placeholder text.
+        props = {**OPTIONAL, **entry, "shape": shape, "format": fmt,
                  "step": index, "of": len(slides),
                  "handle": entry.get("handle", data.get("handle", ""))}
         if ground:
@@ -146,8 +153,6 @@ def render(story: Path) -> int:
         # the overlay to lay over it, with the card punched out of the ground.
         overlay = not entry.get("image")
         if overlay:
-            # Stated, not omitted: Remotion merges defaultProps over anything
-            # a props file leaves out, so a missing key is not an empty one.
             props["image"] = ""
         else:
             source = story / entry["image"]

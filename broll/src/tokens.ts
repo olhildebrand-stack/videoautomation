@@ -573,11 +573,12 @@ export const slide = {
   /** Type never comes closer than this to an edge. */
   side: 76,
   ground: color.void,
-  /** The pill, and the one clause per slide that carries the point. */
-  accent: overlay.lightBlue,
-  onAccent: color.void,
-  headline: overlay.ink,
-  body: color.flare,
+  /**
+   * White. Every reference slide, in every one of the six formats, sets its
+   * type in white -- there is no second text colour shared between them. A
+   * format that wants an accent declares its own below.
+   */
+  ink: overlay.ink,
   /**
    * Where the picture sits, the same on every body slide of a shape -- as it is
    * on every reference slide. Fixed rather than flowed: a slide whose picture
@@ -602,40 +603,87 @@ export const slide = {
     paddingInline: 40,
     size: 40,
   },
-  headlineSize: 84,
-  bodySize: 46,
   coverSize: 92,
-  kickerSize: 38,
   handleSize: 30,
-  lineHeight: 1.12,
-  bodyLineHeight: 1.28,
 } as const;
 
 /**
- * What differs between the three formats, from `howtocutvideo/FORMATS.md`.
+ * The three formats, each read off its own reference set.
  *
- * The type, the margins and the accent are shared -- that is what makes two
- * sequences in different formats still look like one account. Only the ground
- * and the furniture change.
+ * They are meant to look like different posts, not one template recoloured, so
+ * a format owns its palette, its weights, its alignment and its furniture. The
+ * only thing all three share is white type and the 76px side margin.
+ *
+ *   textured  `over(1)`, `over(4)`, `over(6)` -- black paper, everything
+ *             centred, a terracotta pill over an extra-bold headline, a
+ *             semibold paragraph with one clause in the same terracotta.
+ *   blurred   `send it(1)`, `send it(3)` -- the cover photo blurred behind the
+ *             set, everything left and low, a huge ghosted italic step number
+ *             behind a tight extra-bold headline, and the paragraph in
+ *             *regular* weight. No accent colour anywhere.
+ *   labels    `1787344402523`, `1787344487860` -- the photograph untouched and
+ *             the text small, in the app's own black boxes, each line its own
+ *             box. No accent, no handle, no dots: the app draws none.
  */
 export const slideFormat = {
   /** D: text in the app's own black label boxes, over the photograph. */
   labels: {
-    box: '#000000E6',
-    radius: 10,
-    paddingBlock: 16,
-    paddingInline: 26,
-    gap: 14,
-    scrim: '#00000026',
+    align: 'left',
+    /**
+     * No scrim. The reference stories darken nothing -- the boxes are what
+     * makes the text legible, and a scrim is the tell that a design tool was
+     * involved.
+     */
+    scrim: 'transparent',
+    accent: null,
+    headline: {
+      family: 'Inter', weight: 800, size: 44,
+      tracking: '-0.01em', leading: 1.24,
+    },
+    /** Same box, same weight, one step down: the app has no headline role. */
+    body: {
+      family: 'Inter', weight: 800, size: 40,
+      tracking: '-0.01em', leading: 1.24,
+    },
+    box: '#000000',
+    radius: 8,
+    paddingBlock: 10,
+    paddingInline: 18,
+    gap: 8,
   },
   /** C: the cover photograph, blurred, behind every slide in the set. */
   blurred: {
-    blurPx: 34,
-    /** Darkened as well as blurred, or white type will not hold over it. */
-    scrim: '#0A0F14B3',
-    /** The step number, sitting behind the headline. */
-    stepColour: '#FFFFFF40',
-    stepSize: 132,
+    align: 'left',
+    /**
+     * Enough to stop the photograph competing, not enough to erase it. At 34
+     * the ground turned to grey mud and every slide of every set looked the
+     * same; the reference still reads as a person on a hillside.
+     */
+    blurPx: 20,
+    /**
+     * A gradient, not a flat wash: the card sits in the light half and the
+     * paragraph in the dark half, which is what holds regular-weight white
+     * type over a photograph.
+     */
+    scrim: 'linear-gradient(#0A0F1440, #0A0F1466 38%, #0A0F14F2)',
+    accent: null,
+    /** Tight enough that the words read as one object, as the reference does. */
+    headline: {
+      family: 'Inter', weight: 800, size: 88,
+      tracking: '-0.035em', leading: 1.04,
+    },
+    /** Regular. The one weight contrast that makes this format not the others. */
+    body: {
+      family: 'Inter', weight: 400, size: 44,
+      tracking: '0em', leading: 1.36,
+    },
+    step: {
+      family: 'Inter', weight: 800, size: 128,
+      colour: '#FFFFFF52',
+    },
+    card: { radius: 16, height: 0.31 },
+    /** The simulated `<` `>` the reference draws at the card's sides. */
+    arrow: { size: 62, glyph: 30, background: '#FFFFFF40', ink: '#1A1A1A' },
     dot: '#FFFFFF59',
     dotOn: '#FFFFFF',
     dotSize: 12,
@@ -643,8 +691,31 @@ export const slideFormat = {
   },
   /** A: a texture as the ground, and the pill above the headline. */
   textured: {
+    align: 'center',
     /** The texture is lifted off pure black so it reads as a surface. */
     scrim: '#00000073',
+    /**
+     * Terracotta. Read off `over(1)`'s pill and `over(4)`'s "100K in 6 Months"
+     * -- the one colour the reference set uses, and the reason this format is
+     * recognisable from a thumbnail.
+     */
+    accent: '#CE6A4C',
+    onAccent: '#FFFFFF',
+    headline: {
+      family: 'Inter', weight: 800, size: 82,
+      tracking: '-0.02em', leading: 1.08,
+    },
+    /** Semibold, and nearly as large as the headline, as the reference sets it. */
+    body: {
+      family: 'Inter', weight: 600, size: 54,
+      tracking: '-0.01em', leading: 1.2,
+    },
+    pill: {
+      radius: 999,
+      paddingBlock: 16,
+      paddingInline: 44,
+      size: 44,
+    },
   },
 } as const;
 
