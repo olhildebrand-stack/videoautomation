@@ -272,3 +272,22 @@ rewriting it: each entry is a mistake that is now impossible to repeat.
   mistake, full of restarts, went through with every restart intact because
   nothing was checking. Read the table. `keeper` is the machine's guess, not a
   verdict.
+
+- **2026-08-27 -- inside a smeared run, a complete-looking sentence is not
+  evidence of a clean take.** Sentence 9 of contentfire was three attempts at
+  the same thought, all abandoned. The transcript wrote one of them out with a
+  full stop on the end, so it read as the finished version and was promoted to
+  a beat -- while the two either side of it, which trailed off in the text, were
+  dropped as truncated. All three were bloopers. In a stretch the audio table
+  marks as smeared, Whisper's punctuation is invented along with everything
+  else it could not hear: a restart it never wrote down leaves no trace in the
+  text, so a sentence can end in a full stop and be followed by the speaker
+  going again.
+
+  So: where the whole sentence sits inside a smeared run, do not promote any of
+  its takes to a beat on the strength of the transcript looking complete. Say in
+  `risks` that the sentence is unrecoverable from the text and name the seconds
+  to listen to. If the thought only exists in that stretch, leave the beat out
+  and let the operator put it back after hearing it -- an arc missing a beat is
+  recoverable; a blooper in the middle of the cut is what gets noticed on
+  playback.
