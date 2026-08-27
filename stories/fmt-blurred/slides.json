@@ -1,0 +1,34 @@
+{
+  "shape": "story",
+  "format": "blurred",
+  "background": "01-cover.jpg",
+  "handle": "@student",
+  "slides": [
+    {
+      "kind": "body",
+      "image": "01-cover.jpg",
+      "focus": "50% 22%",
+      "kicker": "01/",
+      "headline": "Jag redigerar inte\nmina videor längre.",
+      "body": "Claude klipper dem åt mig."
+    },
+    {
+      "kind": "body",
+      "image": "02.jpg",
+      "focus": "50% 45%",
+      "kicker": "02/",
+      "headline": "Den läser hela\ninspelningen.",
+      "body": "Varje omtagning, varje mening jag bröt mitt i. Den väljer vilka som får vara kvar.",
+      "emphasis": "Och skriver ut varför för varje klipp."
+    },
+    {
+      "kind": "body",
+      "image": "03.jpg",
+      "focus": "50% 40%",
+      "kicker": "03/",
+      "headline": "Och den kommer\nihåg rättningen.",
+      "body": "Säger jag att den valde fel hamnar regeln i en fil som följer med nästa gång.",
+      "emphasis": "Samma misstag görs aldrig två gånger."
+    }
+  ]
+}

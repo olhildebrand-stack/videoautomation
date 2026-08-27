@@ -123,12 +123,25 @@ def render(story: Path) -> int:
     out.mkdir(exist_ok=True)
     props_file = BROLL / "props.slide.json"
 
-    # One shape for the whole set: a carousel of mixed aspect ratios is a
-    # carousel the platform letterboxes.
+    # One shape, one format and one ground for the whole set. Mixing any of
+    # them inside a sequence is what makes a set read as separate posts.
     shape = data.get("shape", "carousel")
+    fmt = data.get("format", "textured")
+    ground = data.get("background")
+    if ground:
+        source = story / ground
+        if not source.is_file():
+            print(f"error: background {source} is not there", file=sys.stderr)
+            return 2
+        shutil.copy2(source, public / source.name)
+        ground = f"{STAGED}/{source.name}"
+
     for index, entry in enumerate(slides, start=1):
-        props = {**entry, "shape": shape,
+        props = {**entry, "shape": shape, "format": fmt,
+                 "step": index, "of": len(slides),
                  "handle": entry.get("handle", data.get("handle", ""))}
+        if ground:
+            props["background"] = ground
         # A slide naming no image is one whose picture is a video: the still is
         # the overlay to lay over it, with the card punched out of the ground.
         overlay = not entry.get("image")
@@ -151,6 +164,10 @@ def render(story: Path) -> int:
         # One composition per shape: Remotion fixes width and height per id, and
         # a story is a different canvas rather than the same one cropped.
         composition = "SlideStory" if shape == "story" else "Slide"
+        # A photograph behind the type is a ground, not a punched-out card, so
+        # these formats never render the overlay variant.
+        if fmt in ("labels", "blurred"):
+            overlay = False
         print(f"Rendering {target.name} ...", flush=True)
         done = subprocess.run(
             remotion_command("still", composition, str(target),

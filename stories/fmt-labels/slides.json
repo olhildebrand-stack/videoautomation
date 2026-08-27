@@ -1,0 +1,30 @@
+{
+  "shape": "story",
+  "format": "labels",
+  "handle": "@student",
+  "slides": [
+    {
+      "kind": "cover",
+      "image": "01-cover.jpg",
+      "focus": "50% 22%",
+      "headline": "Jag redigerar inte\nmina videor längre.",
+      "body": "Claude klipper dem åt mig."
+    },
+    {
+      "kind": "body",
+      "image": "02.jpg",
+      "focus": "50% 45%",
+      "headline": "Den läser hela\ninspelningen.",
+      "body": "Varje omtagning, varje mening\njag bröt mitt i.",
+      "emphasis": "Och skriver ut varför för varje klipp."
+    },
+    {
+      "kind": "body",
+      "image": "03.jpg",
+      "focus": "50% 40%",
+      "headline": "Säger jag att den\nvalde fel —",
+      "body": "hamnar regeln i en fil\nsom följer med nästa gång.",
+      "emphasis": "Samma misstag görs aldrig två gånger."
+    }
+  ]
+}

@@ -560,7 +560,7 @@ export const slideShapes = {
      * middle with black above and below it, reading as a mistake rather than a
      * composition.
      */
-    picture: { top: 820, bottom: 440 },
+    picture: { top: 890, bottom: 440 },
   },
 } as const;
 
@@ -610,6 +610,45 @@ export const slide = {
   lineHeight: 1.12,
   bodyLineHeight: 1.28,
 } as const;
+
+/**
+ * What differs between the three formats, from `howtocutvideo/FORMATS.md`.
+ *
+ * The type, the margins and the accent are shared -- that is what makes two
+ * sequences in different formats still look like one account. Only the ground
+ * and the furniture change.
+ */
+export const slideFormat = {
+  /** D: text in the app's own black label boxes, over the photograph. */
+  labels: {
+    box: '#000000E6',
+    radius: 10,
+    paddingBlock: 16,
+    paddingInline: 26,
+    gap: 14,
+    scrim: '#00000026',
+  },
+  /** C: the cover photograph, blurred, behind every slide in the set. */
+  blurred: {
+    blurPx: 34,
+    /** Darkened as well as blurred, or white type will not hold over it. */
+    scrim: '#0A0F14B3',
+    /** The step number, sitting behind the headline. */
+    stepColour: '#FFFFFF40',
+    stepSize: 132,
+    dot: '#FFFFFF59',
+    dotOn: '#FFFFFF',
+    dotSize: 12,
+    dotGap: 14,
+  },
+  /** A: a texture as the ground, and the pill above the headline. */
+  textured: {
+    /** The texture is lifted off pure black so it reads as a surface. */
+    scrim: '#00000073',
+  },
+} as const;
+
+export type SlideFormat = keyof typeof slideFormat;
 
 export const dimensions = {
   width: 1080,
@@ -727,6 +766,7 @@ export const tokens = {
   dimensions,
   slide,
   slideShapes,
+  slideFormat,
   clipDurationInFrames,
   emphasis,
   resting,
