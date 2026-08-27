@@ -522,6 +522,52 @@ export const tempoMs = brollTempoMs;
 export const fps = 30;
 
 /** Vertical short-form. */
+/**
+ * The carousel slide: a still, not a clip.
+ *
+ * 4:5, the shape every reference slide is in. Two layouts only -- a cover,
+ * which is a photograph with the claim over it, and a body slide, which is a
+ * dark ground carrying one heading, one paragraph, and one picture of the
+ * thing being described. Nothing else earned a place: the references run six
+ * or seven slides on those two.
+ */
+export const slide = {
+  width: 1080,
+  height: 1339,
+  /** Type never comes closer than this to an edge. */
+  side: 76,
+  ground: color.void,
+  /** The pill, and the one clause per slide that carries the point. */
+  accent: overlay.lightBlue,
+  onAccent: color.void,
+  headline: overlay.ink,
+  body: color.flare,
+  /** The screenshot sits on a light card, as every reference slide does. */
+  card: {
+    background: overlay.ink,
+    radius: 28,
+    /** Lifts the card off the ground without a border. */
+    shadow: '#00000066',
+    shadowBlur: 60,
+    shadowDrop: 18,
+  },
+  /** A photograph needs the ground darkened where type sits over it. */
+  scrim: '#060607CC',
+  pill: {
+    radius: 999,
+    paddingBlock: 14,
+    paddingInline: 40,
+    size: 40,
+  },
+  headlineSize: 84,
+  bodySize: 46,
+  coverSize: 92,
+  kickerSize: 38,
+  handleSize: 30,
+  lineHeight: 1.12,
+  bodyLineHeight: 1.28,
+} as const;
+
 export const dimensions = {
   width: 1080,
   height: 1920,
@@ -636,6 +682,7 @@ export const tokens = {
   displayLineHeight,
   fps,
   dimensions,
+  slide,
   clipDurationInFrames,
   emphasis,
   resting,

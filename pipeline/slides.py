@@ -1,0 +1,94 @@
+#!/usr/bin/env python3
+"""Render a carousel from a folder of images and a slides.json beside them.
+
+    python slides.py --story stories/system
+
+Stills, not clips, so nothing here is timed. The folder holds the pictures and
+the words; `out/` beside them holds what to post.
+"""
+
+from __future__ import annotations
+
+import argparse
+import json
+import shutil
+import subprocess
+import sys
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).parent))
+from jsonfile import BadJSON  # noqa: E402
+from jsonfile import read as read_json  # noqa: E402
+from remotion_ops import RemotionMissing  # noqa: E402
+from remotion_ops import command as remotion_command  # noqa: E402
+from verify import reason  # noqa: E402
+
+ROOT = Path(__file__).resolve().parent.parent
+BROLL = ROOT / "broll"
+# Remotion serves assets from public/ and staticFile cannot reach outside it.
+STAGED = "slides"
+
+
+def render(story: Path) -> int:
+    sheet = story / "slides.json"
+    if not sheet.is_file():
+        print(f"error: no such file: {sheet}", file=sys.stderr)
+        return 2
+    data = read_json(sheet)
+    slides = data.get("slides") or []
+    if not slides:
+        print(f"error: {sheet} lists no slides", file=sys.stderr)
+        return 2
+
+    public = BROLL / "public" / STAGED
+    public.mkdir(parents=True, exist_ok=True)
+    # Absolute: the CLI runs with broll/ as its working directory, so a
+    # relative path would write the stills inside the renderer.
+    out = (story / "out").resolve()
+    out.mkdir(exist_ok=True)
+    props_file = BROLL / "props.slide.json"
+
+    for index, entry in enumerate(slides, start=1):
+        source = story / entry["image"]
+        if not source.is_file():
+            print(f"error: slide {index} names {source}, which is not there",
+                  file=sys.stderr)
+            return 2
+        shutil.copy2(source, public / source.name)
+
+        props = {**entry, "image": f"{STAGED}/{source.name}",
+                 "handle": entry.get("handle", data.get("handle", ""))}
+        props_file.write_text(json.dumps(props, ensure_ascii=False),
+                              encoding="utf-8")
+        target = out / f"{index:02d}.png"
+        print(f"Rendering {target.name} ...", flush=True)
+        done = subprocess.run(
+            remotion_command("still", "Slide", str(target),
+                             f"--props={props_file}"),
+            cwd=BROLL, capture_output=True, text=True)
+        if done.returncode != 0:
+            props_file.unlink(missing_ok=True)
+            print(f"error: {reason(done.stderr, done.returncode)}",
+                  file=sys.stderr)
+            return 1
+        print(f"  {target}  ({target.stat().st_size // 1024}kb)")
+
+    props_file.unlink(missing_ok=True)
+    print(f"\n{len(slides)} slide(s) in {out}")
+    return 0
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--story", type=Path, required=True,
+                        help="the folder holding the images and slides.json")
+    args = parser.parse_args()
+    return render(args.story)
+
+
+if __name__ == "__main__":
+    try:
+        sys.exit(main())
+    except (BadJSON, RemotionMissing) as exc:
+        print(f"error: {exc}", file=sys.stderr)
+        sys.exit(2)

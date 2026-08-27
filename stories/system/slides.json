@@ -1,0 +1,30 @@
+{
+  "handle": "",
+  "slides": [
+    {
+      "kind": "cover",
+      "image": "01-cover.jpg",
+      "focus": "50% 20%",
+      "headline": "Jag redigerar\ninte mina videor\nlängre.",
+      "kicker": "[Claude klipper dem åt mig]"
+    },
+    {
+      "kind": "body",
+      "image": "02.jpg",
+      "focus": "50% 45%",
+      "kicker": "Steg 1",
+      "headline": "Claude läser\nhela inspelningen",
+      "body": "Varje omtagning, varje mening jag bröt mitt i. Den väljer vilka som får vara kvar och",
+      "emphasis": "skriver ut varför för varje enskilt klipp."
+    },
+    {
+      "kind": "body",
+      "image": "03.jpg",
+      "focus": "50% 40%",
+      "kicker": "Steg 2",
+      "headline": "Och den kommer\nihåg rättningen",
+      "body": "Säger jag att den valde fel hamnar regeln i en fil som följer med nästa gång.",
+      "emphasis": "Samma misstag görs aldrig två gånger."
+    }
+  ]
+}

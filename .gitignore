@@ -7,7 +7,12 @@ broll/out/
 broll/public/video/
 broll/public/transcripts/
 broll/public/overlay-assets/
+broll/public/slides/
 broll/props.generated.json
+
+# Rendered carousels. The images and the words are committed; the stills are
+# whatever `python pipeline/slides.py` last made of them.
+stories/*/out/
 
 # Reference reels are NOT ignored: reference/ and howtocutvideo/ are meant to
 # be committed, since analysing them is a job for the session, which only sees

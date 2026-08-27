@@ -5,9 +5,10 @@ import { Captions, transcriptDurationInFrames } from './compositions/Captions';
 import { CaptionedVideo } from './compositions/CaptionedVideo';
 import type { Transcript, TranscriptWord } from './captions/types';
 import { Conversation } from './compositions/Conversation';
+import { Slide } from './compositions/Slide';
 import { StatBlock } from './compositions/StatBlock';
 import { TitleCard } from './compositions/TitleCard';
-import { clipDurationInFrames, dimensions, fps } from './tokens';
+import { clipDurationInFrames, dimensions, fps, slide } from './tokens';
 
 /**
  * Every composition shares the project frame rate, dimensions, and clip length
@@ -111,6 +112,23 @@ export const RemotionRoot: React.FC = () => (
           { text: 'Already rendering.', side: 'outgoing' as const },
           { text: 'Ship it.', side: 'incoming' as const },
         ],
+      }}
+    />
+    <Composition
+      id="Slide"
+      component={Slide}
+      // A still. One frame is the whole thing.
+      durationInFrames={1}
+      fps={fps}
+      width={slide.width}
+      height={slide.height}
+      defaultProps={{
+        kind: 'body' as const,
+        image: 'overlay-assets/02.jpg',
+        headline: 'Headline',
+        body: 'Body copy.',
+        emphasis: 'The point.',
+        handle: '',
       }}
     />
     <Composition
