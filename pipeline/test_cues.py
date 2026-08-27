@@ -136,6 +136,30 @@ def test_until_a_phrase_hands_the_frame_over():
     assert resolved[0]["leave"] == klipp[0]
 
 
+def test_until_end_of_a_phrase_stays_through_it():
+    """`until` leaves as a phrase begins, which ends an effect a beat into the
+    sentence it was supposed to be over before."""
+    sheet = [{"kind": "push", "from": "start", "untilEndOf": "klipp"}]
+    resolved, problems = resolve(sheet, WORDS, FPS, 900)
+    assert not problems
+    klipp = phrase_frames(WORDS, "klipp", FPS)
+    assert resolved[0]["leave"] == klipp[1]
+    assert klipp[1] > klipp[0], "the two are not the same frame"
+
+
+def test_a_missing_until_end_of_phrase_is_reported():
+    sheet = [{"kind": "push", "from": "start", "untilEndOf": "aldrig sagt"}]
+    _, problems = resolve(sheet, WORDS, FPS, 900)
+    assert any("untilEndOf" in p.reason for p in problems)
+
+
+def test_until_end_of_never_reaches_the_renderer():
+    """The props carry frames alone; a phrase there means one was not resolved."""
+    sheet = [{"kind": "push", "from": "start", "untilEndOf": "klipp"}]
+    resolved, _ = resolve(sheet, WORDS, FPS, 900)
+    assert "untilEndOf" not in resolved[0]
+
+
 def test_the_chat_beats_hang_on_their_own_phrases():
     sheet = [{"kind": "chat", "cue": "klipp", "prompt": "Redigera min video",
               "typesCue": "captions", "repliesCue": "b-roll"}]

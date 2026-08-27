@@ -140,9 +140,14 @@ rewriting it: each entry is a mistake that is now impossible to repeat.
 
   Anchor it `from: "start"` -- the clip's first frame, not a phrase, because
   the first word is said a moment in and cueing on it puts the effect a moment
-  late. Then give it `until`: the phrase the beat AFTER the hook opens on. A
-  push with no ending holds the picture cropped for the whole video, and
-  `until: "end"` does the same thing on purpose. Both are rejected.
+  late. Then give it `untilEndOf`: the hook's own LAST WORD. A push with no
+  ending holds the picture cropped for the whole video, and `until: "end"`
+  does the same thing on purpose. Both are rejected.
+
+  Not `until` naming the next sentence: `until` leaves as a phrase begins, so
+  that ends the zoom a fraction INTO the sentence after the hook, which reads
+  as the effect overstaying rather than as the hook closing. `untilEndOf`
+  leaves as its phrase ends, so the zoom is over exactly when the sentence is.
 
 - **2026-08-26 -- a generated clip is paced by the sentence, not by a rate.**
   A `terminal` cued on "RAW-file" ran its whole output inside the first second

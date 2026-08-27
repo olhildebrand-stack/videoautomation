@@ -618,7 +618,11 @@ The split worth keeping in mind: interface and typography are better generated
 Anything real -- an actual account, an actual product's UI -- is better
 captured. A mockup of a real docs page is worse than the real docs page.
 Timing keys are `hold` (seconds after the phrase ends, the default),
-`until: "end"`, or `until: "<another phrase>"`.
+`until: "end"`, `until: "<another phrase>"` -- which leaves as that phrase
+BEGINS, for handing the screen to what comes next -- or
+`untilEndOf: "<a phrase>"`, which stays through it and leaves as it ends. The
+push wants the second: ending on the next sentence's first word puts the zoom
+a fraction inside that sentence.
 
 **Files** — `src` and `replyVideo` name a file in `<project>/assets/`. They are
 staged into `broll/public` at render time; assets belong with the project, not

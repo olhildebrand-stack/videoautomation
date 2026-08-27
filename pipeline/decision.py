@@ -76,7 +76,13 @@ OVERLAY_SCHEMA = {
         "cue": {"type": "string",
                 "description": "the phrase this hangs on, said in a kept take"},
         "until": {"type": "string",
-                  "description": '"end", or another phrase it stays until'},
+                  "description": '"end", or another phrase it stays until -- '
+                                 'it leaves as that phrase BEGINS'},
+        "untilEndOf": {"type": "string",
+                       "description": "a phrase it stays through, leaving as "
+                                      "that phrase ends. What the push wants: "
+                                      "naming the next sentence's first word "
+                                      "instead ends it inside that sentence"},
         "from": {"enum": ["start"],
                  "description": "anchor to the clip's first frame instead of "
                                 "a phrase -- for an effect that fires the "
@@ -243,12 +249,13 @@ def validate(decision: dict, takes: list[Take], fps: int = 30) -> list[str]:
     for cue in decision.get("overlays") or []:
         if cue.get("kind") != "push":
             continue
-        if not cue.get("until") and cue.get("hold") is None:
+        if (not cue.get("until") and not cue.get("untilEndOf")
+                and cue.get("hold") is None):
             problems.append(
                 "The `push` says where it starts and never where it ends, so "
                 "it would hold the picture zoomed for the rest of the video. "
-                "Give it `until` — the phrase the beat after the hook opens "
-                "on — or a `hold` in seconds.")
+                "Give it `untilEndOf` — the hook's last word, so it is over "
+                "as the sentence is — or a `hold` in seconds.")
         elif cue.get("until") == "end":
             problems.append(
                 "The `push` runs `until: \"end\"`, which crops the whole "

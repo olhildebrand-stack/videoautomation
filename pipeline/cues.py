@@ -231,7 +231,22 @@ def leave_frame(
     two crossing lines want, since the comparison only exists while both are
     on screen. `until: "<phrase>"` hands the frame over to something else.
     Otherwise it holds for a moment after its own phrase finishes.
+
+    `untilEndOf: "<phrase>"` is the other half of that. `until` leaves as a
+    phrase begins, which is right for handing the screen to what comes next
+    and wrong for an effect that should be over by the time a sentence is --
+    naming the next sentence's first word ends it a beat INTO that sentence,
+    which is what the push kept doing.
     """
+    through = cue.get("untilEndOf")
+    if through:
+        span = phrase_frames(words, through, fps)
+        if span is None:
+            problems.append(
+                Problem(through, cue.get("kind", "?"), "untilEndOf-phrase not found")
+            )
+        else:
+            return span[1]
     until = cue.get("until")
     if until == "end":
         return None
@@ -247,8 +262,8 @@ def leave_frame(
     return min(last + int(round(hold * fps)), duration_frames)
 
 
-AUTHORING_KEYS = ("hold", "until", "from", "typesCue", "repliesCue",
-                  "finishBy", "endFrame")
+AUTHORING_KEYS = ("hold", "until", "untilEndOf", "from", "typesCue",
+                  "repliesCue", "finishBy", "endFrame")
 
 
 def strip_authoring_keys(cue: dict) -> dict:

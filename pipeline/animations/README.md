@@ -11,7 +11,7 @@ Written by `python pipeline/animate.py`, which also renders the previews. Add a
 
 ![Hook push](hook-push.gif)
 
-**What it does.** The picture snaps in 20% over 300ms, holds for the whole sentence, and snaps back out over 300ms finishing exactly on the cut. A slight blur rides the two ramps and is zero while it holds. It scales the footage itself, not a layer over it, so captions and the hook card stay put. It must be told where to end: with no `until` it holds the picture cropped for the rest of the video.
+**What it does.** The picture snaps in 20% over 300ms, holds for the whole sentence, and snaps back out over 300ms finishing exactly on the cut. A slight blur rides the two ramps and is zero while it holds. It scales the footage itself, not a layer over it, so captions and the hook card stay put. It must be told where to end: with no ending it holds the picture cropped for the rest of the video. Use `untilEndOf` and name the hook's last word -- `until` leaves as a phrase BEGINS, so naming the next sentence ends the zoom a fraction inside it.
 
 **When to reach for it.** The opening claim, and nothing else. It makes a vocal hook land harder by being already there while the words arrive. Anywhere else it stops reading as emphasis and starts reading as a camera drifting. One per video.
 
@@ -21,7 +21,7 @@ Written by `python pipeline/animate.py`, which also renders the previews. Add a
 {
   "kind": "push",
   "from": "start",
-  "until": "the phrase the hook ends on"
+  "untilEndOf": "the hook's own last word"
 }
 ```
 
