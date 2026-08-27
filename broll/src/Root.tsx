@@ -8,7 +8,7 @@ import { Conversation } from './compositions/Conversation';
 import { Slide } from './compositions/Slide';
 import { StatBlock } from './compositions/StatBlock';
 import { TitleCard } from './compositions/TitleCard';
-import { clipDurationInFrames, dimensions, fps, slide } from './tokens';
+import { clipDurationInFrames, dimensions, fps, slide, slideShapes } from './tokens';
 
 /**
  * Every composition shares the project frame rate, dimensions, and clip length
@@ -124,6 +124,23 @@ export const RemotionRoot: React.FC = () => (
       height={slide.height}
       defaultProps={{
         kind: 'body' as const,
+        image: '',
+        headline: 'Headline',
+        body: 'Body copy.',
+        emphasis: 'The point.',
+        handle: '',
+      }}
+    />
+    <Composition
+      id="SlideStory"
+      component={Slide}
+      durationInFrames={1}
+      fps={fps}
+      width={slide.width}
+      height={slideShapes.story.height}
+      defaultProps={{
+        kind: 'body' as const,
+        shape: 'story' as const,
         image: '',
         headline: 'Headline',
         body: 'Body copy.',

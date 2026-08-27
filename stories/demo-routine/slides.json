@@ -1,0 +1,31 @@
+{
+  "shape": "story",
+  "handle": "@student",
+  "slides": [
+    {
+      "kind": "cover",
+      "image": "01-cover.jpg",
+      "focus": "50% 40%",
+      "headline": "07:00\nto 21:00.",
+      "kicker": "[what a normal Tuesday looks like]"
+    },
+    {
+      "kind": "body",
+      "image": "02.jpg",
+      "focus": "50% 50%",
+      "kicker": "07:00",
+      "headline": "Studying before\nschool",
+      "body": "Two hours at the desk",
+      "emphasis": "before the day even starts."
+    },
+    {
+      "kind": "body",
+      "image": "03.jpg",
+      "focus": "50% 50%",
+      "kicker": "17:00",
+      "headline": "Then four hours\non content",
+      "body": "After a seven-hour school day.",
+      "emphasis": ""
+    }
+  ]
+}

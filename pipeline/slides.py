@@ -123,8 +123,12 @@ def render(story: Path) -> int:
     out.mkdir(exist_ok=True)
     props_file = BROLL / "props.slide.json"
 
+    # One shape for the whole set: a carousel of mixed aspect ratios is a
+    # carousel the platform letterboxes.
+    shape = data.get("shape", "carousel")
     for index, entry in enumerate(slides, start=1):
-        props = {**entry, "handle": entry.get("handle", data.get("handle", ""))}
+        props = {**entry, "shape": shape,
+                 "handle": entry.get("handle", data.get("handle", ""))}
         # A slide naming no image is one whose picture is a video: the still is
         # the overlay to lay over it, with the card punched out of the ground.
         overlay = not entry.get("image")
@@ -144,9 +148,12 @@ def render(story: Path) -> int:
         props_file.write_text(json.dumps(props, ensure_ascii=False),
                               encoding="utf-8")
         target = out / (f"{index:02d}-overlay.png" if overlay else f"{index:02d}.png")
+        # One composition per shape: Remotion fixes width and height per id, and
+        # a story is a different canvas rather than the same one cropped.
+        composition = "SlideStory" if shape == "story" else "Slide"
         print(f"Rendering {target.name} ...", flush=True)
         done = subprocess.run(
-            remotion_command("still", "Slide", str(target),
+            remotion_command("still", composition, str(target),
                              f"--props={props_file}"),
             cwd=BROLL, capture_output=True, text=True)
         if done.returncode != 0:

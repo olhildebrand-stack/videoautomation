@@ -1,6 +1,7 @@
 import React from 'react';
 import { AbsoluteFill, Img, staticFile } from 'remotion';
-import { caption, slide } from '../tokens';
+import { caption, slide, slideShapes } from '../tokens';
+import type { SlideShape } from '../tokens';
 
 /**
  * One carousel slide, rendered as a still.
@@ -16,6 +17,9 @@ import { caption, slide } from '../tokens';
  */
 export type SlideProps = {
   kind: 'cover' | 'body';
+  /** 4:5 for a carousel, 9:16 for a story. Only the height and where the
+   * picture sits differ; the type and the margins are shared. */
+  shape?: SlideShape;
   /**
    * Absent on a body slide means the picture is a video the editor will lay
    * in: the ground is punched through where the card would be, and the still
@@ -36,7 +40,11 @@ export type SlideProps = {
 export const Slide: React.FC<SlideProps> = (props) =>
   props.kind === 'cover' ? <Cover {...props} /> : <Body {...props} />;
 
-const Cover: React.FC<SlideProps> = ({ image, focus, headline, kicker, handle }) => (
+const shapeOf = (shape?: SlideShape) => slideShapes[shape ?? 'carousel'];
+
+const Cover: React.FC<SlideProps> = ({
+  image, focus, headline, kicker, handle, shape,
+}) => (
   // A cover is the photograph, so it always names one.
   <AbsoluteFill style={{ backgroundColor: slide.ground }}>
     {image ? (
@@ -57,6 +65,8 @@ const Cover: React.FC<SlideProps> = ({ image, focus, headline, kicker, handle })
     <AbsoluteFill
       style={{
         padding: slide.side,
+        paddingTop: slide.side + shapeOf(shape).insetTop,
+        paddingBottom: slide.side + shapeOf(shape).insetBottom,
         display: 'flex', flexDirection: 'column', justifyContent: 'space-between',
       }}
     >
@@ -89,14 +99,15 @@ const Cover: React.FC<SlideProps> = ({ image, focus, headline, kicker, handle })
 );
 
 const Body: React.FC<SlideProps> = ({
-  image, focus, kicker, headline, body, emphasis, handle,
+  image, focus, kicker, headline, body, emphasis, handle, shape,
 }) => (
   <AbsoluteFill style={image ? { backgroundColor: slide.ground } : undefined}>
-    {image ? null : <PunchedGround />}
+    {image ? null : <PunchedGround shape={shape} />}
 
     <AbsoluteFill
       style={{
         padding: slide.side,
+        paddingTop: slide.side + shapeOf(shape).insetTop,
         display: 'flex', flexDirection: 'column', alignItems: 'center',
       }}
     >
@@ -143,7 +154,7 @@ const Body: React.FC<SlideProps> = ({
     </AbsoluteFill>
 
     {image ? (
-      <div style={{ ...pictureBox, ...cardStyle }}>
+      <div style={{ ...pictureBox(shape), ...cardStyle }}>
         <Img
           src={staticFile(image)}
           style={{
@@ -154,20 +165,25 @@ const Body: React.FC<SlideProps> = ({
       </div>
     ) : null}
 
-    <div style={{ position: 'absolute', inset: slide.side, top: 'auto' }}>
+    <div
+      style={{
+        position: 'absolute', left: slide.side, right: slide.side,
+        bottom: slide.side + shapeOf(shape).insetBottom,
+      }}
+    >
       <Handle handle={handle} />
     </div>
   </AbsoluteFill>
 );
 
 /** The picture's place, shared by the card and the hole cut for a video. */
-const pictureBox = {
-  position: 'absolute',
+const pictureBox = (shape?: SlideShape) => ({
+  position: 'absolute' as const,
   left: slide.side,
   right: slide.side,
-  top: slide.picture.top,
-  bottom: slide.picture.bottom,
-} as const;
+  top: shapeOf(shape).picture.top,
+  bottom: shapeOf(shape).picture.bottom,
+});
 
 const cardStyle = {
   borderRadius: slide.card.radius,
@@ -183,11 +199,12 @@ const cardStyle = {
  * is never painted, so the still keeps a real hole rather than a dark patch
  * that would sit on top of the video.
  */
-const PunchedGround: React.FC = () => {
+const PunchedGround: React.FC<{ shape?: SlideShape }> = ({ shape }) => {
+  const geometry = shapeOf(shape);
   const x = slide.side;
-  const y = slide.picture.top;
+  const y = geometry.picture.top;
   const w = slide.width - slide.side * 2;
-  const h = slide.height - slide.picture.top - slide.picture.bottom;
+  const h = geometry.height - geometry.picture.top - geometry.picture.bottom;
   const r = slide.card.radius;
   const hole =
     `M${x + r},${y} H${x + w - r} A${r},${r} 0 0 1 ${x + w},${y + r}` +
@@ -198,13 +215,13 @@ const PunchedGround: React.FC = () => {
   return (
     <svg
       width={slide.width}
-      height={slide.height}
+      height={geometry.height}
       style={{ position: 'absolute', top: 0, left: 0 }}
     >
       <path
         fillRule="evenodd"
         fill={slide.ground}
-        d={`M0,0 H${slide.width} V${slide.height} H0 Z ${hole}`}
+        d={`M0,0 H${slide.width} V${geometry.height} H0 Z ${hole}`}
       />
     </svg>
   );

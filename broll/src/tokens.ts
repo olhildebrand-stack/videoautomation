@@ -531,15 +531,45 @@ export const fps = 30;
  * thing being described. Nothing else earned a place: the references run six
  * or seven slides on those two.
  */
+/**
+ * The two shapes a slide is posted in, and the only thing that differs between
+ * them.
+ *
+ * A carousel is a true 4:5 -- Instagram's largest portrait, and an even number
+ * of rows, which matters because a slide carrying video is encoded as yuv420p
+ * and an odd height comes out a pixel short of its neighbours.
+ *
+ * A story is 9:16 with the platform's own furniture over it: the profile row
+ * at the top and the reply box at the bottom. `inset` keeps everything clear of
+ * both, so nothing that has to be read sits under a button.
+ */
+export const slideShapes = {
+  carousel: {
+    height: 1350,
+    insetTop: 0,
+    insetBottom: 0,
+    picture: { top: 660, bottom: 132 },
+  },
+  story: {
+    height: 1920,
+    insetTop: 250,
+    insetBottom: 300,
+    /**
+     * Proportionally taller than the carousel's, not the same band on a longer
+     * canvas. Scaling 4:5's numbers to 9:16 leaves the picture stranded in the
+     * middle with black above and below it, reading as a mistake rather than a
+     * composition.
+     */
+    picture: { top: 820, bottom: 440 },
+  },
+} as const;
+
+export type SlideShape = keyof typeof slideShapes;
+
 export const slide = {
   width: 1080,
-  /**
-   * A true 4:5, and Instagram's largest portrait. The reference slides come
-   * back 1339 tall, which is what a download did to them -- and an odd number
-   * of rows cannot be encoded as yuv420p, so a slide carrying video would come
-   * out a pixel shorter than its neighbours and the set would be letterboxed.
-   */
-  height: 1350,
+  /** The default, and what a bare `remotion still Slide` renders. */
+  height: slideShapes.carousel.height,
   /** Type never comes closer than this to an edge. */
   side: 76,
   ground: color.void,
@@ -549,15 +579,12 @@ export const slide = {
   headline: overlay.ink,
   body: color.flare,
   /**
-   * Where the picture sits, the same on every body slide -- as it is on every
-   * reference slide. Fixed rather than flowed: a slide whose picture starts
-   * wherever its paragraph happened to end reads as a different template, and
-   * the hole punched for a video has to be somewhere nameable.
+   * Where the picture sits, the same on every body slide of a shape -- as it is
+   * on every reference slide. Fixed rather than flowed: a slide whose picture
+   * starts wherever its paragraph happened to end reads as a different
+   * template, and the hole punched for a video has to be somewhere nameable.
    */
-  picture: {
-    top: 660,
-    bottom: 132,
-  },
+  picture: slideShapes.carousel.picture,
   /** The screenshot sits on a light card, as every reference slide does. */
   card: {
     background: overlay.ink,
@@ -699,6 +726,7 @@ export const tokens = {
   fps,
   dimensions,
   slide,
+  slideShapes,
   clipDurationInFrames,
   emphasis,
   resting,
