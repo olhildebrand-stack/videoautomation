@@ -135,15 +135,9 @@ const Cover: React.FC<SlideProps> = ({
 }) => (
   <AbsoluteFill style={{ backgroundColor: slide.ground }}>
     <Fill src={image ?? background} focus={focus} />
-    {/* Held, not faded, across the band the type sits in. A gradient that is
-        already transparent by the headline leaves white type on whatever the
-        photograph happens to be -- and a phone photo is as often a bright
-        kitchen as a dark beach. */}
     <AbsoluteFill
       style={{
-        background:
-          `linear-gradient(${slide.scrim}, ${slide.scrim} 42%,` +
-          ` transparent 64%, ${slide.scrim})`,
+        background: `linear-gradient(${slide.scrim}, transparent 55%, ${slide.scrim})`,
       }}
     />
     <AbsoluteFill
@@ -156,7 +150,12 @@ const Cover: React.FC<SlideProps> = ({
       }}
     >
       <div>
-        <div style={{ ...typeOf(T.headline), fontSize: slide.coverSize, color: slide.ink }}>
+        <div
+          style={{
+            ...typeOf(T.headline), fontSize: slide.coverSize,
+            color: slide.ink, textShadow: slide.lift,
+          }}
+        >
           {headline}
         </div>
         {kicker ? (
@@ -164,6 +163,7 @@ const Cover: React.FC<SlideProps> = ({
             style={{
               marginTop: T.pill.paddingBlock,
               ...typeOf(T.body), fontSize: T.pill.size, color: T.accent,
+              textShadow: slide.lift,
             }}
           >
             {kicker}
@@ -293,29 +293,44 @@ const Blurred: React.FC<SlideProps> = ({
   image, background, focus, kicker, headline, body, handle, shape, step, of,
 }) => {
   const geometry = shapeOf(shape);
-  const cardTop = geometry.insetTop + slide.side * 1.4;
-  const cardHeight = geometry.height * B.card.height;
+  const inset = slide.side * 1.8;
+  const card = {
+    x: inset,
+    y: geometry.insetTop + slide.side * 1.4,
+    w: slide.width - inset * 2,
+    h: geometry.height * B.card.height,
+  };
   return (
-    <AbsoluteFill style={{ backgroundColor: slide.ground }}>
-      <Fill src={background ?? image} focus="center" blur={B.blurPx} />
-      <AbsoluteFill style={{ background: B.scrim }} />
+    // Opaque only when the blurred photograph is the whole ground. On a video
+    // slide the frame has to stay clear where the clip shows through.
+    <AbsoluteFill style={image ? { backgroundColor: slide.ground } : undefined}>
+      {/* A slide with no picture is one whose picture is a video: the ground
+          is cut away where the card would be so the clip shows through, and
+          the furniture around it still draws. */}
+      <AbsoluteFill
+        style={
+          image
+            ? undefined
+            : { clipPath: punch(slide.width, geometry.height, card, B.card.radius) }
+        }
+      >
+        <Fill src={background ?? image} focus="center" blur={B.blurPx} />
+        <AbsoluteFill style={{ background: B.scrim }} />
+      </AbsoluteFill>
 
       {image ? (
-        <>
-          <Card
-            src={image}
-            focus={focus}
-            radius={B.card.radius}
-            style={{
-              position: 'absolute',
-              left: slide.side * 1.8, right: slide.side * 1.8,
-              top: cardTop, height: cardHeight,
-            }}
-          />
-          <PageArrow side="left" centre={cardTop + cardHeight / 2} />
-          <PageArrow side="right" centre={cardTop + cardHeight / 2} />
-        </>
+        <Card
+          src={image}
+          focus={focus}
+          radius={B.card.radius}
+          style={{
+            position: 'absolute',
+            left: card.x, top: card.y, width: card.w, height: card.h,
+          }}
+        />
       ) : null}
+      <PageArrow side="left" centre={card.y + card.h / 2} />
+      <PageArrow side="right" centre={card.y + card.h / 2} />
 
       {/* Anchored to the bottom, not the top: the copy varies in length and
           growing downwards ran it into the handle. Growing upwards it runs
@@ -470,6 +485,28 @@ const Labels: React.FC<SlideProps> = ({
 
 /* ------------------------------------------------------------------ pieces */
 
+/** One rounded rectangle as an SVG subpath. */
+const roundedRect = (x: number, y: number, w: number, h: number, r: number) =>
+  `M${x + r},${y} H${x + w - r} A${r},${r} 0 0 1 ${x + w},${y + r}` +
+  ` V${y + h - r} A${r},${r} 0 0 1 ${x + w - r},${y + h}` +
+  ` H${x + r} A${r},${r} 0 0 1 ${x},${y + h - r}` +
+  ` V${y + r} A${r},${r} 0 0 1 ${x + r},${y} Z`;
+
+/**
+ * A clip that removes the picture's rectangle from whatever it is put on.
+ *
+ * The textured format can punch its ground with one flat SVG shape because
+ * that ground is a flat colour. A blurred ground is a photograph, so the hole
+ * has to be cut out of the painted layers themselves -- an even-odd clip over
+ * the frame with the card's rectangle as the second subpath.
+ */
+const punch = (
+  width: number, height: number, box: { x: number; y: number; w: number; h: number },
+  radius: number,
+) =>
+  `path(evenodd, "M0,0 H${width} V${height} H0 Z ` +
+  `${roundedRect(box.x, box.y, box.w, box.h, radius)}")`;
+
 /** The picture's place, shared by the card and the hole cut for a video. */
 const pictureBox = (shape?: SlideShape): React.CSSProperties => ({
   position: 'absolute',
@@ -492,12 +529,7 @@ const PunchedGround: React.FC<{ shape?: SlideShape }> = ({ shape }) => {
   const y = geometry.picture.top;
   const w = slide.width - slide.side * 2;
   const h = geometry.height - geometry.picture.top - geometry.picture.bottom;
-  const r = slide.card.radius;
-  const hole =
-    `M${x + r},${y} H${x + w - r} A${r},${r} 0 0 1 ${x + w},${y + r}` +
-    ` V${y + h - r} A${r},${r} 0 0 1 ${x + w - r},${y + h}` +
-    ` H${x + r} A${r},${r} 0 0 1 ${x},${y + h - r}` +
-    ` V${y + r} A${r},${r} 0 0 1 ${x + r},${y} Z`;
+  const hole = roundedRect(x, y, w, h, slide.card.radius);
 
   return (
     <svg

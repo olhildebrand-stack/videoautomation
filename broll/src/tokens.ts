@@ -597,6 +597,13 @@ export const slide = {
   },
   /** A photograph needs the ground darkened where type sits over it. */
   scrim: '#060607CC',
+  /**
+   * White type over a photograph, held up by a shadow rather than by more
+   * scrim -- which is how the reference reels do it, and it costs the picture
+   * nothing. A darker gradient buys the same legibility by covering half the
+   * photograph, which is not a trade worth making.
+   */
+  lift: '0 4px 24px #000000A6',
   pill: {
     radius: 999,
     paddingBlock: 14,

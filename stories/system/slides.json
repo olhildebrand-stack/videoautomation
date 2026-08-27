@@ -1,28 +1,29 @@
 {
+  "format": "blurred",
+  "background": "01-cover.jpg",
   "handle": "",
   "slides": [
     {
-      "kind": "cover",
+      "kind": "body",
       "image": "01-cover.jpg",
       "focus": "50% 20%",
-      "headline": "Jag redigerar\ninte mina videor\nlängre.",
-      "kicker": "[Claude klipper dem åt mig]"
+      "kicker": "01/",
+      "headline": "Jag redigerar inte\nmina videor längre.",
+      "body": "Claude klipper dem åt mig."
     },
     {
       "kind": "body",
       "image": "02.jpg",
       "focus": "50% 45%",
-      "kicker": "Steg 1",
-      "headline": "Claude läser\nhela inspelningen",
-      "body": "Varje omtagning, varje mening jag bröt mitt i. Den väljer vilka som får vara kvar och",
-      "emphasis": "skriver ut varför för varje enskilt klipp."
+      "kicker": "02/",
+      "headline": "Den läser hela\ninspelningen.",
+      "body": "Varje omtagning, varje mening jag bröt mitt i. Den väljer vilka som får vara kvar.\n\nOch skriver ut varför för varje enskilt klipp."
     },
     {
       "kind": "body",
-      "kicker": "Steg 2",
-      "headline": "Och den kommer\nihåg rättningen",
-      "body": "Säger jag att den valde fel hamnar regeln i en fil som följer med nästa gång.",
-      "emphasis": "Samma misstag görs aldrig två gånger.",
+      "kicker": "03/",
+      "headline": "Och den kommer\nihåg rättningen.",
+      "body": "Säger jag att den valde fel hamnar regeln i en fil som följer med nästa gång.\n\nSamma misstag görs aldrig två gånger.",
       "video": "03video.mp4",
       "crop": "1100:646:0:250"
     }

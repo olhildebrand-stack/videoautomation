@@ -1,32 +1,27 @@
 {
   "shape": "story",
-  "background": "ground.jpg",
-  "handle": "@student",
+  "format": "labels",
   "slides": [
     {
       "kind": "cover",
       "image": "01-cover.jpg",
       "focus": "50% 40%",
-      "headline": "07:00\nto 21:00.",
-      "kicker": "[what a normal Tuesday looks like]"
+      "headline": "en helt vanlig tisdag\n07:00 → 21:00",
+      "body": "ingen av de här timmarna\nvar schemalagd åt mig"
     },
     {
       "kind": "body",
       "image": "02.jpg",
       "focus": "50% 50%",
-      "kicker": "07:00",
-      "headline": "Studying before\nschool",
-      "body": "Two hours at the desk",
-      "emphasis": "before the day even starts."
+      "headline": "07:00 — två timmar vid skrivbordet",
+      "body": "innan dagen ens har börjat"
     },
     {
       "kind": "body",
       "image": "03.jpg",
       "focus": "50% 50%",
-      "kicker": "17:00",
-      "headline": "Then four hours\non content",
-      "body": "After a seven-hour school day.",
-      "emphasis": ""
+      "headline": "17:00 — fyra timmar på content",
+      "body": "efter en sjutimmars skoldag"
     }
   ]
 }
