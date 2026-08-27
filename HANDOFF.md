@@ -247,21 +247,12 @@ The whole thing is written for PowerShell on Windows and says so:
   `63c0e6a`) because the vocabulary this project needs — green and red graph
   lines, emoji, screenshots, chat mockups, logos — is exactly what CYANVOID
   forbade. It is kept as history and **governs nothing**. Never answer a design
-  question by quoting it. What survived is the token rule in §1 and the palette
-  in `tokens.ts` itself.
-- **`.claude/skills/motion-design/`** is the vendored LottieFiles motion-design
-  skill (MIT, pinned at `f9a8a04`). It is the design authority now. The parts the
-  components are actually built to: total stagger under 500ms, and with three or
-  more elements at most one third in motion at once (which is why `beatInFrames`
-  equals the enter duration). `.claude/skills/ffmpeg-color-grading-chromakey/` is
-  there for grading recipes.
+  question by quoting it. What survived is the token rule in §1, the palette in
+  `tokens.ts` itself, and the motion-design skill in §4.
 - **Doc drift.** `pipeline/README.md` claims 399 tests; there are **487** (plus 25
   skipped without ffmpeg). `transcribe/README.md` claims 60; there are **97**.
   Small, but a sign the docs lag the code — verify claims against the code before
   relying on them.
-- **`.claude/settings.json` enables a third-party plugin marketplace**
-  (`EveryInc/compound-engineering-plugin`). The new owner may not have it, may not
-  want it, and nothing in the pipeline depends on it. Safe to remove.
 - **`stories/` carousels are half-manual.** A slide whose picture is a video
   renders as `NN-overlay.png` with the card punched out; the operator drops the
   clip behind that PNG in an editor. That step is not automated and is not going
@@ -280,7 +271,92 @@ The whole thing is written for PowerShell on Windows and says so:
 
 ---
 
-## 4. Known failure modes, and what they actually mean
+## 4. The skills that come with the repository, and the one that does not
+
+Two Claude skills are **vendored into `.claude/skills/` and committed** — 21
+files in all — so cloning the repository gets them with no install step. Your
+Claude will pick them up automatically. They are not decoration; one of them is
+now the design authority for the whole renderer.
+
+### `motion-design` — the design authority
+
+The LottieFiles motion-design skill (MIT), vendored from
+`github.com/lottiefiles/motion-design-skill` @ `f9a8a04`. `CLAUDE.md` says
+plainly: **follow it, and nothing overrules it.**
+
+That wording exists because something used to. `CYANVOID.md` — the old brand
+spec — overruled this skill on colour, easing, overshoot and what was allowed on
+screen. Those limits were deleted (commit `63c0e6a`) once it became clear the
+vocabulary the videos actually need is green and red graph lines, emoji,
+screenshots, chat mockups and logos, all of which CYANVOID forbade outright.
+CYANVOID is history now. The skill is the standard.
+
+The components in `broll/src/` are literally built to these numbers, so changing
+them is a renderer-wide change, not a preference:
+
+- **Stagger budget: total stagger under 500ms.** `beatInFrames` in `tokens.ts`
+  is derived from this.
+- **The 1/3 rule.** With three or more elements, at most one third may be in
+  active motion at once — which is *why* `beatInFrames` equals the enter
+  duration: each element settles as the next one starts.
+- **The 8-step checklist and the decision framework** (`director/`) for planning
+  a new clip, and its **narrative structure** — setup, action, resolution inside
+  a single clip.
+
+Also inside it: `patterns/` (entrance-exit, multi-element, state-feedback,
+ambient-continuous), `reference/timing-easing-tables.md`,
+`reference/quality-checklist.md`, `reference/troubleshooting.md`, and the
+`director/` set on choreography, Disney principles and emotion mapping.
+
+**The one place the skill does not have the last word** is the actual duration
+values and the easing curve in `broll/src/tokens.ts`. Those are this project's,
+arrived at by watching renders. `CLAUDE.md` is explicit that they are "defaults
+to design with, not laws to cite" — so tune them by watching a render, not by
+quoting a table at them.
+
+### `ffmpeg-color-grading-chromakey` — the grading reference
+
+A complete colour-manipulation and green-screen skill: `chromakey`/`colorkey`,
+LUT application via `lut3d`, curves and levels, colour balance, colour-space
+handling and HDR tone mapping. `pipeline/README.md` points at it for filter
+recipes.
+
+The pipeline's own grade is deliberately modest — slight contrast, mild
+saturation, a small cool bias, **no LUT**, so there is nothing to ship or
+version. For a real look, drop a `.cube` file in and pass it as `Grade(lut=...)`
+in `pipeline/ffmpeg_ops.py`; it is applied last, so it grades the corrected
+image rather than the raw one. That is the moment to open this skill.
+
+Note its first section is a set of Windows path rules — another sign of the
+machine this was built on.
+
+### The plugin that is *not* vendored
+
+`.claude/settings.json` enables `compound-engineering@compound-engineering-plugin`
+from the third-party marketplace `EveryInc/compound-engineering-plugin`. Unlike
+the two skills above, **it is a reference, not a copy** — the code lives in
+someone else's repository, and your Claude may prompt to install it from that
+marketplace on first run.
+
+Nothing in the pipeline depends on it. If the new owner does not want a
+third-party marketplace enabled in their sessions, deleting the
+`extraKnownMarketplaces` and `enabledPlugins` blocks from `.claude/settings.json`
+is safe and breaks nothing. If they do want it, it is worth asking the original
+author what it was doing for them — that is local knowledge this repository does
+not carry.
+
+### Skills are also the right place to put what you learn
+
+Nothing stops the new owner from adding their own skill under `.claude/skills/`
+for their half of the work. But note the ordering this project already has, and
+keep it: **corrections to editorial judgement go in `pipeline/DIRECTOR.md` under
+*Learned rules*, not into a skill and not into a chat reply.** A skill teaches
+technique; `DIRECTOR.md` accumulates what went wrong on a specific video and what
+to do instead. Do not blur the two.
+
+---
+
+## 5. Known failure modes, and what they actually mean
 
 Learn these; they are most of the debugging surface.
 
@@ -300,12 +376,14 @@ Learn these; they are most of the debugging surface.
 
 ---
 
-## 5. What to do first, in order, with a check for each step
+## 6. What to do first, in order, with a check for each step
 
 Do not start a video until steps 1–5 are green.
 
 1. **Read the docs.** `CLAUDE.md`, `pipeline/README.md`, `transcribe/README.md`,
-   `broll/README.md`, `pipeline/DIRECTOR.md`.
+   `broll/README.md`, `pipeline/DIRECTOR.md`. Add
+   `.claude/skills/motion-design/SKILL.md` before you touch anything that moves
+   on screen (§4).
    *Check:* you can explain, without looking, why the unit is the take and not
    the sentence, and why cut points come from the audio.
 
@@ -365,7 +443,7 @@ Do not start a video until steps 1–5 are green.
 
 ---
 
-## 6. How to work in this repository
+## 7. How to work in this repository
 
 The house rules, from `CLAUDE.md`. Follow them; they are why the codebase reads
 the way it does.
@@ -404,7 +482,7 @@ comment that says "this is what `aieditoradvancing` did to us" is the point.
 
 ---
 
-## 7. Questions worth asking the original author before starting
+## 8. Questions worth asking the original author before starting
 
 These are the things the repository cannot tell you:
 
@@ -425,7 +503,7 @@ These are the things the repository cannot tell you:
 
 ---
 
-## 8. The honest summary
+## 9. The honest summary
 
 **What works well:** transcription (fast, accurate, verbatim, with a real fix for
 the hotword and DLL problems), cut-point measurement from audio, the three
