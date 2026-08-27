@@ -84,6 +84,12 @@ collage, with the caption boxes reading as a caption under it.
 **Why it works.** The screenshots are evidence, and scattering them says
 "there's more where this came from" in a way a neat grid does not.
 
+**The green chip is the format.** `701537468` and `639800251` both lay a bright
+green chip with black text over the figure inside each screenshot -- `$3k week`,
+`$2k day`, `First $10k month`. Without it the reader has to find the number in
+someone else's dashboard, and they will not. It is placed by hand, because only
+the person who took the screenshot knows where in it the number is.
+
 ## F. Video with a text stack
 
 all five `comment BDP` mp4s — 4:5, moving. A frame is lifted out of each as
@@ -135,7 +141,7 @@ sequence in the folder's `slides.json`, never per slide.
 | `stack` | F | a weight ladder over a dim photo, no boxes at all |
 | `titled` | C's cover | a sharp photo and a four-cut title ladder over angled cards |
 | `beforeafter` | B's `over(4)` | a huge accent number, two cards, a long arrow between the dates |
-| `collage` | E's `639735492` | screenshots scattered over the photo, white caption boxes |
+| `collage` | E | screenshots scattered over a blurred photo, green chips over the figures, white caption boxes |
 
 One of each is rendered into `stories/formats/out/`, built from the sources in
 `stories/formats/<name>/`.

@@ -40,6 +40,11 @@ export type SlideProps = {
   emphasis?: string;
   /** collage, titled, beforeafter: the screenshots they scatter or stack. */
   images?: string[];
+  /**
+   * collage: the figures called out of those screenshots, each placed where
+   * its number actually is, as a fraction of the frame.
+   */
+  chips?: { text: string; x: number; y: number }[];
   handle?: string;
   /**
    * This slide's picture is a video: cut the card's rectangle out of the
@@ -777,7 +782,7 @@ const Co = slideFormat.collage;
  * every other format's caption, and the reason it reads as a different post.
  */
 const Collage: React.FC<SlideProps> = ({
-  image, background, focus, headline, body, images, shape,
+  image, background, focus, headline, body, images, chips, shape,
 }) => {
   const geometry = shapeOf(shape);
   const shots = images ?? [];
@@ -801,6 +806,28 @@ const Collage: React.FC<SlideProps> = ({
             transform: `rotate(${Co.shot.tilts[index % Co.shot.tilts.length]}deg)`,
           }}
         />
+      ))}
+
+      {/* Over the screenshots, under the captions: a chip is an annotation on
+          the evidence, not part of the sentence about it. */}
+      {(chips ?? []).map((chip) => (
+        <div
+          key={chip.text}
+          style={{
+            position: 'absolute',
+            left: slide.width * chip.x,
+            top: geometry.height * chip.y,
+            backgroundColor: Co.chip.background, color: Co.chip.ink,
+            borderRadius: Co.chip.radius,
+            paddingBlock: Co.chip.paddingBlock,
+            paddingInline: Co.chip.paddingInline,
+            fontFamily: Co.caption.family, fontWeight: Co.caption.weight,
+            fontSize: Co.chip.size, letterSpacing: Co.caption.tracking,
+            boxShadow: Co.chip.shadow,
+          }}
+        >
+          {chip.text}
+        </div>
       ))}
 
       <div

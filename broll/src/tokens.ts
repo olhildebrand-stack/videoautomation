@@ -853,6 +853,23 @@ export const slideFormat = {
     paddingInline: 30,
     gap: 18,
     shot: { radius: 14, shadow: '#00000073', tilts: [-3, 2, -1.5] },
+    /**
+     * The green chip laid over the number inside a screenshot. It is the whole
+     * difference between a collage and a proof collage: without it the reader
+     * has to find the figure in someone else's dashboard, and they will not.
+     *
+     * Placed by hand, because only the person who took the screenshot knows
+     * where in it the number is.
+     */
+    chip: {
+      background: '#3FDD52',
+      ink: '#0A0A0A',
+      radius: 10,
+      paddingBlock: 12,
+      paddingInline: 22,
+      size: 52,
+      shadow: '0 6px 18px #00000059',
+    },
   },
 } as const;
 
