@@ -1,5 +1,6 @@
 {
   "shape": "story",
+  "background": "ground.jpg",
   "handle": "@student",
   "slides": [
     {

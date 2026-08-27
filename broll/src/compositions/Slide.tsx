@@ -192,7 +192,13 @@ const Cover: React.FC<SlideProps> = ({
 const Body: React.FC<SlideProps> = ({
   image, background, focus, kicker, headline, body, emphasis, handle, shape,
 }) => (
-  <AbsoluteFill style={background ? undefined : { backgroundColor: slide.ground }}>
+  // Opaque only when nothing else supplies a ground. A background is a full-
+  // bleed Fill, and a slide with no picture is one whose picture is a video:
+  // there PunchedGround is the ground, and painting behind it would fill in
+  // the hole the video has to show through.
+  <AbsoluteFill
+    style={image && !background ? { backgroundColor: slide.ground } : undefined}
+  >
     {background ? (
       <>
         <Fill src={background} />
