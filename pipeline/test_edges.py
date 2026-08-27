@@ -17,6 +17,7 @@ import pytest
 sys.path.insert(0, str(Path(__file__).parent))
 from edges import (  # noqa: E402
     DEFAULT_MAX_DRIFT, LADDER, edges_from_runs, measure, measure_best,
+    report_gaps,
 )
 from takes import Run  # noqa: E402
 
@@ -390,3 +391,39 @@ def test_a_tight_range_in_a_quiet_room_is_left_alone(tone):
     from edges import trim_to_speech
     speaks_at, stops_at = trim_to_speech(tone, 0.95, 2.05)
     assert speaks_at <= 1.05 and stops_at >= 1.95
+
+
+# --- gaps inside a range ----------------------------------------------------
+
+@pytest.mark.skipif(shutil.which("ffmpeg") is None, reason="ffmpeg is not on PATH")
+def test_gaps_reports_the_silence_between_two_sentences(tmp_path, capsys):
+    """One range holding two sentences: the pause is what to cut on."""
+    source = tmp_path / "two.wav"
+    subprocess.run(
+        ["ffmpeg", "-v", "error", "-y", "-f", "lavfi", "-i",
+         "aevalsrc='0.4*sin(2*PI*300*t)*(between(t,0,3)+between(t,4.2,7))"
+         "':d=8:s=44100", str(source)],
+        check=True,
+    )
+    assert report_gaps(source, 0.0, 8.0, -45.0, 0.35) == 0
+    out = capsys.readouterr().out
+    assert "3.00 ->     4.20" in out
+    # The split it proposes is the two ranges either side of that pause.
+    assert "0.00 -> 3.00" in out and "4.20 -> 8.00" in out
+
+
+@pytest.mark.skipif(shutil.which("ffmpeg") is None, reason="ffmpeg is not on PATH")
+def test_no_gap_says_to_raise_the_threshold(tmp_path, capsys):
+    """A pause quieter than the room still sits above a sensitive threshold.
+
+    Reporting "no silence" and stopping would send the operator away with the
+    wrong answer, so the way forward is part of the answer.
+    """
+    source = tmp_path / "unbroken.wav"
+    subprocess.run(
+        ["ffmpeg", "-v", "error", "-y", "-f", "lavfi", "-i",
+         "aevalsrc='0.4*sin(2*PI*300*t)':d=4:s=44100", str(source)],
+        check=True,
+    )
+    assert report_gaps(source, 0.0, 4.0, -45.0, 0.35) == 1
+    assert "--noise -36" in capsys.readouterr().out

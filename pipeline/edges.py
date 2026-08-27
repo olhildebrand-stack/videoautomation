@@ -4,6 +4,7 @@
     python edges.py raw.mp4 42.28-49.24
     python edges.py raw.mp4 --script pipeline/edit-scripts/clip.json
     python edges.py raw.mp4 42.28-49.24 --noise -40
+    python edges.py raw.mp4 66.43-77.46 --gaps --noise -36
 
 The source is the RAW recording -- the same file the edit script's times refer
 to, not a cut of it. Nothing is modified; this only reports.
@@ -394,6 +395,35 @@ def report_script(script: Path, source: Path, head: float, tail: float, args) ->
     return 0
 
 
+def report_gaps(source: Path, start: float, end: float,
+                noise_db: float, min_silence: float) -> int:
+    """The silences inside a range, and the cut each one would make.
+
+    Everything else here measures the EDGES of a take. This looks in the
+    middle, for the case where one continuous range holds two sentences with a
+    pause between them and the pause is the thing to remove. The pause is often
+    quieter than the room but not silent, so the threshold usually has to come
+    up from the default before it shows.
+    """
+    found = detect_silences(Path(source), start, end, noise_db, min_silence)
+    if not found:
+        print(f"No silence of {min_silence}s or more inside "
+              f"{start:.2f}-{end:.2f} at {noise_db:.0f}dB.")
+        print("A pause quieter than the room is still louder than this "
+              "threshold: try --noise -36, then -30.")
+        return 1
+
+    print(f"{len(found)} gap(s) inside {start:.2f}-{end:.2f} "
+          f"at {noise_db:.0f}dB:\n")
+    for began, ended in found:
+        print(f"  silence  {began:>8.2f} -> {ended:>8.2f}   ({ended - began:.2f}s)")
+    print("\nSplitting on the first of these gives two ranges:")
+    first, second = found[0]
+    print(f"  {start:.2f} -> {first:.2f}")
+    print(f"  {second:.2f} -> {end:.2f}")
+    return 0
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(
         description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
@@ -416,6 +446,9 @@ def main() -> int:
     parser.add_argument("--noise", type=float, default=DEFAULT_NOISE_DB,
                         help=f"silence threshold in dB (default {DEFAULT_NOISE_DB:.0f})")
     parser.add_argument("--min-silence", type=float, default=DEFAULT_MIN_SILENCE)
+    parser.add_argument("--gaps", action="store_true",
+                        help="list the silences INSIDE the range, for splitting "
+                             "one long take into two beats")
     args = parser.parse_args()
 
     from sentences import DEFAULT_HEAD, DEFAULT_TAIL
@@ -442,6 +475,9 @@ def main() -> int:
     except ValueError:
         print(f"error: expected START-END, got {args.range!r}", file=sys.stderr)
         return 2
+
+    if args.gaps:
+        return report_gaps(args.source, start, end, args.noise, args.min_silence)
 
     try:
         edges = measure(args.source, start, end, search=args.search,
