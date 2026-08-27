@@ -134,8 +134,8 @@ sequence in the folder's `slides.json`, never per slide.
 | `labels` | D | the photo untouched, small text in the app's black boxes |
 | `stack` | F | a weight ladder over a dim photo, no boxes at all |
 | `titled` | C's cover | a sharp photo and a four-cut title ladder over angled cards |
-| `beforeafter` | B's `over(4)` | a huge accent number, two cards, rings drawn on |
-| `collage` | E's `639735492` | screenshots on a torn black mask, white caption boxes |
+| `beforeafter` | B's `over(4)` | a huge accent number, two cards, a long arrow between the dates |
+| `collage` | E's `639735492` | screenshots scattered over the photo, white caption boxes |
 
 One of each is rendered into `stories/formats/out/`, built from the sources in
 `stories/formats/<name>/`.

@@ -679,32 +679,33 @@ const BeforeAfter: React.FC<SlideProps> = ({
       </div>
 
       {shots.map((src, index) => (
-        <React.Fragment key={src}>
-          <Card
-            src={src}
-            radius={BA.card.radius}
-            style={{
-              position: 'absolute',
-              right: slide.side,
-              top: top + index * (cardH + BA.card.gap),
-              width: slide.width * BA.card.width,
-              height: cardH,
-            }}
-          />
-          <Ring
-            colour={index === 0 ? BA.ring.was : BA.ring.became}
-            cx={slide.width - slide.side - slide.width * BA.card.width * 0.32}
-            cy={top + index * (cardH + BA.card.gap) + cardH * 0.55}
-            rx={slide.width * 0.11}
-            ry={cardH * 0.3}
-          />
-        </React.Fragment>
+        <Card
+          key={src}
+          src={src}
+          radius={BA.card.radius}
+          style={{
+            position: 'absolute',
+            right: slide.side,
+            top: top + index * (cardH + BA.card.gap),
+            width: slide.width * BA.card.width,
+            height: cardH,
+          }}
+        />
       ))}
 
-      {/* The two dates, aligned to the middle of the card each one names. */}
+      {/* The two dates, aligned to the card each one names, with the arrow
+          running the whole way down between them -- it is the distance that
+          says how long this took, so a glyph sitting next to one of them
+          says nothing. */}
       {was ? <Stamp text={was} y={top + cardH * 0.4} /> : null}
       {became ? (
-        <Stamp text={became} y={top + cardH * 1.1 + BA.card.gap} arrow />
+        <Stamp text={became} y={top + cardH * 1.4 + BA.card.gap} />
+      ) : null}
+      {was && became ? (
+        <LongArrow
+          from={top + cardH * 0.4 + BA.label.size + BA.arrow.clear}
+          to={top + cardH * 1.4 + BA.card.gap - BA.arrow.clear}
+        />
       ) : null}
 
       <div
@@ -721,36 +722,42 @@ const BeforeAfter: React.FC<SlideProps> = ({
   );
 };
 
-/** One of the two dates, with the arrow that runs down to the next one. */
-const Stamp: React.FC<{ text: string; y: number; arrow?: boolean }> = ({
-  text, y, arrow,
-}) => (
+/** One of the two dates. */
+const Stamp: React.FC<{ text: string; y: number }> = ({ text, y }) => (
   <div
     style={{
       position: 'absolute', left: slide.side, top: y,
       ...typeOf(BA.label), color: slide.ink, textShadow: slide.lift,
     }}
   >
-    {arrow ? <div style={{ marginBottom: BA.card.gap }}>{'\u2193'}</div> : null}
     {text}
   </div>
 );
 
-/** A circle drawn round the figure that changed, by hand rather than by grid. */
-const Ring: React.FC<{
-  colour: string; cx: number; cy: number; rx: number; ry: number;
-}> = ({ colour, cx, cy, rx, ry }) => (
-  <svg
-    width={slide.width} height={rx * 4}
-    style={{ position: 'absolute', left: 0, top: cy - rx * 2 }}
-  >
-    <ellipse
-      cx={cx} cy={rx * 2} rx={rx} ry={ry}
-      fill="none" stroke={colour} strokeWidth={BA.ring.weight}
-      strokeLinecap="round" transform={`rotate(-4 ${cx} ${rx * 2})`}
-    />
-  </svg>
-);
+/**
+ * The arrow between the two dates: a long line starting under the first and
+ * ending, head and all, just above the second. Its length is the point.
+ */
+const LongArrow: React.FC<{ from: number; to: number }> = ({ from, to }) => {
+  const x = slide.side + BA.arrow.offset;
+  const head = BA.arrow.head;
+  return (
+    <svg
+      width={slide.width} height={to - from}
+      style={{ position: 'absolute', left: 0, top: from }}
+    >
+      <path
+        d={`M${x},0 V${to - from}` +
+           ` M${x - head},${to - from - head} L${x},${to - from} L${x + head},${to - from - head}`}
+        stroke={slide.ink}
+        strokeWidth={BA.arrow.weight}
+        fill="none"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+};
 
 /* -------------------------------------------------------- format: collage  */
 
@@ -773,8 +780,6 @@ const Collage: React.FC<SlideProps> = ({
     <AbsoluteFill style={{ backgroundColor: slide.ground }}>
       <Fill src={image ?? background} focus={focus} />
       <AbsoluteFill style={{ backgroundColor: Co.scrim }} />
-
-      <Blob top={geometry.insetTop} height={geometry.height} />
 
       {shots.map((src, index) => (
         <Card
@@ -816,35 +821,6 @@ const Collage: React.FC<SlideProps> = ({
         ))}
       </div>
     </AbsoluteFill>
-  );
-};
-
-/**
- * The irregular black mask the screenshots sit on.
- *
- * Drawn with a cubic on every side rather than as a rounded rectangle: a
- * rectangle would read as a panel, and the point of this shape is that it
- * looks torn out by hand.
- */
-const Blob: React.FC<{ top: number; height: number }> = ({ top, height }) => {
-  const x = slide.side * 0.5;
-  const w = slide.width - x * 2;
-  const y = top + height * 0.02;
-  const h = height * 0.6;
-  return (
-    <svg
-      width={slide.width} height={height}
-      style={{ position: 'absolute', top: 0, left: 0 }}
-    >
-      <path
-        fill={Co.blob}
-        d={`M${x},${y + h * 0.1}` +
-           ` C${x + w * 0.06},${y - h * 0.05} ${x + w * 0.6},${y + h * 0.04} ${x + w},${y}` +
-           ` C${x + w * 1.04},${y + h * 0.4} ${x + w * 0.96},${y + h * 0.7} ${x + w},${y + h}` +
-           ` C${x + w * 0.6},${y + h * 1.05} ${x + w * 0.2},${y + h * 0.94} ${x},${y + h * 0.98}` +
-           ` C${x - w * 0.04},${y + h * 0.6} ${x + w * 0.03},${y + h * 0.35} ${x},${y + h * 0.1} Z`}
-      />
-    </svg>
   );
 };
 

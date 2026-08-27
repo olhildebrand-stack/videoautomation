@@ -820,23 +820,21 @@ export const slideFormat = {
       tracking: '0em', leading: 1,
     },
     card: { radius: 22, width: 0.56, height: 0.16, gap: 34 },
-    /** Drawn round the number that changed: what it was, what it became. */
-    ring: { was: '#EF4444', became: '#22C55E', weight: 9 },
+    /** Runs the whole way from the first date to the second. */
+    arrow: { weight: 7, head: 22, offset: 54, clear: 22 },
   },
   /**
    * E's blob variant, from `639735492_...jpg`.
    *
-   * Screenshots scattered at slight angles behind an irregular black mask,
-   * over a photograph, with white caption boxes carrying black text at the
-   * bottom. The mask is drawn rather than aligned -- a neat grid would say
-   * "here is my evidence, arranged", and the scatter says "there is more
-   * where this came from".
+   * Screenshots scattered at slight angles over a photograph, with white
+   * caption boxes carrying black text at the bottom. The scatter is the
+   * whole idea -- a neat grid would say "here is my evidence, arranged",
+   * and this says "there is more where this came from".
    */
   collage: {
     align: 'center',
     scrim: '#00000040',
     accent: null,
-    blob: '#000000',
     /** Black on white, the inverse of every other format's caption. */
     caption: {
       family: 'Inter', weight: 800, size: 46,
