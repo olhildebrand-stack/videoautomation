@@ -1,0 +1,13 @@
+{
+  "shape": "story",
+  "format": "labels",
+  "slides": [
+    {
+      "kind": "cover",
+      "image": "01-cover.jpg",
+      "focus": "50% 22%",
+      "headline": "\"du kan inte klippa en video\nutan att sitta i Premiere\ni fyra timmar\"",
+      "body": "ja kanske DU inte kan"
+    }
+  ]
+}

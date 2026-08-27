@@ -1,0 +1,17 @@
+{
+  "shape": "story",
+  "format": "textured",
+  "background": "ground.webp",
+  "handle": "@student",
+  "slides": [
+    {
+      "kind": "body",
+      "image": "02.jpg",
+      "focus": "50% 45%",
+      "kicker": "Steg 1",
+      "headline": "Den läser hela\ninspelningen",
+      "body": "Varje omtagning, varje mening jag bröt mitt i.",
+      "emphasis": "Och skriver ut varför."
+    }
+  ]
+}

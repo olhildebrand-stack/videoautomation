@@ -1,0 +1,18 @@
+{
+  "shape": "story",
+  "format": "blurred",
+  "background": "01-cover.jpg",
+  "handle": "@student",
+  "slides": [
+    {
+      "kind": "body",
+      "image": "02.jpg",
+      "focus": "50% 45%",
+      "kicker": "02/",
+      "headline": "Den läser hela\ninspelningen.",
+      "body": "Varje omtagning, varje mening jag bröt mitt i. Den väljer vilka som får vara kvar.\n\nOch skriver ut varför för varje klipp.",
+      "step": 2,
+      "of": 3
+    }
+  ]
+}
