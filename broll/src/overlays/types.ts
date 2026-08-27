@@ -85,11 +85,11 @@ export type OverlayCue = {
   full?: boolean;
 
   /**
-   * iconRow: three verdicts side by side, each revealed as it is named. The
-   * question they answer sits in a pill below them.
+   * iconRow: logos side by side, each snapping into focus as it is named.
+   * `name` is never drawn -- the mark is the point. An optional question sits
+   * in a pill below them.
    */
   slots?: {
-    tone?: 'bad' | 'good' | 'great';
     name: string;
     src?: string;
     emoji?: string;

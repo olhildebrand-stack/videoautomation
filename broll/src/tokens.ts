@@ -326,34 +326,24 @@ export const terminal = {
 } as const;
 
 /**
- * The comparison row: three verdicts side by side, each a card holding an app
- * icon, revealed as it is named.
+ * The logo row, measured off the AI-stack reel, which has no cuts at all --
+ * the whole video is one take with this row changing above it.
  *
- * Measured off the AI-stack reel, which has no cuts at all -- the whole video
- * is one take with this row changing above it. The blur is the mechanism: an
- * icon nobody has named yet is present but unreadable, so the viewer knows
- * something is coming and cannot read ahead. Naming it brings it into focus.
+ * The blur is the mechanism: a logo nobody has named yet is present but
+ * unreadable, so the viewer knows something is coming and cannot read ahead.
+ * Naming it brings it into focus. Nothing is drawn behind or under the mark:
+ * a box around it and a word beneath it both say what the caption is already
+ * saying.
  */
-export const verdict = {
-  bad: '#EF4444',
-  good: '#F59E0B',
-  great: '#22C55E',
-} as const;
-
-export type VerdictTone = keyof typeof verdict;
-
 export const iconCard = {
-  background: '#FFFFFF',
-  text: '#18181B',
-  radius: 22,
+  /** The square each logo is fitted into. Holds the row's layout still, so a
+   * logo coming into focus never shifts its neighbours. */
   size: 190,
   gap: 26,
   /** How unreadable an unnamed icon is. Enough to hide a logo entirely. */
   blur: 22,
   /** The snap into focus. Faster than the fades: it is a reveal, not an entry. */
   focusMs: 220,
-  nameSize: 26,
-  labelSize: 30,
 } as const;
 
 /**

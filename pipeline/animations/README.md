@@ -60,9 +60,9 @@ Written by `python pipeline/animate.py`, which also renders the previews. Add a
 
 No preview here: it draws robot.png, higgsfield.png, claude.png, which belongs to the project that uses it. Render one against your own copies.
 
-**What it does.** Every logo on screen from the first frame, blurred past recognition, and each one snaps into focus as you say what it is. The row holds its layout, so a card coming into focus never shifts its neighbours, and each logo is fitted into the same square whatever shape its file is.
+**What it does.** Every logo on screen from the first frame, blurred past recognition, and each one snaps into focus as you say what it is. Nothing is drawn behind or under them: no box, no label. Each fills the same square whatever shape its file is, and the square holds the row's layout, so a logo coming into focus never shifts its neighbours.
 
-**When to reach for it.** Naming two or three products or tools in one breath. The words go by faster than a viewer can picture them, and the blur says how many are coming without giving away what they are. Reach for chipRow instead when the things being named are categories rather than products with a mark.
+**When to reach for it.** Naming two or three products or tools in one breath. The words go by faster than a viewer can picture them, and the blur says how many are coming without giving away what they are. The caption is already saying the words, so a label under the mark would say them twice -- reach for chipRow instead when the things being named have no logo.
 
 **Seen in.** aivoiceagents -- chattbottar / videogenerering / kodning
 

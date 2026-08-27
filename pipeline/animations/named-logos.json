@@ -1,17 +1,38 @@
 {
   "title": "Logos, sharpening as you name them",
-  "what": "Every logo on screen from the first frame, blurred past recognition, and each one snaps into focus as you say what it is. The row holds its layout, so a card coming into focus never shifts its neighbours, and each logo is fitted into the same square whatever shape its file is.",
-  "when": "Naming two or three products or tools in one breath. The words go by faster than a viewer can picture them, and the blur says how many are coming without giving away what they are. Reach for chipRow instead when the things being named are categories rather than products with a mark.",
+  "what": "Every logo on screen from the first frame, blurred past recognition, and each one snaps into focus as you say what it is. Nothing is drawn behind or under them: no box, no label. Each fills the same square whatever shape its file is, and the square holds the row's layout, so a logo coming into focus never shifts its neighbours.",
+  "when": "Naming two or three products or tools in one breath. The words go by faster than a viewer can picture them, and the blur says how many are coming without giving away what they are. The caption is already saying the words, so a label under the mark would say them twice -- reach for chipRow instead when the things being named have no logo.",
   "seen_in": "aivoiceagents -- chattbottar / videogenerering / kodning",
   "cue": {
     "kind": "iconRow",
     "cue": "the phrase that puts the row on screen, blurred",
     "until": "the phrase it should leave on",
     "slots": [
-      {"name": "CHATTBOTTAR", "src": "robot.png", "cue": "chattbottar"},
-      {"name": "VIDEOGENERERING", "src": "higgsfield.png", "cue": "videogenerering"},
-      {"name": "KODNING", "src": "claude.png", "cue": "kodning"}
+      {
+        "name": "CHATTBOTTAR",
+        "src": "robot.png",
+        "cue": "chattbottar"
+      },
+      {
+        "name": "VIDEOGENERERING",
+        "src": "higgsfield.png",
+        "cue": "videogenerering"
+      },
+      {
+        "name": "KODNING",
+        "src": "claude.png",
+        "cue": "kodning"
+      }
     ]
   },
-  "preview": {"enter": 6, "leave": null, "children": [18, 42, 66], "frames": 100}
+  "preview": {
+    "enter": 6,
+    "leave": null,
+    "children": [
+      18,
+      42,
+      66
+    ],
+    "frames": 100
+  }
 }
