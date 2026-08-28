@@ -23,10 +23,20 @@ from asking for exact words -- a phrase that spanned a discarded attempt, a
 quote that was slightly wrong, a cut point inside a word -- and all three are
 gone the moment you name a number instead.
 
-You do not write hook text. `pipeline/hooks/winning-hooks.md` is the complete
-set -- all hooks in it have equal weight, so match the idea to the
-tightest-fitting one from any category and change as few words as possible. Do
-not add to, remove from, or modify that file. If nothing in it fits, say so.
+You do not write hook text, of either kind. There are two banks and they are
+not interchangeable:
+
+- **`pipeline/hooks/winning-hooks.md`** -- VERBAL hooks, the sentence that is
+  spoken over the opening seconds. A full sentence. All of them have equal
+  weight, so match from any category.
+- **`pipeline/hooks/onscreen-hooks.md`** -- ON-SCREEN hooks, the text card on
+  the frame. Three to eight words. Carry the source's punctuation across: a
+  trailing `...` and QUOTED CAPS are the structure, not decoration.
+
+Both work the same way: match the tightest-fitting source and change as few
+words as possible -- usually one noun, with everything around it untouched.
+Word-for-word is a normal outcome, not a failure to try. Do not add to, remove
+from, or modify either file. If nothing fits, say so.
 
 ## Every take gets a decision
 

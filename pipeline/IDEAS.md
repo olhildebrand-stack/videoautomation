@@ -16,7 +16,8 @@ translation:
 | file | what it is | who reads it |
 | --- | --- | --- |
 | `topic.txt` | what the video is about, in a sentence or two | `brief.py`, then the director |
-| a hook | the tightest fit from `pipeline/hooks/winning-hooks.md` | checkpoint 3 |
+| a verbal hook | the tightest fit from `pipeline/hooks/winning-hooks.md` | checkpoint 3 |
+| an on-screen hook | the tightest fit from `pipeline/hooks/onscreen-hooks.md` | the hook card |
 | a beat outline | `HOOK`, `PROBLEM`, …, `LANDING` — names, not timings | the operator, when recording |
 
 The beat outline is the point of the whole stage. An idea written as prose has
@@ -47,12 +48,14 @@ never.
 These are not restated here because they are enforced elsewhere. They bind
 this stage anyway.
 
-**Hooks come from the swipe file.** `pipeline/hooks/winning-hooks.md` holds
-1050+ proven hooks and is the complete, intentional set — only those. All of
-them have equal weight, so match against any category; take the
-tightest-fitting hook and change as few words as possible. Never write one,
-and never add to, remove from, or modify the file. If nothing in it fits, say
-so — do not quietly invent a hook and present it as matched.
+**Hooks come from the banks, and there are two.**
+`pipeline/hooks/winning-hooks.md` is 1050+ proven *verbal* hooks — the spoken
+opening sentence. `pipeline/hooks/onscreen-hooks.md` is the *on-screen* hook,
+the three-to-eight-word text card. An idea needs both, and one will not do the
+other's job. Match the tightest-fitting source in the right bank and change as
+few words as possible — usually one noun. Never write one, and never add to,
+remove from, or modify either file. If nothing fits, say so — do not quietly
+invent a hook and present it as matched.
 
 **A story picks a format from the bank first.** `pipeline/formats/bank.json`,
 and `CLAUDE.md` says to offer the formats before asking what the story is
