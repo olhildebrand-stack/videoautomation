@@ -599,7 +599,7 @@ const Ti = slideFormat.titled;
  */
 const Titled: React.FC<SlideProps> = ({
   image, background, focus, headline, kicker, emphasis, body, images, shape,
-  step, of,
+  step, of, steps,
 }) => {
   const geometry = shapeOf(shape);
   const shots = images ?? [];
@@ -640,6 +640,28 @@ const Titled: React.FC<SlideProps> = ({
           </div>
         ) : null}
       </div>
+
+      {/* Commands are typed, so they are set rather than photographed --
+          sharp at any size, and centred instead of ragged left. */}
+      {steps?.length ? (
+        <div
+          style={{
+            position: 'absolute',
+            left: slide.side, right: slide.side,
+            top: geometry.insetTop + safe * Ti.terminal.top,
+            backgroundColor: Ti.terminal.background,
+            borderRadius: Ti.terminal.radius,
+            paddingBlock: Ti.terminal.padBlock,
+            paddingInline: Ti.terminal.padInline,
+            boxShadow: `0 ${slide.card.shadowDrop}px ${slide.card.shadowBlur}px ${slide.card.shadow}`,
+            ...typeOf(Ti.terminal),
+            color: Ti.terminal.ink,
+            textAlign: 'center',
+          }}
+        >
+          {steps.join('\n\n')}
+        </div>
+      ) : null}
 
       {/* Two screenshots scatter; one is the subject and sits straight. */}
       {shots.length === 1 ? (

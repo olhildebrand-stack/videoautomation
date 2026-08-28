@@ -6,12 +6,15 @@
       "kind": "cover",
       "image": "IMG_9211.jpg",
       "focus": "50% 45%",
-      "images": ["compoundengineering.png"],
-      "headline": "Så gör du Claude",
+      "headline": "Så gör du\nClaude",
       "kicker": "till en",
       "emphasis": "supermaskin.",
       "step": 1,
-      "of": 2
+      "of": 2,
+      "steps": [
+        "/plugin marketplace add\nEveryInc/compound-engineering-plugin",
+        "/plugin install compound-engineering"
+      ]
     }
   ]
 }

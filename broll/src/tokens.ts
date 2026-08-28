@@ -778,7 +778,7 @@ export const slideFormat = {
     scrim: 'linear-gradient(#0A0F1459, #0A0F1426 40%, #0A0F1473)',
     accent: null,
     headline: {
-      family: 'Inter', weight: 800, size: 86,
+      family: 'Inter', weight: 800, size: 112,
       tracking: '-0.035em', leading: 1.04,
     },
     /** Second line, indented, italic. */
@@ -803,6 +803,25 @@ export const slideFormat = {
      * cover crop would cut the half that carries the commands.
      */
     shot: { radius: 14, background: '#0D0D0F', pad: 22, top: 0.37 },
+    /**
+     * Commands set as live text rather than a screenshot. A capture of a
+     * terminal is pixels, and this one has to be read at arm's length on a
+     * phone -- scaled up it softens, and scaled to fit it is unreadable.
+     *
+     * Not scaled by the shape either. Monospace is bound by the frame's
+     * width, not its height: 58 characters at 47px would need 1400px of a
+     * 1080px canvas. Wrapping at the spaces is what buys the size back.
+     */
+    terminal: {
+      family: 'IBM Plex Mono', weight: 400, size: 36,
+      tracking: '0em', leading: 1.65,
+      ink: '#E8E8EA',
+      background: '#0D0D0F',
+      radius: 18,
+      padBlock: 64,
+      padInline: 46,
+      top: 0.55,
+    },
   },
   /**
    * B's before/after variant, from `Comment GUIDE and I'll send it over(4).jpg`.

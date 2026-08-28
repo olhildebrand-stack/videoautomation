@@ -115,6 +115,7 @@
         "body",
         "image",
         "images",
+        "steps",
         "step",
         "of"
       ],
@@ -125,7 +126,7 @@
       ],
       "from": "Comment GUIDE and I'll send it.jpg",
       "sample": "titled",
-      "note": "The ladder is headline, kicker, emphasis, body -- in that order down the slide, not in importance order. Two screenshots scatter at angles; ONE sits straight and is contained rather than cropped, and the card takes its height from it. On a story it draws a next-arrow instead of the dots, which are a carousel's affordance."
+      "note": "The ladder is headline, kicker, emphasis, body -- in that order down the slide, not in importance order. Give `steps` and it sets them as live text in a terminal card, centred: commands are typed, so they are set rather than photographed and stay sharp at any size. Two screenshots scatter at angles; ONE sits straight and contained, and the card takes its height from it. On a story it draws a next-arrow instead of the dots, which are a carousel's affordance."
     },
     {
       "name": "beforeafter",
