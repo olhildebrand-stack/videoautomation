@@ -76,6 +76,19 @@ The parts of the skill worth naming, because the components are built to them:
 The durations and the easing curve in `tokens.ts` are this project's, arrived at
 by watching renders. They are defaults to design with, not laws to cite.
 
+## A story starts with a format choice
+
+When the operator says they want a story, **offer the formats before asking what
+it is about**. Not all fourteen -- the two or three the material can actually
+carry, grouped by what each one needs from them: how many photographs, whether
+any of them have to be screenshots, and how many slides that buys.
+
+The reason is the order the work happens in. What the story is about is theirs
+to decide and takes a sentence; how many photographs they have to go and take is
+the expensive part, and it is decided by the format. Asking for the idea first
+and the format second means the idea gets written against a format nobody chose,
+and then the shot list arrives as a surprise.
+
 ## The formats bank
 
 `pipeline/formats/bank.json` holds every slide format that exists. A sequence
