@@ -1,8 +1,8 @@
 # Directing the idea
 
 The stage before the director. It turns "I want to post something" into the
-thing `pipeline.py` already knows how to consume: a topic, a hook picked from
-the bank by number, and a beat outline in the director's own vocabulary.
+thing `pipeline.py` already knows how to consume: a topic, a hook matched from
+the swipe file, and a beat outline in the director's own vocabulary.
 
 It is not a separate product. The editing pipeline has a front end missing,
 and this is it — which is why it lives here, beside the banks it has to read,
@@ -16,32 +16,38 @@ used to go to die.
 
 | file | what it is | who reads it |
 | --- | --- | --- |
-| `topics/<name>.txt` | what the video is about. `--topic` already reads it | `hookgen.py`, then the director |
-| `outlines/<name>.md` | `needs`, a format, a hook **number**, and the beats | the operator, at the camera |
+| `topics/<name>.txt` | what the video is about, in plain prose | `hookgen.py`, then the director |
+| `outlines/<name>.md` | `needs`, a format, both hooks, and the beats | the operator, at the camera |
 
 The outline's header is the part that decides whether the idea gets made:
 `needs` is the honest list of what has to be filmed or captured, `format` is a
-name from the formats bank or `-` for a talking head, and `hook` is a number
-from the hooks bank — never hook text.
+name from the formats bank or `-` for a talking head, and the two hooks are
+matched text — `verbal` from `hooks/winning-hooks.md`, the sentence spoken over
+the opening seconds, and `onscreen` from `hooks/onscreen-hooks.md`, the three-
+to-eight-word card on the frame. Both carry the `from:` line naming the source
+they were matched from, because that line is what makes "matched, not written"
+checkable.
+
+The verbal hook belongs here rather than at checkpoint 3, and that is the
+point of deciding it now: it is the first thing said on camera, so it has to
+be known before the camera is on. Checkpoint 3 picks the on-screen card
+against the finished cut, which is why `onscreen` here is a first choice
+rather than the final one.
 
 ```
 python pipeline\idea.py new   <name>    a blank topic and a blank outline
-python pipeline\idea.py hooks <name>    rank the bank against the topic
 python pipeline\idea.py check <name>    every rule below, enforced
 ```
 
-`hooks` is the same matcher checkpoint 3 uses, run with no transcript, because
-at idea time there is no recording. The topic file alone is enough to rank
-against — and a subject the bank holds no hook for is worth discovering before
-the shoot rather than after it, which is the only reason to match this early.
-
 `check` is the part that makes the rules below real rather than written down.
-It fails on an unanswered `BRAND.md`, a hook that is text instead of a number,
-a hook number the bank does not contain, a format not in the formats bank, an
-outline that does not run `HOOK` → `LANDING`, an empty beat, an idea that does
-not say what it needs filmed, and any timing written into a beat name or the
-header. It says nothing about what the beats *say* — that is judgement, and it
-is what the conversation in this file is for.
+It fails on an unanswered `BRAND.md`, a hook with no source line, a source
+that does not appear in its bank **verbatim** — the same check `hookgen.py`
+makes, and the one that catches an invented hook presented as a match — a
+format not in the formats bank, an outline that does not run `HOOK` →
+`LANDING`, an empty beat, an idea that does not say what it needs filmed, and
+any timing written into a beat name or the header. It says nothing about
+whether the hook is a *good* match: that is judgement, and it is what the
+conversation in this file is for.
 
 The beat outline is the point of the whole stage. An idea written as prose has
 to be reverse-engineered into beats by whoever records it, and that is where
@@ -71,11 +77,14 @@ never.
 These are not restated here because they are enforced elsewhere. They bind
 this stage anyway.
 
-**Hooks come from the bank.** `pipeline/hooks/bank.json` holds hooks that
-won. Match one, never write one, and change no more than three words. If
-nothing in the bank fits, say so and offer to grow the bank — do not quietly
-invent a hook and present it as matched. `hookgen.py` already does the
-matching against a topic; call it rather than re-implementing it.
+**Hooks come from the banks, and there are two.**
+`pipeline/hooks/winning-hooks.md` is 1050+ proven *verbal* hooks — the spoken
+opening sentence. `pipeline/hooks/onscreen-hooks.md` is the *on-screen* hook,
+the three-to-eight-word text card. An idea needs both, and one will not do the
+other's job. Match the tightest-fitting source in the right bank and change as
+few words as possible — usually one noun. Never write one, and never add to,
+remove from, or modify either file. If nothing fits, say so — do not quietly
+invent a hook and present it as matched.
 
 **A story picks a format from the bank first.** `pipeline/formats/bank.json`,
 and `CLAUDE.md` says to offer the formats before asking what the story is

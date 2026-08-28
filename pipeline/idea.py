@@ -2,16 +2,15 @@
 """The idea stage: what gets recorded, settled before anything is filmed.
 
     python pipeline/idea.py new   <name>
-    python pipeline/idea.py hooks <name>
     python pipeline/idea.py check <name>
 
 `IDEAS.md` is the stage. This is the part of it a machine can check. The stage
-turns "I want to post something" into a topic, a hook picked from the bank by
-number, and a beat outline -- and every one of those already has a rule
-attached that was, until now, only written down.
+turns "I want to post something" into a topic, both hooks, and a beat outline
+-- and every one of those already has a rule attached that was, until now,
+only written down.
 
-Two files per idea, both tracked, both outliving the project directory they get
-copied into:
+Two tracked files per idea, both outliving the gitignored `projects/`
+directory they get copied into:
 
     topics/<name>.txt     what the video is ABOUT. `--topic` already reads it.
     outlines/<name>.md    the beats, in the director's vocabulary. Read at the
@@ -19,9 +18,11 @@ copied into:
                           the director re-derives the beats from what was
                           actually said, not from what was planned.
 
-The hook is matched here rather than only at checkpoint 3, because by
-checkpoint 3 the video exists. A subject the bank holds no hook for is worth
-finding out about before the recording rather than after it.
+Matching a hook is judgement and stays in the conversation; there is no
+matcher here. What is checkable is the accounting: every hook names the source
+it was matched from, and that source has to appear in its bank verbatim. That
+is `hookgen.py`'s own check, applied to the half of the work that happens
+before the camera is on.
 """
 
 from __future__ import annotations
@@ -33,14 +34,24 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent))
 from formats import names as format_names  # noqa: E402
-from hookgen import (  # noqa: E402
-    SEED_TOPIC, bank_has_nothing, generate, load_bank, parse_topic,
-)
+from hookgen import SEED_TOPIC, bank_text, in_bank  # noqa: E402
 
 HERE = Path(__file__).resolve().parent
 BRAND = HERE / "ideas" / "BRAND.md"
 TOPICS = HERE / "topics"
 OUTLINES = HERE / "outlines"
+
+# The two banks, and which header field is matched from which. They are not
+# interchangeable: a verbal hook is the full sentence spoken over the opening
+# seconds, an on-screen hook is the three-to-eight-word card on the frame.
+BANKS = {
+    "verbal": HERE / "hooks" / "winning-hooks.md",
+    "onscreen": HERE / "hooks" / "onscreen-hooks.md",
+}
+
+# What the on-screen bank says a card is. The verbal bank has no such limit --
+# its entries are whole sentences.
+ONSCREEN_WORDS = (3, 8)
 
 # The two beats DIRECTOR.md fixes the ends of the video to. Everything between
 # them is named for what it is -- `STEP 1`, `THE FIX`, `WHAT CHANGED` -- so
@@ -52,10 +63,13 @@ LAST_BEAT = "LANDING"
 # the pipeline measures time from the audio, so an outline saying "10 seconds
 # on the problem" is guessing at a number the machine will overrule.
 #
-# Only beat names and header values are searched, never what the beat says. A
-# line of spoken content that happens to mention three minutes is the video's
-# subject, not a timing, and flagging it would teach the operator to ignore
-# this check -- which costs more than the rule is worth.
+# Only beat names and the non-hook header values are searched. What a beat
+# says is exempt -- a line of spoken content mentioning three minutes is the
+# video's subject, not a timing. So are the hook fields, and that is not a
+# nicety: the swipe file is full of proven hooks built on a clock, "Can you
+# tell us how to (insert result) in 60 seconds?" among them, and a check that
+# rejected those would reject most of the bank. Flagging either would teach
+# the operator to ignore this check, which costs more than the rule is worth.
 CLOCK = re.compile(
     r"\b\d+([.,]\d+)?\s*(s|sec|secs|second|seconds|sek|sekund|sekunder"
     r"|min|mins|minute|minutes|minut|minuter)\b|\b\d{1,2}:\d{2}\b",
@@ -65,17 +79,26 @@ CLOCK = re.compile(
 SEED_OUTLINE = """\
 # {name}
 
-# needs  : what has to be filmed or captured, honestly -- talking head only,
-#          a screen recording, a screenshot, three photographs. This is what
-#          decides whether the idea gets made this week or never.
-# format : a slide format from pipeline/formats/bank.json, for a story. Leave
-#          it as `-` for a talking-head video.
-# hook   : a number from pipeline/hooks/bank.json. `idea.py hooks {name}`
-#          ranks the bank against topics/{name}.txt.
+# needs    : what has to be filmed or captured, honestly -- talking head only,
+#            a screen recording, a screenshot, three photographs. This is what
+#            decides whether the idea gets made this week or never.
+# format   : a slide format from pipeline/formats/bank.json, for a story.
+#            Leave it as `-` for a talking-head video.
+# verbal   : the sentence spoken over the opening seconds, matched from
+#            hooks/winning-hooks.md. Never written.
+# onscreen : the {lo}-to-{hi}-word card on the frame, matched from
+#            hooks/onscreen-hooks.md. A different bank and a different job.
+#
+# Each hook carries the source it was matched from, quoted exactly as that
+# bank has it. Change as few words as possible -- usually one noun -- and
+# carry the source's punctuation across. Word-for-word is a normal outcome.
 
-needs  :
-format : -
-hook   :
+needs         :
+format        : -
+verbal        :
+verbal-from   :
+onscreen      :
+onscreen-from :
 
 ## HOOK
 
@@ -100,7 +123,7 @@ def brand_unanswered(text: str) -> list[str]:
     somebody generic, which is the one thing that reliably does not get
     watched. So it is a gate, not a warning.
     """
-    unanswered, question = [], "?"
+    unanswered = []
     for block in re.split(r"^## ", text, flags=re.M)[1:]:
         question = block.splitlines()[0].strip()
         _, _, answer = block.partition("**Answer:**")
@@ -131,6 +154,39 @@ def parse_outline(text: str) -> tuple[dict[str, str], list[tuple[str, str]]]:
     return header, beats
 
 
+def hook_problems(header: dict[str, str], name: str) -> list[str]:
+    """Both hooks present, and both matched from a source that really exists.
+
+    The verbatim check is the one that matters. A hook the model liked the
+    sound of, presented with a source that is not in the bank, is an invented
+    hook -- which is the single failure both banks exist to prevent, and the
+    only part of matching a machine can settle.
+    """
+    found = []
+    for field, bank in BANKS.items():
+        text, source = header.get(field, ""), header.get(f"{field}-from", "")
+        if not text:
+            found.append(f"no {field} hook. Match one from {bank.name}")
+            continue
+        if not source:
+            found.append(f"the {field} hook does not say what it was matched"
+                         f" from. Without a `{field}-from` line naming a"
+                         f" source in {bank.name}, nothing distinguishes a"
+                         f" match from an invention")
+            continue
+        if not in_bank(source, bank_text(bank)):
+            found.append(f"the {field} hook is matched from {source!r}, which"
+                         f" is not in {bank.name}. That bank is the complete"
+                         f" set, so this is a written hook, not a matched one")
+    card = header.get("onscreen", "")
+    lo, hi = ONSCREEN_WORDS
+    if card and not lo <= len(card.split()) <= hi:
+        found.append(f"the on-screen hook is {len(card.split())} words;"
+                     f" {outline_path(name).name} needs {lo}-{hi}. A whole"
+                     f" sentence is a verbal hook, which is the other bank")
+    return found
+
+
 def problems(name: str) -> list[str]:
     """Everything wrong with this idea that can be established mechanically."""
     found = []
@@ -144,11 +200,13 @@ def problems(name: str) -> list[str]:
     if not outline_file.is_file():
         return found + [f"no outline at {outline_file}"]
 
-    topic = parse_topic(topic_file.read_text(encoding="utf-8-sig"))
-    if not (topic.tools or topic.subject or topic.makes or topic.replaces
-            or topic.about):
-        found.append(f"{topic_file.name} is still the blank seed, so hook"
-                     " matching has nothing to rank against")
+    topic = "\n".join(
+        line for line in topic_file.read_text(encoding="utf-8-sig").splitlines()
+        if not line.lstrip().startswith("#")
+    ).strip()
+    if not topic:
+        found.append(f"{topic_file.name} says nothing about the video, so a"
+                     " hook cannot be matched against it")
 
     text = outline_file.read_text(encoding="utf-8-sig")
     header, beats = parse_outline(text)
@@ -162,14 +220,7 @@ def problems(name: str) -> list[str]:
         found.append(f"format {fmt!r} is not in the formats bank -- a sequence"
                      " picks a layout, it does not invent one")
 
-    hook = header.get("hook", "")
-    if not hook:
-        found.append(f"no hook picked. `idea.py hooks {name}` ranks the bank")
-    elif not hook.isdigit():
-        found.append(f"hook {hook!r} is not a number -- hooks are matched from"
-                     " the bank by number, never written")
-    elif int(hook) not in {h["n"] for h in load_bank()}:
-        found.append(f"hook {hook} is not in pipeline/hooks/bank.json")
+    found += hook_problems(header, name)
 
     if not beats:
         found.append("the outline has no beats, which is the whole point of it")
@@ -183,7 +234,9 @@ def problems(name: str) -> list[str]:
             if not body:
                 found.append(f"beat {beat} is empty, so there is nothing to say")
 
-    timed = [f"{k}: {v}" for k, v in header.items() if CLOCK.search(v)]
+    exempt = set(BANKS) | {f"{field}-from" for field in BANKS}
+    timed = [f"{k}: {v}" for k, v in header.items()
+             if k not in exempt and CLOCK.search(v)]
     timed += [beat for beat, _ in beats if CLOCK.search(beat)]
     for where in timed:
         found.append(f"the outline writes a timing: {where!r}. The pipeline"
@@ -207,9 +260,11 @@ def check(name: str) -> int:
 
 
 def new(name: str) -> int:
+    lo, hi = ONSCREEN_WORDS
     written = []
     for path, seed in ((topic_path(name), SEED_TOPIC),
-                       (outline_path(name), SEED_OUTLINE.format(name=name))):
+                       (outline_path(name),
+                        SEED_OUTLINE.format(name=name, lo=lo, hi=hi))):
         if path.is_file():
             print(f"{path} already exists, left alone")
             continue
@@ -222,36 +277,6 @@ def new(name: str) -> int:
     return 0
 
 
-def hooks(name: str, count: int = 5) -> int:
-    """Rank the bank against the topic alone -- there is no recording yet."""
-    path = topic_path(name)
-    if not path.is_file():
-        print(f"error: no topic at {path}", file=sys.stderr)
-        return 2
-    topic = parse_topic(path.read_text(encoding="utf-8-sig"))
-    candidates = generate("", topic, count=count)
-
-    for c in candidates:
-        print(f"\n[{c.source_n}] {c.sv}")
-        print(f"     {c.source_en!r}"
-              f" -- {c.changed} word{'' if c.changed == 1 else 's'} changed")
-        if c.why:
-            print(f"     why: {', '.join(c.why)}")
-
-    if bank_has_nothing(candidates):
-        print("\nThe bank does not hold a hook for this. Every candidate above"
-              "\nscored as noise, so the shortlist is a ranking of nothing."
-              "\nEither the topic is about something the bank has never covered"
-              "\n-- in which case the bank needs growing with a hook that"
-              "\nactually won -- or topics/%s.txt is too thin to rank against."
-              % name)
-        return 1
-
-    print(f"\nWrite the number into the `hook :` line of"
-          f" outlines/{name}.md.")
-    return 0
-
-
 def main() -> int:
     parser = argparse.ArgumentParser(
         description=__doc__,
@@ -259,20 +284,12 @@ def main() -> int:
     sub = parser.add_subparsers(dest="command", required=True)
     for command, helptext in [
         ("new", "start an idea: a blank topic and a blank outline"),
-        ("hooks", "rank the hooks bank against the topic, before recording"),
         ("check", "every rule IDEAS.md states, enforced"),
     ]:
-        p = sub.add_parser(command, help=helptext)
-        p.add_argument("name")
-        if command == "hooks":
-            p.add_argument("--count", type=int, default=5)
+        sub.add_parser(command, help=helptext).add_argument("name")
 
     args = parser.parse_args()
-    if args.command == "new":
-        return new(args.name)
-    if args.command == "hooks":
-        return hooks(args.name, args.count)
-    return check(args.name)
+    return new(args.name) if args.command == "new" else check(args.name)
 
 
 if __name__ == "__main__":

@@ -10,6 +10,7 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).parent))
 import pipeline as p  # noqa: E402
+from hookgen import Candidate  # noqa: E402
 from state import GATES, ORDER, PipelineState, Stage, load, save  # noqa: E402
 
 
@@ -565,6 +566,19 @@ def test_only_the_first_non_comment_line_is_used(tmp_path):
 
 # --- checkpoint 3: the hook -------------------------------------------------
 
+@pytest.fixture(autouse=True)
+def _no_claude_call(monkeypatch):
+    """The match is a judgement made by Claude, which no test can make. What
+    these tests are about is everything around it: the gate, the numbering,
+    the pick. So the call is stood in for, and the one thing worth asserting
+    about it -- that an invented source is refused -- lives in test_hookgen."""
+    monkeypatch.setattr(
+        p, "generate",
+        lambda transcript, topic, count=5, **kw: [
+            Candidate(f"Hook nummer {i}", f"Source {i}", "bytte ett substantiv")
+            for i in range(1, count + 1)])
+
+
 def _graded(tmp_path, transcript="Jag bygger ett system som klipper video åt mig."):
     """A pipeline sitting at GRADED, i.e. one step from the hook gate."""
     tmp_path.mkdir(parents=True, exist_ok=True)
@@ -603,7 +617,7 @@ def test_the_gate_prints_a_numbered_shortlist(tmp_path, capsys):
     for i in range(1, len(state.hook_candidates) + 1):
         assert f"  {i}. " in out
     # Every option says where it came from, so nothing looks invented.
-    assert out.count("from [") == len(state.hook_candidates)
+    assert out.count("from: ") == len(state.hook_candidates)
 
 
 def test_a_blank_topic_file_is_seeded_for_the_operator(tmp_path):
@@ -1333,37 +1347,48 @@ def _hook_project(tmp_path, transcript):
 
 
 def test_a_video_the_bank_does_not_fit_is_told_so(tmp_path, monkeypatch, capsys):
-    """Every hook is scored, so there is always a top five -- but a top five is
-    not a match. Five hooks tying at 2.0 on one incidental keyword were
-    presented with the same confidence as a real one scoring 28."""
-    monkeypatch.setattr(p, "probe_duration", lambda _: 40.0)
-    state = _hook_project(
-        tmp_path,
-        "Det är planering struktur och utförande och hur mycket det kostar")
+    """A bent hook offered as a match is the failure this stage exists to
+    prevent, so an empty shortlist has to read as an answer rather than as a
+    breakage -- and has to say where to go instead."""
+    monkeypatch.setattr(p, "generate", lambda *a, **k: [])
+    state = _hook_project(tmp_path, "Det är planering struktur och utförande")
     p.build_hook_shortlist(state, tmp_path, 5)
     assert state.hook_weak
     p.show_hook_gate(state, tmp_path)
     out = capsys.readouterr().out
-    assert "Nothing in the winning-hooks bank fits this video" in out
-    assert "your own spoken opening" in out
-    assert "MATCHED from the winning-hooks bank" not in out
+    assert "Nothing in the on-screen bank fits this video" in out
+    assert "onscreen-hooks.md" in out
+    assert "hook 0" in out
+    assert "MATCHED from" not in out
 
 
 def test_a_video_the_bank_does_fit_is_not_hedged(tmp_path, monkeypatch, capsys):
-    monkeypatch.setattr(p, "probe_duration", lambda _: 40.0)
-    (tmp_path / "topic.txt").write_text(
-        "tools: Claude Code\nabout: automating video editing end to end\n",
-        encoding="utf-8")
     state = _hook_project(
         tmp_path,
-        "Jag bygger ett system som klipper video captions och b-roll åt mig "
-        "helt automatiskt med Claude och content blir sjukt mycket bättre")
+        "Jag bygger ett system som klipper video captions och b-roll åt mig")
     p.build_hook_shortlist(state, tmp_path, 5)
     assert not state.hook_weak
     p.show_hook_gate(state, tmp_path)
     out = capsys.readouterr().out
-    assert "Nothing in the winning-hooks bank" not in out
-    assert "MATCHED from the winning-hooks bank" in out
+    assert "Nothing in the on-screen bank" not in out
+    assert "MATCHED from onscreen-hooks.md" in out
+
+
+def test_an_unreachable_matcher_still_opens_the_gate(tmp_path, capsys, monkeypatch):
+    """No `claude` on PATH is not a reason to refuse. The bank is right there
+    and matching by hand is the same judgement without the shortcut."""
+    def boom(*a, **k):
+        raise p.DirectorUnavailable("the `claude` CLI is not on PATH")
+    monkeypatch.setattr(p, "generate", boom)
+    state = _hook_project(tmp_path, "Jag bygger ett system")
+    p.build_hook_shortlist(state, tmp_path, 5)
+    assert state.hook_candidates == []
+    assert not state.hook_weak          # the bank was never asked, so not weak
+    p.show_hook_gate(state, tmp_path)
+    out = capsys.readouterr().out
+    assert "not on PATH" in out
+    assert "Nothing in the on-screen bank" not in out
+    assert "hook 0" in out
 
 
 # --- files the operator hand-edits on Windows --------------------------------

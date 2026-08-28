@@ -31,9 +31,10 @@ from cutlist import (
 from ffmpeg_ops import FFmpegMissing, Grade, cut, grade, probe_duration
 from remotion_ops import command as remotion_command
 from hookgen import (
-    SEED_TOPIC, as_dicts, bank_has_nothing, generate, load_topic,
-    render_file,
+    BANK as HOOK_BANK, BankUnavailable, SEED_TOPIC, as_dicts, generate,
+    load_topic, render_file,
 )
+from director import DirectorUnavailable
 from brief import TARGET_SECONDS
 from jsonfile import BadJSON, read as read_json
 from cues import CHILD_KEYS, load_sheet, resolve as resolve_cues
@@ -196,7 +197,14 @@ DEFAULT_HOOK_COUNT = 5
 
 
 def build_hook_shortlist(state: PipelineState, project: Path, count: int) -> None:
-    """Match the winning-hooks bank against this video and store the result."""
+    """Match hooks/onscreen-hooks.md against this video and store the result.
+
+    A bank of prose cannot be scored, so this is a judgement stage like the
+    director: the bank goes to Claude and a shortlist comes back, each option
+    carrying the source it was matched from. When that call cannot be made the
+    gate still opens -- matching by hand and picking with `hook 0` is the same
+    work without the shortcut, and is better than a stage that refuses.
+    """
     topic_path = project / "topic.txt"
     if not topic_path.is_file():
         topic_path.write_text(SEED_TOPIC, encoding="utf-8")
@@ -207,11 +215,17 @@ def build_hook_shortlist(state: PipelineState, project: Path, count: int) -> Non
         # The cut, not the raw recording: the hook has to fit what survived.
         transcript = transcript_text(Path(state.cut_transcript))
 
-    candidates = generate(transcript, load_topic(project), count=count)
-    state.hook_weak = bank_has_nothing(candidates)
+    try:
+        candidates = generate(transcript, load_topic(project), count=count)
+    except (BankUnavailable, DirectorUnavailable) as exc:
+        state.hook_candidates = []
+        state.hook_weak = False
+        say(f"Could not match a shortlist: {exc}")
+        return
+    state.hook_weak = not candidates
     state.hook_candidates = as_dicts(candidates)
     # A record of the whole shortlist, so a rejected option can be recovered
-    # later without regenerating and hoping the ranking comes out the same.
+    # later without regenerating and hoping the match comes out the same.
     (project / "hooks.txt").write_text(render_file(candidates), encoding="utf-8")
 
 
@@ -512,36 +526,26 @@ def show_hook_gate(state: PipelineState, project: Path) -> None:
     rule("CHECKPOINT 3 of 3 -- hook")
     say()
     if not state.hook_candidates:
-        say(f"No hook matched. Fill in topic.txt and run:  python {me()} "
-            f"hooks --project {project}")
+        # Either nothing fit, or the matcher could not be reached. Both end in
+        # the same place: the bank is right there, and matching by hand is the
+        # same judgement the stage would have made.
+        if state.hook_weak:
+            say("Nothing in the on-screen bank fits this video without being")
+            say("rewritten into a different hook, so nothing is offered.")
+        say(f"Match one yourself from {HOOK_BANK}, put it in")
+        say(f"{project / 'hook.txt'}, then:")
+        say(f"  python {me()} hook 0 --project {project}")
+        say()
+        say(f"Or try again:  python {me()} hooks --project {project}")
+        say(f"Or no card at all: delete {project / 'hook.txt'} and pick nothing")
         return
-    if state.hook_weak:
-        say("Nothing in the winning-hooks bank fits this video.")
-        say()
-        say("Every hook gets a score, so there is always a top five -- but a")
-        say("top five is not a match. These tie on one incidental keyword and")
-        say("are worth no more than each other.")
-        say()
     for i, c in enumerate(state.hook_candidates, 1):
-        changed = c["changed"]
         say(f"  {i}. {c['sv']}")
-        say(f"       from [{c['source_n']}] {c['source_en']!r}"
-            f"  -- {changed} word{'' if changed == 1 else 's'} changed")
-        if c["en"] != c["source_en"]:
-            say(f"       reads as: {c['en']}")
-        if c["why"]:
-            say(f"       matched on: {', '.join(c['why'])}")
+        say(f"       from: {c['source']}")
+        say(f"       changed: {c['changed']}")
         say()
-    if state.hook_weak:
-        say("Better options than any of the above:")
-        say(f"  - put your own spoken opening in {project / 'hook.txt'}, then"
-            f" hook 0")
-        say(f"  - render with no card at all: delete {project / 'hook.txt'}"
-            " and pick nothing")
-        say("  - add hooks that fit this kind of video to hooks/bank.json")
-    else:
-        say("All of these are MATCHED from the winning-hooks bank -- none were written.")
-        say("Zero words changed is the best outcome; three is the hard limit.")
+    say(f"All of these are MATCHED from {HOOK_BANK.name} -- none were written.")
+    say("Word-for-word is a fine outcome; one noun swapped is the usual one.")
     say()
     say(f"Pick one:      python {me()} hook 1 --project {project}")
     say(f"See more:      python {me()} hooks --count 10 --project {project}")
