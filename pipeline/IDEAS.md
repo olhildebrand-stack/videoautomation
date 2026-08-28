@@ -119,6 +119,45 @@ Corrections go here, written as what to do instead. A rule here applies to
 every future idea; a rule in a chat applies to none. Keep the case that made
 each one necessary — a rule without its reason gets argued with later.
 
+- **2026-08-28 — a hook is never an announcement about the operator.** The
+  reel that died opened *"Jag fick nyss en till referens..."* — I just got
+  another referral. It held 4 seconds of 19 (21%) against 54% for the reel
+  that worked, and its 9x deficit in reach followed from that: the platform
+  distributes what holds people, so the video was dead before its content was
+  judged. Neither bank contains a source that announces the speaker's own good
+  news, and the nearest thing, *"I just uninstalled OpenClaw"*, is an action
+  with a reveal rather than a status update. A hook is about something in the
+  world with stakes in it. What happened to the operator this week is not a
+  hook, however good the week was.
+
+- **2026-08-28 — a video with nothing on screen has to carry a claim the
+  audience does not already believe.** Talking head alone is legitimate —
+  three of the ten reference reels are exactly that — but it spends the whole
+  video on the claim, so the claim has to be worth it. The reel that died
+  paired no artifact with *referrals are the warmest customers*, which every
+  business owner it was aimed at already believed. The reel that worked paired
+  a system on screen with a claim that had a victim in it. Before proposing a
+  talking-head idea, say what the viewer believes now and what they believe
+  after. If those are the same sentence, the idea needs an artifact or it
+  needs a better claim.
+
+- **2026-08-28 — one road per video.** `ideas/BRAND.md` answer 3 wants one
+  thought: *I want to hire this guy*. Three roads reach it — he can build,
+  that would work in my business, I need to move on this — and all three are
+  wanted across the account. In a single video they compete: proving
+  competence, sparking application and creating urgency need different beats,
+  different evidence and different landings. Pick the road in the outline and
+  let the other two go. A video that takes all three arrives nowhere.
+
+- **2026-08-28 — grade a posted video on retention, and read the drop.**
+  Views are the last thing to look at, not the first: they are downstream of
+  how long the video held people. Where the drop happens says which half
+  failed — inside the first few seconds it is the hook, later it is the body —
+  and those are different fixes. Answer 5 of `BRAND.md` is where what gets
+  learned goes, so record watch time against length, not just views, and say
+  which half you think died. n is currently 2, which is why every rule above
+  is a hypothesis worth re-testing rather than a law.
+
 - **2026-08-28 — the on-screen bank is two people's niches, and only two of
   the five are the operator's.** `hooks/onscreen-hooks.md` came from the
   operator's mentor's dashboard and its 45 examples are grouped under five
