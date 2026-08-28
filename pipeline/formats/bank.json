@@ -20,7 +20,7 @@
     "  from    the reference it was read off, or 'improvised' where there was",
     "          none. Improvised is not a lesser class; it means the reference",
     "          set had no example and the gap was the reason to build it.",
-    "  sample  the folder that renders one, under stories/formats/."
+    "  sample  the folder that renders one, under stories/. More than one where a format has a variant worth looking at separately."
   ],
   "formats": [
     {
@@ -41,7 +41,7 @@
         "when you have a brand texture"
       ],
       "from": "over(1), over(6)",
-      "sample": "textured",
+      "sample": "formats/textured",
       "note": "Its words are bounded by the card: about three lines of body. slides.py counts them and refuses more."
     },
     {
@@ -64,7 +64,7 @@
         "a set that must read as one piece"
       ],
       "from": "send it(1), send it(3)",
-      "sample": "blurred",
+      "sample": "formats/blurred",
       "note": "The first slide of a set usually names no image: there is nothing to show yet, so it carries no card."
     },
     {
@@ -83,7 +83,7 @@
         "anything that should look typed rather than designed"
       ],
       "from": "1787344402523, 1787344487860",
-      "sample": "labels",
+      "sample": "formats/labels",
       "note": "No handle, no dots, no logo. The app draws none, and adding them is the tell."
     },
     {
@@ -102,7 +102,7 @@
         "a list that adds up to a number"
       ],
       "from": "bdp-frame-0..4",
-      "sample": "stack",
+      "sample": "formats/stack",
       "note": "Put a | in `emphasis` before the words that take the accent and the underline."
     },
     {
@@ -125,7 +125,7 @@
         "a title that has to carry four separate ideas"
       ],
       "from": "Comment GUIDE and I'll send it.jpg",
-      "sample": "titled",
+      "sample": "formats/titled, ce/cover",
       "note": "The ladder is headline, kicker, emphasis, body -- in that order down the slide, not in importance order. Give `steps` and it sets them as live text in a terminal card, centred: commands are typed, so they are set rather than photographed and stay sharp at any size. Two screenshots scatter at angles; ONE sits straight and contained, and the card takes its height from it. On a story it draws a next-arrow instead of the dots, which are a carousel's affordance."
     },
     {
@@ -147,7 +147,7 @@
         "a claim that needs two screenshots to be believed"
       ],
       "from": "over(4)",
-      "sample": "beforeafter",
+      "sample": "formats/beforeafter, ce/loop",
       "note": "`emphasis` is the two dates separated by a slash: 'FÖRE/EFTER'. Give `steps` instead and it draws that sequence down the middle with an arrow between each, in place of the cards -- for a claim whose subject is the order and which has nothing to photograph. Omit `handle` and the footer goes with it."
     },
     {
@@ -167,7 +167,7 @@
         "a DM or dashboard worth showing"
       ],
       "from": "701537468, 639800251",
-      "sample": "collage",
+      "sample": "formats/collage",
       "note": "The chip is the format. Each names its own x and y as a fraction of the frame, placed by hand -- only whoever took the screenshot knows where the number is. Three places, filled in order."
     },
     {
@@ -187,27 +187,8 @@
         "a closer"
       ],
       "from": "improvised",
-      "sample": "ticker-photo, ticker-texture",
+      "sample": "formats/ticker-photo, formats/ticker-texture",
       "note": "`image` is a photograph and is darkened; `background` is a texture and is not."
-    },
-    {
-      "name": "split",
-      "what": "A hard horizontal edge: the photograph above it, a flat block below, type only in the block.",
-      "needs": [
-        "kicker",
-        "headline",
-        "body",
-        "emphasis",
-        "image"
-      ],
-      "ground": "photo above, flat colour below",
-      "good_for": [
-        "a photo worth not darkening",
-        "a caption that needs real room"
-      ],
-      "from": "improvised",
-      "sample": "split",
-      "note": "The only photo format that puts no type on the picture, so the picture is never scrimmed."
     },
     {
       "name": "thread",
@@ -223,77 +204,8 @@
         "something someone said about the work"
       ],
       "from": "improvised",
-      "sample": "thread",
+      "sample": "formats/thread",
       "note": "Drawn, so it is not evidence -- for a thread worth reading, not a thread worth proving. The name is always blurred: a real thread has a real person in it."
-    },
-    {
-      "name": "quote",
-      "what": "A serif pull quote on paper, an oversized mark bled off the left edge, a rule and an attribution in mono.",
-      "needs": [
-        "headline",
-        "kicker",
-        "body"
-      ],
-      "ground": "paper",
-      "good_for": [
-        "one sentence worth stopping on",
-        "a reflection",
-        "breaking up a dark set"
-      ],
-      "from": "improvised",
-      "sample": "quote",
-      "note": "The only light ground and the only place the serif is used at size."
-    },
-    {
-      "name": "ledger",
-      "what": "Rows of label and value with a total, values in the mono and right-aligned so the digits stack, a hairline between.",
-      "needs": [
-        "headline",
-        "rows",
-        "emphasis"
-      ],
-      "ground": "flat dark",
-      "good_for": [
-        "what something cost",
-        "a breakdown that adds up",
-        "time or money"
-      ],
-      "from": "improvised",
-      "sample": "ledger",
-      "note": "`emphasis` is the total, label and value separated by a slash: 'Nu/12 min'."
-    },
-    {
-      "name": "grid",
-      "what": "Six paper tiles on a dark ground, each a figure and a caption.",
-      "needs": [
-        "headline",
-        "rows"
-      ],
-      "ground": "flat dark",
-      "good_for": [
-        "a countable list",
-        "things stopped or started",
-        "the opposite claim to the collage's"
-      ],
-      "from": "improvised",
-      "sample": "grid",
-      "note": "A grid says this is all of it. Use the collage when the claim is that there is more."
-    },
-    {
-      "name": "timeline",
-      "what": "A rail down the left with the times on it, dots, and what happened at each.",
-      "needs": [
-        "headline",
-        "rows"
-      ],
-      "ground": "flat dark",
-      "good_for": [
-        "an order of events",
-        "how long something took end to end"
-      ],
-      "from": "improvised",
-      "sample": "timeline",
-      "note": "Evenly spaced, not scaled to the real intervals: one long wait clumps every short gap into an unreadable stack."
     }
   ]
 }

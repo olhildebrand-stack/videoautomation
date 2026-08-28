@@ -21,7 +21,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 BANK = Path(__file__).resolve().parent / "formats" / "bank.json"
 TOKENS = ROOT / "broll" / "src" / "tokens.ts"
-SAMPLES = ROOT / "stories" / "formats"
+SAMPLES = ROOT / "stories"
 
 
 def load() -> list[dict]:
