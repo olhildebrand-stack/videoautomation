@@ -133,6 +133,20 @@ the ground. Only A wants one.
 
 ---
 
+## The bank
+
+`pipeline/formats/bank.json` is the machine-readable version of everything
+below: what each format is, what keys it reads, what ground it wants and when
+to reach for it. **A sequence picks a format from the bank; nothing invents a
+layout** -- the hooks bank's rule, for the hooks bank's reason. `slides.py`
+refuses a `format` that is not in it.
+
+    python pipeline/formats.py           what each of the fourteen is
+    python pipeline/formats.py --check   fail if the bank has drifted
+
+This file stays the human read -- why each format works, and what was read off
+which reference. The bank is the one you pick from.
+
 ## What is built
 
 Seven formats, each named in `broll/src/tokens.ts` under `slideFormat` and

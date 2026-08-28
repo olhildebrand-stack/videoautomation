@@ -9,7 +9,7 @@
     "upgrade": "remotion upgrade",
     "typecheck": "tsc --noEmit",
     "lint:tokens": "node scripts/check-tokens.mjs",
-    "check": "npm run typecheck && npm run lint:tokens && npm test",
+    "check": "npm run typecheck && npm run lint:tokens && npm test && python3 ../pipeline/formats.py --check",
     "test": "node --experimental-strip-types --test src/**/*.test.ts"
   },
   "dependencies": {

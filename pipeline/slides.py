@@ -27,6 +27,7 @@ from jsonfile import BadJSON  # noqa: E402
 from jsonfile import read as read_json  # noqa: E402
 from remotion_ops import RemotionMissing  # noqa: E402
 from remotion_ops import command as remotion_command  # noqa: E402
+from formats import names as banked_formats  # noqa: E402
 from verify import reason  # noqa: E402
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -143,6 +144,15 @@ def render(story: Path) -> int:
             return 2
         shutil.copy2(source, public / source.name)
         ground = f"{STAGED}/{source.name}"
+
+    # A sequence picks a format from the bank; it never invents a layout. The
+    # same rule the hooks bank enforces, for the same reason.
+    if fmt not in banked_formats():
+        print(f"error: format {fmt!r} is not in the bank. Pick one of:"
+              f" {', '.join(sorted(banked_formats()))}."
+              "\n       `python pipeline/formats.py` says what each one is.",
+              file=sys.stderr)
+        return 2
 
     if fmt == "textured":
         for index, entry in enumerate(slides, start=1):

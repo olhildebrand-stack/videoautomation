@@ -1,0 +1,297 @@
+{
+  "_readme": [
+    "The formats bank. These are BUILT formats -- a sequence picks one by name,",
+    "it never invents a layout. Adding an entry here is how the bank grows, and",
+    "nothing writes a slide design that is not in it.",
+    "",
+    "The rule is the hooks bank's rule, for the same reason: a format that has",
+    "been rendered, looked at and corrected is worth more than a better idea",
+    "nobody has seen. `pipeline/slides.py` refuses a `format` that is not here.",
+    "",
+    "  name    what goes in a slides.json `format`. Must exist in",
+    "          broll/src/tokens.ts under `slideFormat`.",
+    "  what    one line. What is actually on the slide.",
+    "  needs   the slide keys this format reads. A format renders without them,",
+    "          it just renders less -- except where marked required.",
+    "  ground  what sits behind the type: a photo, a texture, a flat colour, or",
+    "          nothing. One per sequence, never mixed.",
+    "  good_for  when to reach for it. Scored by eye, not by a matcher --",
+    "          fourteen entries is a list you read, not a search problem.",
+    "  from    the reference it was read off, or 'improvised' where there was",
+    "          none. Improvised is not a lesser class; it means the reference",
+    "          set had no example and the gap was the reason to build it.",
+    "  sample  the folder that renders one, under stories/formats/."
+  ],
+  "formats": [
+    {
+      "name": "textured",
+      "what": "Centred: a terracotta pill, an extra-bold headline, a semibold paragraph with one clause in the same terracotta, and a screenshot on a light card below.",
+      "needs": [
+        "kicker",
+        "headline",
+        "body",
+        "emphasis",
+        "image",
+        "handle"
+      ],
+      "ground": "texture",
+      "good_for": [
+        "a numbered walkthrough",
+        "six slides that must read as one document",
+        "when you have a brand texture"
+      ],
+      "from": "over(1), over(6)",
+      "sample": "textured",
+      "note": "Its words are bounded by the card: about three lines of body. slides.py counts them and refuses more."
+    },
+    {
+      "name": "blurred",
+      "what": "The cover photo blurred behind every slide, a light card in the upper half, a ghosted italic step number behind a tight headline, paragraph in regular weight.",
+      "needs": [
+        "kicker",
+        "headline",
+        "body",
+        "image",
+        "background",
+        "handle",
+        "step",
+        "of"
+      ],
+      "ground": "the set's own cover photo",
+      "good_for": [
+        "showing a UI",
+        "a student with a good photo and no brand assets",
+        "a set that must read as one piece"
+      ],
+      "from": "send it(1), send it(3)",
+      "sample": "blurred",
+      "note": "The first slide of a set usually names no image: there is nothing to show yet, so it carries no card."
+    },
+    {
+      "name": "labels",
+      "what": "The photograph untouched, no scrim, and the text small in the app's own black label boxes, each line its own box.",
+      "needs": [
+        "headline",
+        "body",
+        "emphasis",
+        "image"
+      ],
+      "ground": "photo, undarkened",
+      "good_for": [
+        "a personal day",
+        "a reply to something",
+        "anything that should look typed rather than designed"
+      ],
+      "from": "1787344402523, 1787344487860",
+      "sample": "labels",
+      "note": "No handle, no dots, no logo. The app draws none, and adding them is the tell."
+    },
+    {
+      "name": "stack",
+      "what": "A weight ladder over a dim photo: tight bold headline, a light-weight list, then a bold payoff with one accent word underlined.",
+      "needs": [
+        "headline",
+        "body",
+        "emphasis",
+        "image"
+      ],
+      "ground": "photo, heavily dimmed",
+      "good_for": [
+        "far more text than a still normally carries",
+        "an argument in three tiers",
+        "a list that adds up to a number"
+      ],
+      "from": "bdp-frame-0..4",
+      "sample": "stack",
+      "note": "Put a | in `emphasis` before the words that take the accent and the underline."
+    },
+    {
+      "name": "titled",
+      "what": "A sharp photograph and a title set as four different cuts -- bold, bold italic, serif, bracketed italic -- over two angled overlapping cards.",
+      "needs": [
+        "headline",
+        "kicker",
+        "emphasis",
+        "body",
+        "image",
+        "images",
+        "step",
+        "of"
+      ],
+      "ground": "photo, sharp",
+      "good_for": [
+        "the cover of a carousel",
+        "a title that has to carry four separate ideas"
+      ],
+      "from": "Comment GUIDE and I'll send it.jpg",
+      "sample": "titled",
+      "note": "The ladder is headline, kicker, emphasis, body -- in that order down the slide, not in importance order."
+    },
+    {
+      "name": "beforeafter",
+      "what": "An italic line, a huge accent number, a parenthetical, two screenshots down the right, and a long arrow between the two dates on the left.",
+      "needs": [
+        "kicker",
+        "headline",
+        "body",
+        "emphasis",
+        "image",
+        "images",
+        "handle"
+      ],
+      "ground": "photo, darkened",
+      "good_for": [
+        "one number that changed",
+        "a claim that needs two screenshots to be believed"
+      ],
+      "from": "over(4)",
+      "sample": "beforeafter",
+      "note": "`emphasis` is the two dates separated by a slash: 'FÖRE/EFTER'."
+    },
+    {
+      "name": "collage",
+      "what": "Portrait screenshots at three sizes, overlapping, over a blurred photo, with green chips over the figures and white caption boxes carrying black text.",
+      "needs": [
+        "images",
+        "chips",
+        "headline",
+        "body",
+        "image"
+      ],
+      "ground": "photo, blurred",
+      "good_for": [
+        "proof",
+        "several results at once",
+        "a DM or dashboard worth showing"
+      ],
+      "from": "701537468, 639800251",
+      "sample": "collage",
+      "note": "The chip is the format. Each names its own x and y as a fraction of the frame, placed by hand -- only whoever took the screenshot knows where the number is. Three places, filled in order."
+    },
+    {
+      "name": "ticker",
+      "what": "One figure sized to fill the frame and clip when it is longer, a mono label above and a line below.",
+      "needs": [
+        "kicker",
+        "headline",
+        "body",
+        "image",
+        "background"
+      ],
+      "ground": "none, a blurred photo, or a texture -- each under a vignette",
+      "good_for": [
+        "a single number that is the whole point",
+        "an opener",
+        "a closer"
+      ],
+      "from": "improvised",
+      "sample": "ticker-photo, ticker-texture",
+      "note": "`image` is a photograph and is darkened; `background` is a texture and is not."
+    },
+    {
+      "name": "split",
+      "what": "A hard horizontal edge: the photograph above it, a flat block below, type only in the block.",
+      "needs": [
+        "kicker",
+        "headline",
+        "body",
+        "emphasis",
+        "image"
+      ],
+      "ground": "photo above, flat colour below",
+      "good_for": [
+        "a photo worth not darkening",
+        "a caption that needs real room"
+      ],
+      "from": "improvised",
+      "sample": "split",
+      "note": "The only photo format that puts no type on the picture, so the picture is never scrimmed."
+    },
+    {
+      "name": "thread",
+      "what": "The conversation drawn rather than screenshotted: bubbles over a blurred photo, the sender's name blurred.",
+      "needs": [
+        "headline",
+        "messages",
+        "image"
+      ],
+      "ground": "photo, blurred",
+      "good_for": [
+        "a reaction worth reading",
+        "something someone said about the work"
+      ],
+      "from": "improvised",
+      "sample": "thread",
+      "note": "Drawn, so it is not evidence -- for a thread worth reading, not a thread worth proving. The name is always blurred: a real thread has a real person in it."
+    },
+    {
+      "name": "quote",
+      "what": "A serif pull quote on paper, an oversized mark bled off the left edge, a rule and an attribution in mono.",
+      "needs": [
+        "headline",
+        "kicker",
+        "body"
+      ],
+      "ground": "paper",
+      "good_for": [
+        "one sentence worth stopping on",
+        "a reflection",
+        "breaking up a dark set"
+      ],
+      "from": "improvised",
+      "sample": "quote",
+      "note": "The only light ground and the only place the serif is used at size."
+    },
+    {
+      "name": "ledger",
+      "what": "Rows of label and value with a total, values in the mono and right-aligned so the digits stack, a hairline between.",
+      "needs": [
+        "headline",
+        "rows",
+        "emphasis"
+      ],
+      "ground": "flat dark",
+      "good_for": [
+        "what something cost",
+        "a breakdown that adds up",
+        "time or money"
+      ],
+      "from": "improvised",
+      "sample": "ledger",
+      "note": "`emphasis` is the total, label and value separated by a slash: 'Nu/12 min'."
+    },
+    {
+      "name": "grid",
+      "what": "Six paper tiles on a dark ground, each a figure and a caption.",
+      "needs": [
+        "headline",
+        "rows"
+      ],
+      "ground": "flat dark",
+      "good_for": [
+        "a countable list",
+        "things stopped or started",
+        "the opposite claim to the collage's"
+      ],
+      "from": "improvised",
+      "sample": "grid",
+      "note": "A grid says this is all of it. Use the collage when the claim is that there is more."
+    },
+    {
+      "name": "timeline",
+      "what": "A rail down the left with the times on it, dots, and what happened at each.",
+      "needs": [
+        "headline",
+        "rows"
+      ],
+      "ground": "flat dark",
+      "good_for": [
+        "an order of events",
+        "how long something took end to end"
+      ],
+      "from": "improvised",
+      "sample": "timeline",
+      "note": "Evenly spaced, not scaled to the real intervals: one long wait clumps every short gap into an unreadable stack."
+    }
+  ]
+}

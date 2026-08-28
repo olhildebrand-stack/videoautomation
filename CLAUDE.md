@@ -76,6 +76,18 @@ The parts of the skill worth naming, because the components are built to them:
 The durations and the easing curve in `tokens.ts` are this project's, arrived at
 by watching renders. They are defaults to design with, not laws to cite.
 
+## The formats bank
+
+`pipeline/formats/bank.json` holds every slide format that exists. A sequence
+picks one by name; nothing writes a new layout. It is the hooks bank's rule
+applied to design, and for the same reason: a format that has been rendered,
+looked at and corrected beats a better idea nobody has seen.
+
+`python pipeline\formats.py` says what each one is and when to reach for it.
+`--check` fails if the bank has drifted from `slideFormat` in `tokens.ts` or
+from the samples in `stories/formats/`. Growing the bank means building the
+format, rendering one, and adding the entry -- in that order.
+
 ## The token rule
 
 `broll/src/tokens.ts` is the only file allowed to contain a raw hex value, a raw
