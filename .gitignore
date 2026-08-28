@@ -9,10 +9,14 @@ broll/public/transcripts/
 broll/public/overlay-assets/
 broll/public/slides/
 broll/props.generated.json
+broll/props.verify.json
 
 # Rendered carousels. The images and the words are committed; the stills are
 # whatever `python pipeline/slides.py` last made of them.
-stories/*/out/
+# Two levels deep, not one: a story can live at stories/<set>/<slide>/, and
+# `stories/*/out/` matched only the shallow case. The nested renders were
+# tracked, both sides edited them, and git cannot merge a PNG.
+stories/**/out/
 
 # ...except the format samples. One render of each format, committed on
 # purpose: they are a catalogue to look at, like the references themselves,

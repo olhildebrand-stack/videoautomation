@@ -775,7 +775,12 @@ export const slideFormat = {
    */
   titled: {
     align: 'left',
-    scrim: 'linear-gradient(#0A0F1459, #0A0F1426 40%, #0A0F1473)',
+    /**
+     * Heavier than the reference needed. Its cover photo was a mid-blue sky;
+     * a pale building behind white type gives the title nothing to sit on,
+     * and the serif line is the first to go because it is the thinnest.
+     */
+    scrim: 'linear-gradient(#0A0F14A6, #0A0F1466 46%, #0A0F1499)',
     accent: null,
     headline: {
       family: 'Inter', weight: 800, size: 112,
