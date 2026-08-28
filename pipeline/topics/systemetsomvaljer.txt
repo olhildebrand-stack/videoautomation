@@ -1,0 +1,13 @@
+# What is this video ABOUT? Two or three lines of plain prose.
+
+The editing pipeline now makes the editorial decisions, not just the
+mechanical ones. It reads a file describing who the content is for, matches
+hooks from banks it is forbidden to invent from, and refuses an idea that
+breaks its own rules. When it decides wrongly, the correction is written back
+as a rule and it cannot repeat that mistake.
+
+The point is not video editing. It is that AI can be trusted with judgement
+work when it is fenced in and made to accumulate -- which is the thing a
+Swedish business owner cannot picture until they have seen one.
+
+Replaces: the part of the job everyone assumes has to stay human.
