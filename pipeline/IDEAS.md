@@ -150,6 +150,9 @@ each one necessary — a rule without its reason gets argued with later.
   let the other two go. A video that takes all three arrives nowhere.
 
 - **2026-08-28 — grade a posted video on retention, and read the drop.**
+  `performance.json` is where the numbers go and `python pipeline\perf.py`
+  prints them beside the beats each video was made of; `--check` names any
+  video the pipeline edited whose numbers were never kept.
   Views are the last thing to look at, not the first: they are downstream of
   how long the video held people. Where the drop happens says which half
   failed — inside the first few seconds it is the hook, later it is the body —

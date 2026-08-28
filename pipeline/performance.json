@@ -1,0 +1,34 @@
+{
+  "_readme": [
+    "What a posted video actually did. The idea stage has no other memory:",
+    "hooks come from banks of other people's wins and the learned rules come",
+    "from this file, so a video whose numbers were never written down taught",
+    "nobody anything.",
+    "",
+    "  name      matches edit-scripts/<name>.json where the video went through",
+    "            the pipeline. That join is the point -- it is what lets a",
+    "            beat structure be compared against how long people watched.",
+    "  length    seconds, as posted.",
+    "  watch     average seconds watched. `perf.py` turns this into retention,",
+    "            which is the number that matters; views are downstream of it.",
+    "  dms       null means not known, which is different from 0.",
+    "  note      judgement. What you think died, and why. The numbers are the",
+    "            evidence; this is the reading of them."
+  ],
+  "posts": [
+    {
+      "name": "videoautomationsystem",
+      "length": 26, "watch": 14.0, "views": 1745,
+      "saves": 3, "shares": 0, "comments": 12,
+      "profile_visits": 5, "follows": 5, "dms": null,
+      "note": "Best so far. Hook is a claim with a named victim -- every short-form editor out of business. HOOK -> TESTKANIN -> THE TAKE -> WHY -> LANDING, five beats. Reach and interest succeeded; nothing proves it produced a client."
+    },
+    {
+      "name": "referenser",
+      "length": 19, "watch": 4.0, "views": 188,
+      "saves": 0, "shares": 0, "comments": 0,
+      "profile_visits": 0, "follows": 0, "dms": 0,
+      "note": "Died in the first four seconds. Announcement hook -- 'I just got another referral' -- then a truism its audience already believed, with nothing on screen. Not put through the pipeline, so there is no edit script to compare against."
+    }
+  ]
+}
