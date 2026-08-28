@@ -926,10 +926,13 @@ const Ticker: React.FC<SlideProps> = ({
     <AbsoluteFill style={{ backgroundColor: K.ground }}>
       {ground ? (
         <>
-          {/* A photograph is blurred and darkened; a texture is neither. It is
-              already quiet, so blurring throws away the grain it was chosen
-              for and a scrim takes it to black. */}
-          <Fill src={ground} focus={focus} blur={image ? K.blurPx : undefined} />
+          {/* Both are blurred, a texture far less. Only a photograph is
+              darkened: a scrim took a texture of mean luma 37 to black. */}
+          <Fill
+            src={ground}
+            focus={focus}
+            blur={image ? K.blur.photo : K.blur.texture}
+          />
           {image ? <AbsoluteFill style={{ backgroundColor: K.scrim }} /> : null}
           <AbsoluteFill style={{ background: K.vignette }} />
         </>

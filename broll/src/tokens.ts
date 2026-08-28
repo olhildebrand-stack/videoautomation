@@ -910,11 +910,12 @@ export const slideFormat = {
     ink: '#FFFFFF',
     accent: '#F0562E',
     /**
-     * An optional ground. A photograph is blurred, because a sharp one starts
-     * competing with a figure this size; a texture is not, because that is all
-     * a texture is for.
+     * An optional ground, blurred either way but not by the same amount. A
+     * photograph has to lose its subject; a texture only has to lose its
+     * edges, and blurring it hard would throw away the grain it was chosen
+     * for.
      */
-    blurPx: 30,
+    blur: { photo: 27, texture: 12 },
     /**
      * A photograph only. A texture has no competing detail to put behind
      * glass, and this on top of the vignette took a ground of mean luma 37
@@ -972,16 +973,23 @@ export const slideFormat = {
    * reading, not a thread worth proving.
    */
   thread: {
-    blurPx: 26,
+    blurPx: 23,
     /**
-     * Warm, and ten points lighter than it was: at 85% the photograph behind
-     * had gone from quiet to absent, and the point of having one is that a
-     * room is visible behind the conversation.
+     * Near-neutral, and ten points lighter than it was. At 85% the photograph
+     * behind had gone from quiet to absent. A strongly warm scrim was worse
+     * still: over a warm-lit room it read as an orange filter laid over the
+     * whole slide. The warmth belongs to the photograph -- this only has to
+     * get out of its way.
      */
-    scrim: '#1A120CBF',
+    scrim: '#131110BF',
     ink: '#FFFFFF',
-    them: '#3A322C',
-    me: '#3F7A46',
+    /**
+     * Neutral, not warm. A brown bubble on a warm ground melts into it, and
+     * the bubbles are the subject; they have to sit clearly on top of the
+     * room rather than share its colour.
+     */
+    them: '#2B2B2E',
+    me: '#0F7A5A',
     radius: 30,
     /** The one corner that stays tight, which is what makes it a bubble. */
     tail: 8,
