@@ -154,7 +154,7 @@ Seven more, improvised rather than read off anything. All fourteen render into
 
 | `format` | what it is | why it is not one of the seven above |
 | --- | --- | --- |
-| `ticker` | one figure, sized to fill the frame and clip | no photograph at all |
+| `ticker` | one figure, sized to fill the frame and clip | its ground is optional: none, a blurred photo, or a texture, each under a vignette |
 | `split` | a hard edge: picture above, flat block below | type never sits on the picture |
 | `thread` | the conversation drawn, not screenshotted | carries what was said and nothing else |
 | `quote` | a serif pull quote on paper | the only light ground, the only serif at size |

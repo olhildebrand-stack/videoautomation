@@ -103,6 +103,12 @@ const typeOf = (role: Role): React.CSSProperties => ({
   whiteSpace: 'pre-line',
 });
 
+/*
+ * Note the `||` at every call site below, never `??`. A slide that names no
+ * picture is given `image: ""` rather than having the key omitted, so that a
+ * composition's defaultProps cannot leak into it -- and `"" ?? background` is
+ * `""`, which silently drops the ground.
+ */
 const Fill: React.FC<{ src?: string; focus?: string; blur?: number }> = ({
   src, focus, blur,
 }) => (src ? (
@@ -165,7 +171,7 @@ const Cover: React.FC<SlideProps> = ({
   image, background, focus, headline, kicker, handle, shape,
 }) => (
   <AbsoluteFill style={{ backgroundColor: slide.ground }}>
-    <Fill src={image ?? background} focus={focus} />
+    <Fill src={image || background} focus={focus} />
     <AbsoluteFill
       style={{
         background: `linear-gradient(${slide.scrim}, transparent 55%, ${slide.scrim})`,
@@ -345,7 +351,7 @@ const Blurred: React.FC<SlideProps> = ({
             : undefined
         }
       >
-        <Fill src={background ?? image} focus="center" blur={B.blurPx} />
+        <Fill src={background || image} focus="center" blur={B.blurPx} />
         <AbsoluteFill style={{ background: B.scrim }} />
       </AbsoluteFill>
 
@@ -486,7 +492,7 @@ const Labels: React.FC<SlideProps> = ({
   const lines = [headline, body, emphasis].filter(Boolean) as string[];
   return (
     <AbsoluteFill style={{ backgroundColor: slide.ground }}>
-      <Fill src={image ?? background} focus={focus} />
+      <Fill src={image || background} focus={focus} />
       <AbsoluteFill style={{ backgroundColor: L.scrim }} />
       <div
         style={{
@@ -535,7 +541,7 @@ const Stack: React.FC<SlideProps> = ({
   const geometry = shapeOf(shape);
   return (
     <AbsoluteFill style={{ backgroundColor: slide.ground }}>
-      <Fill src={image ?? background} focus={focus} />
+      <Fill src={image || background} focus={focus} />
       <AbsoluteFill style={{ background: S.scrim }} />
       <div
         style={{
@@ -597,7 +603,7 @@ const Titled: React.FC<SlideProps> = ({
   const shots = images ?? [];
   return (
     <AbsoluteFill style={{ backgroundColor: slide.ground }}>
-      <Fill src={image ?? background} focus={focus} />
+      <Fill src={image || background} focus={focus} />
       <AbsoluteFill style={{ background: Ti.scrim }} />
 
       <div
@@ -674,7 +680,7 @@ const BeforeAfter: React.FC<SlideProps> = ({
   const top = geometry.insetTop + geometry.height * 0.42;
   return (
     <AbsoluteFill style={{ backgroundColor: slide.ground }}>
-      <Fill src={image ?? background} focus={focus} />
+      <Fill src={image || background} focus={focus} />
       <AbsoluteFill style={{ background: BA.scrim }} />
 
       <div
@@ -804,7 +810,7 @@ const Collage: React.FC<SlideProps> = ({
   const lines = [headline, body].filter(Boolean) as string[];
   return (
     <AbsoluteFill style={{ backgroundColor: slide.ground }}>
-      <Fill src={image ?? background} focus={focus} blur={Co.blurPx} />
+      <Fill src={image || background} focus={focus} blur={Co.blurPx} />
       <AbsoluteFill style={{ backgroundColor: Co.scrim }} />
 
       {/* Three places, filled in order. A fourth screenshot has nowhere to go
@@ -911,33 +917,48 @@ const K = slideFormat.ticker;
  * Sized to fill the frame edge to edge, and clipped when the figure is long
  * enough to run past it. Nothing else on the slide competes.
  */
-const Ticker: React.FC<SlideProps> = ({ kicker, headline, body, shape }) => {
+const Ticker: React.FC<SlideProps> = ({
+  image, background, focus, kicker, headline, body, shape,
+}) => {
   const geometry = shapeOf(shape);
+  const ground = image || background;
   return (
-    <AbsoluteFill
-      style={{
-        backgroundColor: K.ground,
-        paddingTop: geometry.insetTop + slide.side,
-        paddingBottom: geometry.insetBottom + slide.side,
-        paddingInline: slide.side,
-        display: 'flex', flexDirection: 'column', justifyContent: 'space-between',
-      }}
-    >
-      <div style={{ ...typeOf(K.label), color: K.ink, textTransform: 'uppercase' }}>
-        {kicker}
-      </div>
-      {/* Clipped on purpose: the figure runs past both edges. */}
-      <div style={{ overflow: 'hidden', marginInline: -slide.side }}>
-        <div
-          style={{
-            ...typeOf(K.figure), color: K.accent,
-            whiteSpace: 'nowrap', paddingInline: slide.side * 0.4,
-          }}
-        >
-          {headline}
+    <AbsoluteFill style={{ backgroundColor: K.ground }}>
+      {ground ? (
+        <>
+          {/* A photograph is blurred and darkened; a texture is neither. It is
+              already quiet, so blurring throws away the grain it was chosen
+              for and a scrim takes it to black. */}
+          <Fill src={ground} focus={focus} blur={image ? K.blurPx : undefined} />
+          {image ? <AbsoluteFill style={{ backgroundColor: K.scrim }} /> : null}
+          <AbsoluteFill style={{ background: K.vignette }} />
+        </>
+      ) : null}
+      <AbsoluteFill
+        style={{
+          paddingTop: geometry.insetTop + slide.side,
+          paddingBottom: geometry.insetBottom + slide.side,
+          paddingInline: slide.side,
+          display: 'flex', flexDirection: 'column', justifyContent: 'space-between',
+          textShadow: ground ? slide.lift : undefined,
+        }}
+      >
+        <div style={{ ...typeOf(K.label), color: K.ink, textTransform: 'uppercase' }}>
+          {kicker}
         </div>
-      </div>
-      <div style={{ ...typeOf(K.body), color: K.ink }}>{body}</div>
+        {/* Clipped on purpose: the figure runs past both edges. */}
+        <div style={{ overflow: 'hidden', marginInline: -slide.side }}>
+          <div
+            style={{
+              ...typeOf(K.figure), color: K.accent,
+              whiteSpace: 'nowrap', paddingInline: slide.side * 0.4,
+            }}
+          >
+            {headline}
+          </div>
+        </div>
+        <div style={{ ...typeOf(K.body), color: K.ink }}>{body}</div>
+      </AbsoluteFill>
     </AbsoluteFill>
   );
 };
@@ -960,7 +981,7 @@ const Split: React.FC<SlideProps> = ({
   return (
     <AbsoluteFill style={{ backgroundColor: Sp.block }}>
       <div style={{ height: geometry.height * Sp.at, overflow: 'hidden' }}>
-        <Fill src={image ?? background} focus={focus} />
+        <Fill src={image || background} focus={focus} />
       </div>
       <div
         style={{
@@ -1017,7 +1038,7 @@ const Thread: React.FC<SlideProps> = ({
   const geometry = shapeOf(shape);
   return (
     <AbsoluteFill style={{ backgroundColor: slide.ground }}>
-      <Fill src={image ?? background} focus={focus} blur={Th.blurPx} />
+      <Fill src={image || background} focus={focus} blur={Th.blurPx} />
       <AbsoluteFill style={{ backgroundColor: Th.scrim }} />
       <AbsoluteFill
         style={{
@@ -1052,9 +1073,7 @@ const Thread: React.FC<SlideProps> = ({
               padding: slide.side * 0.42,
             }}
           >
-            {message.from ? (
-              <div style={{ ...typeOf(Th.name), opacity: 0.65 }}>{message.from}</div>
-            ) : null}
+            {message.from ? <Redacted name={message.from} /> : null}
             <div style={typeOf(Th.body)}>{message.text}</div>
           </div>
         ))}
@@ -1062,6 +1081,28 @@ const Thread: React.FC<SlideProps> = ({
     </AbsoluteFill>
   );
 };
+
+/**
+ * The sender's name, blurred.
+ *
+ * A real thread has a real person in it, and putting their name on a story
+ * calls them out; inventing one reads as invented. Blurred, it still says
+ * that someone you know sent this.
+ */
+const Redacted: React.FC<{ name: string }> = ({ name }) => (
+  <div
+    style={{
+      display: 'inline-block',
+      backgroundColor: Th.redact.background,
+      borderRadius: Th.redact.radius,
+      paddingInline: Th.redact.padInline,
+      filter: `blur(${Th.redact.blurPx}px)`,
+      ...typeOf(Th.name),
+    }}
+  >
+    {name}
+  </div>
+);
 
 /* ---------------------------------------------------------- format: quote  */
 

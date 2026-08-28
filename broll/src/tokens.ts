@@ -909,6 +909,25 @@ export const slideFormat = {
     ground: '#0B0B0C',
     ink: '#FFFFFF',
     accent: '#F0562E',
+    /**
+     * An optional ground. A photograph is blurred, because a sharp one starts
+     * competing with a figure this size; a texture is not, because that is all
+     * a texture is for.
+     */
+    blurPx: 30,
+    /**
+     * A photograph only. A texture has no competing detail to put behind
+     * glass, and this on top of the vignette took a ground of mean luma 37
+     * down to nothing -- the texture was rendering, and was simply invisible.
+     */
+    scrim: '#0B0B0C99',
+    /**
+     * Darkens the corners and leaves the middle alone, so the figure sits in
+     * the one part of the frame the ground has been cleared out of.
+     */
+    vignette:
+      'radial-gradient(ellipse at 50% 46%,' +
+      ' #00000000 26%, #00000080 72%, #000000CC 100%)',
     figure: {
       family: 'Inter', weight: 800, size: 480,
       tracking: '-0.06em', leading: 0.82,
@@ -954,10 +973,15 @@ export const slideFormat = {
    */
   thread: {
     blurPx: 26,
-    scrim: '#08111AD9',
+    /**
+     * Warm, and ten points lighter than it was: at 85% the photograph behind
+     * had gone from quiet to absent, and the point of having one is that a
+     * room is visible behind the conversation.
+     */
+    scrim: '#1A120CBF',
     ink: '#FFFFFF',
-    them: '#26313A',
-    me: '#0F7A5A',
+    them: '#3A322C',
+    me: '#3F7A46',
     radius: 30,
     /** The one corner that stays tight, which is what makes it a bubble. */
     tail: 8,
@@ -971,6 +995,13 @@ export const slideFormat = {
       family: 'Inter', weight: 800, size: 30,
       tracking: '0em', leading: 1.2,
     },
+    /**
+     * The sender's name is blurred wherever it appears. A real thread has a
+     * real person in it, and posting their name to a story calls them out; a
+     * made-up name reads as made up. Blurred, it still says someone you know
+     * sent this.
+     */
+    redact: { blurPx: 7, background: '#FFFFFF1A', radius: 6, padInline: 10 },
   },
   /**
    * A pull quote on paper.
