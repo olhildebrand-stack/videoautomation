@@ -530,33 +530,36 @@ last thing decided and the first thing seen, so it is matched against the
 
 ### It is matched, never written
 
-`pipeline/hooks/bank.json` holds the winning hooks — hooks that already worked,
-in English and in idiomatic Swedish. Nothing in this pipeline invents hook text.
-Adding an entry to the bank is the only way the vocabulary grows.
+There are two banks and they are not interchangeable:
 
-Where a hook names the wrong subject, one phrase may be swapped for this
-video's own. A swap costs words, and **more than three is refused** — so the
-best candidates are usually the ones offered verbatim, which is the point.
+- `pipeline/hooks/onscreen-hooks.md` — **on-screen** hooks, the text card on
+  the frame, three to eight words. This is the one checkpoint 3 matches
+  against.
+- `pipeline/hooks/winning-hooks.md` — **verbal** hooks, the sentence spoken
+  over the opening seconds. Chosen before the camera is on, at the idea stage.
+
+Both are the complete, intentional set: nothing is added, removed or modified,
+and nothing in this pipeline invents hook text. Match the tightest-fitting
+source and change as few words as possible — usually one noun, with the
+structure around it untouched. Carry the source's punctuation across; a
+trailing `...` and QUOTED CAPS are what make a card read as a confession or an
+overheard objection rather than a headline. Word-for-word is a normal outcome.
+
+Both banks are prose, so there is nothing in them to score. Checkpoint 3 is a
+judgement stage like the director: the bank goes to Claude and a shortlist
+comes back, each option carrying the source it was matched from. An answer
+quoting a source that is not in the bank is refused — that is "only these"
+enforced rather than asserted.
+
+If `claude` is not on PATH the gate still opens. Match one by hand from the
+bank, put it in `<project>/hook.txt`, and pick it with `hook 0`.
 
 ### topic.txt
 
 A recording can spend ninety seconds on a system without once naming the tools
-it is built from, so the transcript alone cannot rank hooks. `<project>/topic.txt`
-says what the video is *about*; a blank one is written for you the first time
-you reach the gate.
-
-```
-tools    : Claude Code, Remotion
-subject  : videoredigering | video editing
-makes    : klipp | Videos
-replaces : videoredigerare | Video Editor
-about    : automating short form video editing end to end
-```
-
-Every field is optional. `svenska | English` pairs exist because the Swedish
-half is what renders and the English half is what the three-word rule counts.
-With none of them, hooks are still ranked from the transcript and offered
-verbatim.
+it is built from, so the transcript alone is not enough to match against.
+`<project>/topic.txt` says what the video is *about*, in plain prose; a blank
+one is written for you the first time you reach the gate.
 
 ### Picking
 

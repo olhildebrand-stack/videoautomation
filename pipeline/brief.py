@@ -284,11 +284,9 @@ def hook_shortlist(state: dict) -> str:
     rows = []
     for number, candidate in enumerate(candidates, 1):
         text = candidate.get("sv") or candidate.get("text") or ""
-        changed = candidate.get("words_changed", 0)
-        rows.append(f"{number}. {text}"
-                    + (f"   (score {candidate.get('score', 0):.1f}, "
-                       f"{changed} word(s) changed from the bank)"
-                       if candidate.get("score") is not None else ""))
+        rows.append(f"{number}. {text}")
+        if candidate.get("source"):
+            rows.append(f"   from: {candidate['source']}")
     return "\n".join(rows)
 
 

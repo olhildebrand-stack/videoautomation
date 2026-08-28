@@ -70,8 +70,14 @@ def claude_cli() -> str:
     return found
 
 
-def ask(prompt: str, model: str, timeout: float = 600.0) -> dict:
-    """One call, returning the parsed decision.
+def ask(prompt: str, model: str, schema: dict | None = None,
+        system: str = SYSTEM, timeout: float = 600.0) -> dict:
+    """One call, returning the parsed answer.
+
+    `schema` and `system` default to the director's own. The hook stage is the
+    other judgement in this pipeline and passes its own pair; everything about
+    how the call is made -- stdin, no tools, the envelope -- is the same
+    problem twice and is solved here once.
 
     The prompt goes in on **stdin**, never as an argument. On Windows `claude`
     is a .cmd shim, so the call runs through cmd.exe, which refuses a command
@@ -86,8 +92,8 @@ def ask(prompt: str, model: str, timeout: float = 600.0) -> dict:
     args = [
         claude_cli(), "-p",
         "--model", model,
-        "--system-prompt", SYSTEM,
-        "--json-schema", json.dumps(SCHEMA),
+        "--system-prompt", system,
+        "--json-schema", json.dumps(schema if schema is not None else SCHEMA),
         "--output-format", "json",
         # No tools, no MCP servers, no skills. Everything needed is in the
         # prompt, and a director that goes reading the repository is a
