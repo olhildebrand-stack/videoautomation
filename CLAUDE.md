@@ -32,6 +32,24 @@ over adding new manual instructions to a README.
 weights and Remotion's Chrome download are unavailable here. Renders in-session
 use `--browser-executable=/opt/pw-browsers/chromium_headless_shell-*/chrome-linux/headless_shell`.
 
+## The idea stage comes before the director
+
+`pipeline/IDEAS.md` is the stage that turns "I want to post something" into
+what the pipeline already consumes: a topic, a hook matched from the bank by
+number, and a beat outline in the director's vocabulary. Read it before doing
+any idea, script or hook work — it is to that stage what `DIRECTOR.md` is to
+the edit, including its own *Learned rules*.
+
+It is not a separate project. The editing pipeline was missing a front end and
+this is it, which is why it lives beside the banks it has to read rather than
+in a repository of its own: the hooks bank especially, since a second copy of
+it somewhere else would drift and then neither could be trusted.
+
+**Fill `pipeline/ideas/BRAND.md` first.** The stage reads it before producing
+anything, and until it is answered every idea is a guess about somebody
+generic. Fill it in conversation, not as a form. Material the operator feeds
+in goes in `pipeline/ideas/sources/`.
+
 ## The editorial brain is a stage, not a chat
 
 `python pipeline\pipeline.py direct --project <project>` hands the transcript to
