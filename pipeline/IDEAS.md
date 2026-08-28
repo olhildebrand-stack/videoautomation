@@ -119,4 +119,22 @@ Corrections go here, written as what to do instead. A rule here applies to
 every future idea; a rule in a chat applies to none. Keep the case that made
 each one necessary — a rule without its reason gets argued with later.
 
-*(Nothing yet. The first correction goes here.)*
+- **2026-08-28 — the on-screen bank is two people's niches, and only two of
+  the five are the operator's.** `hooks/onscreen-hooks.md` came from the
+  operator's mentor's dashboard and its 45 examples are grouped under five
+  headings. **1. video editing / Claude** and **4. the Claude workflow
+  itself** are the operator's. **2. websites / offer**, **3. AI cold-calling /
+  remodeler leads** and **5. websites / remodelers** are the mentor's — a
+  client-services business selling websites and cold-calling to remodelers,
+  which the operator is not in.
+
+  This session read the five headings as one account's range and reported back
+  that three fifths of the channel was remodeler lead-gen. That is wrong, and
+  it is wrong in the direction that matters: an idea stage that believes it is
+  writing for remodelers will produce ideas nobody here can film.
+
+  So: the bank is for *matching structures*, never for inferring who is
+  watching. A hook source proves a shape worked, not that its subject is the
+  operator's subject — which is the whole reason the same source gets reused
+  across five niches in that file. Take the audience from `ideas/BRAND.md` and
+  nowhere else.
