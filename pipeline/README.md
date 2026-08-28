@@ -3,7 +3,8 @@
 Raw video to a graded, captioned cut — stopping at three human checkpoints.
 
 ```
-raw.mp4
+idea      (IDEAS.md: a topic, a hook number, a beat outline — before filming)
+  → raw.mp4
   → transcribe
   → ⛔ CHECKPOINT 1: throughline
   → direct  (Claude decides what the video is, against DIRECTOR.md)

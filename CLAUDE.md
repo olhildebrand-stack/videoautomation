@@ -40,6 +40,11 @@ number, and a beat outline in the director's vocabulary. Read it before doing
 any idea, script or hook work — it is to that stage what `DIRECTOR.md` is to
 the edit, including its own *Learned rules*.
 
+`python pipeline\idea.py check <name>` enforces the mechanical half of it — the
+hook is a bank number and not text, the outline runs `HOOK` to `LANDING`, it
+says what has to be filmed, and it carries no timings. The judgement half is the
+conversation, and `IDEAS.md` is what governs it.
+
 It is not a separate project. The editing pipeline was missing a front end and
 this is it, which is why it lives beside the banks it has to read rather than
 in a repository of its own: the hooks bank especially, since a second copy of

@@ -10,14 +10,38 @@ rather than in a repository of its own.
 
 ## What it outputs
 
-Whatever it produces has to land as something the next stage takes without
-translation:
+Two files per idea, both tracked, both outliving the `projects/` directory
+they get copied into — which is gitignored, and is where a good topic file
+used to go to die.
 
 | file | what it is | who reads it |
 | --- | --- | --- |
-| `topic.txt` | what the video is about, in a sentence or two | `brief.py`, then the director |
-| a hook number | an index into `pipeline/hooks/bank.json` | checkpoint 3 |
-| a beat outline | `HOOK`, `PROBLEM`, …, `LANDING` — names, not timings | the operator, when recording |
+| `topics/<name>.txt` | what the video is about. `--topic` already reads it | `hookgen.py`, then the director |
+| `outlines/<name>.md` | `needs`, a format, a hook **number**, and the beats | the operator, at the camera |
+
+The outline's header is the part that decides whether the idea gets made:
+`needs` is the honest list of what has to be filmed or captured, `format` is a
+name from the formats bank or `-` for a talking head, and `hook` is a number
+from the hooks bank — never hook text.
+
+```
+python pipeline\idea.py new   <name>    a blank topic and a blank outline
+python pipeline\idea.py hooks <name>    rank the bank against the topic
+python pipeline\idea.py check <name>    every rule below, enforced
+```
+
+`hooks` is the same matcher checkpoint 3 uses, run with no transcript, because
+at idea time there is no recording. The topic file alone is enough to rank
+against — and a subject the bank holds no hook for is worth discovering before
+the shoot rather than after it, which is the only reason to match this early.
+
+`check` is the part that makes the rules below real rather than written down.
+It fails on an unanswered `BRAND.md`, a hook that is text instead of a number,
+a hook number the bank does not contain, a format not in the formats bank, an
+outline that does not run `HOOK` → `LANDING`, an empty beat, an idea that does
+not say what it needs filmed, and any timing written into a beat name or the
+header. It says nothing about what the beats *say* — that is judgement, and it
+is what the conversation in this file is for.
 
 The beat outline is the point of the whole stage. An idea written as prose has
 to be reverse-engineered into beats by whoever records it, and that is where
