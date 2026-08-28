@@ -915,7 +915,7 @@ export const slideFormat = {
      * edges, and blurring it hard would throw away the grain it was chosen
      * for.
      */
-    blur: { photo: 22, texture: 12 },
+    blur: { photo: 18, texture: 12 },
     /**
      * A photograph only. A texture has no competing detail to put behind
      * glass, and this on top of the vignette took a ground of mean luma 37
@@ -973,7 +973,7 @@ export const slideFormat = {
    * reading, not a thread worth proving.
    */
   thread: {
-    blurPx: 18,
+    blurPx: 14,
     /**
      * Near-neutral, and ten points lighter than it was. At 85% the photograph
      * behind had gone from quiet to absent. A strongly warm scrim was worse
