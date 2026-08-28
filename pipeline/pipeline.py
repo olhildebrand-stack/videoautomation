@@ -196,7 +196,7 @@ DEFAULT_HOOK_COUNT = 5
 
 
 def build_hook_shortlist(state: PipelineState, project: Path, count: int) -> None:
-    """Match the winning-hooks bank against this video and store the result."""
+    """Match hooks/bank.json against this video and store the result."""
     topic_path = project / "topic.txt"
     if not topic_path.is_file():
         topic_path.write_text(SEED_TOPIC, encoding="utf-8")
@@ -516,7 +516,7 @@ def show_hook_gate(state: PipelineState, project: Path) -> None:
             f"hooks --project {project}")
         return
     if state.hook_weak:
-        say("Nothing in the winning-hooks bank fits this video.")
+        say("Nothing in the scored bank fits this video.")
         say()
         say("Every hook gets a score, so there is always a top five -- but a")
         say("top five is not a match. These tie on one incidental keyword and")
@@ -538,10 +538,13 @@ def show_hook_gate(state: PipelineState, project: Path) -> None:
             f" hook 0")
         say(f"  - render with no card at all: delete {project / 'hook.txt'}"
             " and pick nothing")
-        say("  - add hooks that fit this kind of video to hooks/bank.json")
+        say("  - match one yourself from hooks/winning-hooks.md, which is the")
+        say("    complete set, and put it in hook.txt")
     else:
-        say("All of these are MATCHED from the winning-hooks bank -- none were written.")
-        say("Zero words changed is the best outcome; three is the hard limit.")
+        say("All of these are MATCHED from the scored bank -- none were written.")
+        say("Zero words changed is the best outcome.")
+        say("The full set is hooks/winning-hooks.md; a hook matched from there")
+        say("goes in hook.txt and is picked with hook 0.")
     say()
     say(f"Pick one:      python {me()} hook 1 --project {project}")
     say(f"See more:      python {me()} hooks --count 10 --project {project}")

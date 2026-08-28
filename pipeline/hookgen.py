@@ -1,11 +1,19 @@
 #!/usr/bin/env python3
-"""Match hooks from the winning-hooks bank against a project.
+"""Match hooks from `hooks/bank.json` against a project.
 
-The rule this exists to enforce: never write a new hook. The bank holds hooks
-that already worked; this ranks them against what the video is actually about
-and, where a hook names the wrong subject, swaps that one phrase for the
-project's own. A swap costs words, and more than three is not allowed -- so the
-best candidates are almost always the ones offered verbatim.
+SUPERSEDED. The hook rules now live in `hooks/winning-hooks.md`, which is the
+complete, intentional set -- all hooks in it have equal weight, matching is
+against any category, and the budget is "as few words as possible" rather than
+the three this file counts. That file is prose, so nothing here can score it:
+the match is made by reading it and putting the chosen line in the project's
+`hook.txt`, then `pipeline.py hook 0`. What remains below still runs, against
+the thirty-eight structured hooks in `bank.json` only.
+
+The rule it enforced: never write a new hook. The bank holds hooks that already
+worked; this ranks them against what the video is actually about and, where a
+hook names the wrong subject, swaps that one phrase for the project's own. A
+swap costs words, and more than three is not allowed -- so the best candidates
+are almost always the ones offered verbatim.
 
 Two inputs decide the ranking:
 

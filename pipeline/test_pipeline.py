@@ -1344,9 +1344,9 @@ def test_a_video_the_bank_does_not_fit_is_told_so(tmp_path, monkeypatch, capsys)
     assert state.hook_weak
     p.show_hook_gate(state, tmp_path)
     out = capsys.readouterr().out
-    assert "Nothing in the winning-hooks bank fits this video" in out
+    assert "Nothing in the scored bank fits this video" in out
     assert "your own spoken opening" in out
-    assert "MATCHED from the winning-hooks bank" not in out
+    assert "MATCHED from the scored bank" not in out
 
 
 def test_a_video_the_bank_does_fit_is_not_hedged(tmp_path, monkeypatch, capsys):
@@ -1362,8 +1362,8 @@ def test_a_video_the_bank_does_fit_is_not_hedged(tmp_path, monkeypatch, capsys):
     assert not state.hook_weak
     p.show_hook_gate(state, tmp_path)
     out = capsys.readouterr().out
-    assert "Nothing in the winning-hooks bank" not in out
-    assert "MATCHED from the winning-hooks bank" in out
+    assert "Nothing in the scored bank" not in out
+    assert "MATCHED from the scored bank" in out
 
 
 # --- files the operator hand-edits on Windows --------------------------------

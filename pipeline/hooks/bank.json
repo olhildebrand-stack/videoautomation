@@ -1,8 +1,10 @@
 {
   "_readme": [
-    "The winning-hooks bank. These are PROVEN hooks -- the generator matches",
-    "against them, it never writes new ones. Adding an entry here is how the",
-    "bank grows; nothing else should ever invent hook text.",
+    "SUPERSEDED by winning-hooks.md, which is the complete, intentional set",
+    "of hooks -- only those, all of equal weight, matched by reading the file",
+    "and changing as few words as possible. Nothing is to be added here. These",
+    "thirty-eight remain only because hookgen.py's scorer needs the structured",
+    "fields below, and the prose swipe file has none of them.",
     "",
     "  en      the hook exactly as it was supplied, in English.",
     "  sv      an idiomatic Swedish rendering -- grammar, not word-for-word.",

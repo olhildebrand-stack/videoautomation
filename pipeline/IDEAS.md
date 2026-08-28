@@ -1,8 +1,8 @@
 # Directing the idea
 
 The stage before the director. It turns "I want to post something" into the
-thing `pipeline.py` already knows how to consume: a topic, a hook picked from
-the bank by number, and a beat outline in the director's own vocabulary.
+thing `pipeline.py` already knows how to consume: a topic, a hook matched from
+the swipe file, and a beat outline in the director's own vocabulary.
 
 It is not a separate product. The editing pipeline has a front end missing,
 and this is it — which is why it lives here, beside the banks it has to read,
@@ -16,7 +16,7 @@ translation:
 | file | what it is | who reads it |
 | --- | --- | --- |
 | `topic.txt` | what the video is about, in a sentence or two | `brief.py`, then the director |
-| a hook number | an index into `pipeline/hooks/bank.json` | checkpoint 3 |
+| a hook | the tightest fit from `pipeline/hooks/winning-hooks.md` | checkpoint 3 |
 | a beat outline | `HOOK`, `PROBLEM`, …, `LANDING` — names, not timings | the operator, when recording |
 
 The beat outline is the point of the whole stage. An idea written as prose has
@@ -47,11 +47,12 @@ never.
 These are not restated here because they are enforced elsewhere. They bind
 this stage anyway.
 
-**Hooks come from the bank.** `pipeline/hooks/bank.json` holds hooks that
-won. Match one, never write one, and change no more than three words. If
-nothing in the bank fits, say so and offer to grow the bank — do not quietly
-invent a hook and present it as matched. `hookgen.py` already does the
-matching against a topic; call it rather than re-implementing it.
+**Hooks come from the swipe file.** `pipeline/hooks/winning-hooks.md` holds
+1050+ proven hooks and is the complete, intentional set — only those. All of
+them have equal weight, so match against any category; take the
+tightest-fitting hook and change as few words as possible. Never write one,
+and never add to, remove from, or modify the file. If nothing in it fits, say
+so — do not quietly invent a hook and present it as matched.
 
 **A story picks a format from the bank first.** `pipeline/formats/bank.json`,
 and `CLAUDE.md` says to offer the formats before asking what the story is

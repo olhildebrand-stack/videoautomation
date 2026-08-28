@@ -23,8 +23,10 @@ from asking for exact words -- a phrase that spanned a discarded attempt, a
 quote that was slightly wrong, a cut point inside a word -- and all three are
 gone the moment you name a number instead.
 
-You do not write hook text. The bank is winning hooks; you pick one by its
-number, or pick 0 and say why none fit.
+You do not write hook text. `pipeline/hooks/winning-hooks.md` is the complete
+set -- all hooks in it have equal weight, so match the idea to the
+tightest-fitting one from any category and change as few words as possible. Do
+not add to, remove from, or modify that file. If nothing in it fits, say so.
 
 ## Every take gets a decision
 
