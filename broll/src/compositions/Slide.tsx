@@ -96,10 +96,10 @@ type Role = {
   leading: number;
 };
 
-const typeOf = (role: Role): React.CSSProperties => ({
+const typeOf = (role: Role, scale = 1): React.CSSProperties => ({
   fontFamily: role.family,
   fontWeight: role.weight,
-  fontSize: role.size,
+  fontSize: role.size * scale,
   letterSpacing: role.tracking,
   lineHeight: role.leading,
   whiteSpace: 'pre-line',
@@ -603,6 +603,11 @@ const Titled: React.FC<SlideProps> = ({
 }) => {
   const geometry = shapeOf(shape);
   const shots = images ?? [];
+  const scale = geometry.typeScale;
+  // Measured down the safe area, not the whole frame. A story's safe area is
+  // 1370 tall against the carousel's 1350, so the same fractions put the
+  // ladder and the screenshot in the same place on both.
+  const safe = geometry.height - geometry.insetTop - geometry.insetBottom;
   return (
     <AbsoluteFill style={{ backgroundColor: slide.ground }}>
       <Fill src={image || background} focus={focus} />
@@ -612,21 +617,25 @@ const Titled: React.FC<SlideProps> = ({
         style={{
           position: 'absolute',
           left: slide.side, right: slide.side,
-          top: geometry.insetTop + geometry.height * 0.14,
+          top: geometry.insetTop + safe * 0.1,
           textAlign: Ti.align, textShadow: slide.lift, color: slide.ink,
         }}
       >
-        <div style={typeOf(Ti.headline)}>{headline}</div>
+        <div style={typeOf(Ti.headline, scale)}>{headline}</div>
         {kicker ? (
-          <div style={{ ...typeOf(Ti.kicker), fontStyle: 'italic', marginLeft: '8%' }}>
+          <div
+            style={{ ...typeOf(Ti.kicker, scale), fontStyle: 'italic', marginLeft: '8%' }}
+          >
             {kicker}
           </div>
         ) : null}
         {emphasis ? (
-          <div style={{ ...typeOf(Ti.serif), marginLeft: '14%' }}>{emphasis}</div>
+          <div style={{ ...typeOf(Ti.serif, scale), marginLeft: '14%' }}>{emphasis}</div>
         ) : null}
         {body ? (
-          <div style={{ ...typeOf(Ti.body), fontStyle: 'italic', marginLeft: '16%' }}>
+          <div
+            style={{ ...typeOf(Ti.body, scale), fontStyle: 'italic', marginLeft: '16%' }}
+          >
             {body}
           </div>
         ) : null}
@@ -638,7 +647,7 @@ const Titled: React.FC<SlideProps> = ({
           style={{
             position: 'absolute',
             left: slide.side, right: slide.side,
-            top: geometry.insetTop + geometry.height * Ti.shot.top,
+            top: geometry.insetTop + safe * Ti.shot.top,
             backgroundColor: Ti.shot.background,
             borderRadius: Ti.shot.radius,
             padding: Ti.shot.pad,
@@ -664,7 +673,7 @@ const Titled: React.FC<SlideProps> = ({
             style={{
               position: 'absolute',
               left: slide.side * (index === 0 ? 0.8 : 5.2),
-              top: geometry.insetTop + geometry.height * (index === 0 ? 0.42 : 0.39),
+              top: geometry.insetTop + safe * (index === 0 ? 0.42 : 0.39),
               width: slide.width * Ti.card.width,
               height: geometry.height * Ti.card.height,
               transform: `rotate(${Ti.card.tilt + index * 3}deg)`,
@@ -676,7 +685,7 @@ const Titled: React.FC<SlideProps> = ({
       {shots.length > 1 ? (
         <PageArrow
           side="right"
-          centre={geometry.insetTop + geometry.height * 0.48}
+          centre={geometry.insetTop + safe * 0.48}
         />
       ) : null}
       {/* Dots are a carousel's affordance. A story has no dots -- it has an
@@ -718,6 +727,7 @@ const BeforeAfter: React.FC<SlideProps> = ({
   const geometry = shapeOf(shape);
   const shots = images ?? [];
   const [was, became] = (emphasis ?? '').split('/');
+  const scale = geometry.typeScale;
   const cardH = geometry.height * BA.card.height;
   const top = geometry.insetTop + geometry.height * 0.42;
   return (
@@ -735,14 +745,21 @@ const BeforeAfter: React.FC<SlideProps> = ({
       >
         {kicker ? (
           <div
-            style={{ ...typeOf(BA.kicker), fontStyle: 'italic', color: slide.ink }}
+            style={{
+              ...typeOf(BA.kicker, scale), fontStyle: 'italic', color: slide.ink,
+            }}
           >
             {kicker}
           </div>
         ) : null}
         {headline ? (
-          <div style={{ ...typeOf(BA.headline), color: BA.accent }}>{headline}</div>
+          <div style={{ ...typeOf(BA.headline, scale), color: BA.accent }}>
+            {headline}
+          </div>
         ) : null}
+        {/* The parenthetical is unscaled: it is subordinate to the line above
+            it and stays small, as it does in the reference. Grown with the
+            rest it wraps, and a wrapped aside reads as a second thought. */}
         {body ? (
           <div style={{ ...typeOf(BA.body), color: slide.ink }}>{body}</div>
         ) : null}
@@ -829,7 +846,9 @@ const Sequence: React.FC<{ steps: string[]; shape?: SlideShape }> = ({
             </svg>
           </div>
         ) : null}
-        <div style={{ ...typeOf(BA.steps), color: slide.ink }}>{name}</div>
+        <div style={{ ...typeOf(BA.steps, shapeOf(shape).typeScale), color: slide.ink }}>
+          {name}
+        </div>
       </React.Fragment>
     ))}
   </AbsoluteFill>

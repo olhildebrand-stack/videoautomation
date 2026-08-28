@@ -543,14 +543,24 @@ export const fps = 30;
  * at the top and the reply box at the bottom. `inset` keeps everything clear of
  * both, so nothing that has to be read sits under a button.
  */
+/**
+ * A format's type sizes were tuned on one canvas and have to hold their
+ * presence on the other. The same 86px headline fills a quarter of a 4:5
+ * frame and a sixth of a 9:16 one -- identical in pixels, and visibly
+ * smaller. `typeScale` buys that back. It stops at 1.3 rather than the 1.42
+ * the heights imply, because the frames are the same 1080 wide and a longer
+ * headline starts to wrap.
+ */
 export const slideShapes = {
   carousel: {
+    typeScale: 1,
     height: 1350,
     insetTop: 0,
     insetBottom: 0,
     picture: { top: 660, bottom: 132 },
   },
   story: {
+    typeScale: 1.3,
     height: 1920,
     insetTop: 250,
     insetBottom: 300,
