@@ -910,12 +910,13 @@ export const slideFormat = {
     ink: '#FFFFFF',
     accent: '#F0562E',
     /**
-     * An optional ground, blurred either way but not by the same amount. A
-     * photograph has to lose its subject; a texture only has to lose its
-     * edges, and blurring it hard would throw away the grain it was chosen
-     * for.
+     * An optional ground, blurred either way and now by about the same amount.
+     * Both started far higher and came down by eye: at 30 the photograph was a
+     * smear with nothing left to recognise, which reads as a mistake rather
+     * than as depth. What the blur has to do is soften the ground enough that
+     * the figure sits in front of it -- not erase what is behind.
      */
-    blur: { photo: 18, texture: 12 },
+    blur: { photo: 11, texture: 12 },
     /**
      * A photograph only. A texture has no competing detail to put behind
      * glass, and this on top of the vignette took a ground of mean luma 37
@@ -973,7 +974,7 @@ export const slideFormat = {
    * reading, not a thread worth proving.
    */
   thread: {
-    blurPx: 14,
+    blurPx: 8,
     /**
      * Near-neutral, and ten points lighter than it was. At 85% the photograph
      * behind had gone from quiet to absent. A strongly warm scrim was worse
