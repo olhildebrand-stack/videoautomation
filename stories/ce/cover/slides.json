@@ -1,0 +1,17 @@
+{
+  "shape": "story",
+  "format": "titled",
+  "slides": [
+    {
+      "kind": "cover",
+      "image": "IMG_9211.jpg",
+      "focus": "50% 45%",
+      "images": ["compoundengineering.png"],
+      "headline": "Så gör du Claude",
+      "kicker": "till en",
+      "emphasis": "supermaskin.",
+      "step": 1,
+      "of": 2
+    }
+  ]
+}

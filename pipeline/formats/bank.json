@@ -125,7 +125,7 @@
       ],
       "from": "Comment GUIDE and I'll send it.jpg",
       "sample": "titled",
-      "note": "The ladder is headline, kicker, emphasis, body -- in that order down the slide, not in importance order."
+      "note": "The ladder is headline, kicker, emphasis, body -- in that order down the slide, not in importance order. Two screenshots scatter at angles; ONE sits straight and is contained rather than cropped, and the card takes its height from it. On a story it draws a next-arrow instead of the dots, which are a carousel's affordance."
     },
     {
       "name": "beforeafter",
@@ -137,6 +137,7 @@
         "emphasis",
         "image",
         "images",
+        "steps",
         "handle"
       ],
       "ground": "photo, darkened",
@@ -146,7 +147,7 @@
       ],
       "from": "over(4)",
       "sample": "beforeafter",
-      "note": "`emphasis` is the two dates separated by a slash: 'FÖRE/EFTER'."
+      "note": "`emphasis` is the two dates separated by a slash: 'FÖRE/EFTER'. Give `steps` instead and it draws that sequence down the middle with an arrow between each, in place of the cards -- for a claim whose subject is the order and which has nothing to photograph. Omit `handle` and the footer goes with it."
     },
     {
       "name": "collage",

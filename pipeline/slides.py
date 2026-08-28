@@ -36,7 +36,8 @@ BROLL = ROOT / "broll"
 STAGED = "slides"
 
 # Every optional word on a slide, so none of them can fall back to a default.
-OPTIONAL = {"kicker": "", "body": "", "emphasis": "", "focus": ""}
+OPTIONAL = {"kicker": "", "body": "", "emphasis": "", "focus": "",
+            "headline": ""}
 
 # The textured format holds its picture at a fixed place, so its words have a
 # fixed slot above it: roughly three lines of about this many characters. Copy

@@ -1,0 +1,21 @@
+{
+  "shape": "story",
+  "format": "beforeafter",
+  "slides": [
+    {
+      "kind": "cover",
+      "image": "Snapchat-361263800.jpg",
+      "focus": "50% 40%",
+      "kicker": "Claude Code + CE",
+      "body": "(en sekvens, sex steg, massiv uppgradering)",
+      "steps": [
+        "/ce-brainstorm",
+        "/ce-plan",
+        "/ce-work",
+        "/ce-simplify-code",
+        "/ce-code-review",
+        "/ce-compound"
+      ]
+    }
+  ]
+}

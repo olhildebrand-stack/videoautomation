@@ -787,6 +787,12 @@ export const slideFormat = {
       tracking: '0em', leading: 1.2,
     },
     card: { radius: 18, tilt: -5, width: 0.4, height: 0.16 },
+    /**
+     * One screenshot instead of two cards: centred, straight, and contained
+     * rather than cropped -- a terminal screenshot is mostly whitespace and a
+     * cover crop would cut the half that carries the commands.
+     */
+    shot: { radius: 14, background: '#0D0D0F', pad: 22, top: 0.37 },
   },
   /**
    * B's before/after variant, from `Comment GUIDE and I'll send it over(4).jpg`.
@@ -822,6 +828,16 @@ export const slideFormat = {
     card: { radius: 22, width: 0.56, height: 0.16, gap: 34 },
     /** Runs the whole way from the first date to the second. */
     arrow: { weight: 7, head: 22, offset: 54, clear: 22 },
+    /**
+     * A sequence down the middle, in place of the two cards. The commands are
+     * set in the mono because that is what they are -- typed, not spoken --
+     * and an arrow between each says the order is the point.
+     */
+    steps: {
+      family: 'IBM Plex Mono', weight: 400, size: 46,
+      tracking: '0em', leading: 1.2,
+      gap: 26, arrow: 30, arrowWeight: 4, dim: '#FFFFFF8C',
+    },
   },
   /**
    * E's blob variant, from `639735492_...jpg`.

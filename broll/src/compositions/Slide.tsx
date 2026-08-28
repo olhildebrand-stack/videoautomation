@@ -53,6 +53,8 @@ export type SlideProps = {
   rows?: { label: string; value: string }[];
   /** thread: what was said, and by whom. */
   messages?: { text: string; from?: string; mine?: boolean }[];
+  /** beforeafter: a sequence down the middle, in place of the two cards. */
+  steps?: string[];
   handle?: string;
   /**
    * This slide's picture is a video: cut the card's rectangle out of the
@@ -630,29 +632,69 @@ const Titled: React.FC<SlideProps> = ({
         ) : null}
       </div>
 
-      {shots.map((src, index) => (
-        <Card
-          key={src}
-          src={src}
-          radius={Ti.card.radius}
+      {/* Two screenshots scatter; one is the subject and sits straight. */}
+      {shots.length === 1 ? (
+        <div
           style={{
             position: 'absolute',
-            left: slide.side * (index === 0 ? 0.8 : 5.2),
-            top: geometry.insetTop + geometry.height * (index === 0 ? 0.42 : 0.39),
-            width: slide.width * Ti.card.width,
-            height: geometry.height * Ti.card.height,
-            transform: `rotate(${Ti.card.tilt + index * 3}deg)`,
+            left: slide.side, right: slide.side,
+            top: geometry.insetTop + geometry.height * Ti.shot.top,
+            backgroundColor: Ti.shot.background,
+            borderRadius: Ti.shot.radius,
+            padding: Ti.shot.pad,
+            boxShadow: `0 ${slide.card.shadowDrop}px ${slide.card.shadowBlur}px ${slide.card.shadow}`,
           }}
-        />
-      ))}
+        >
+          {/* Contained, not cropped: a terminal screenshot is mostly
+              whitespace, and a cover crop cuts the half with the commands. */}
+          {/* The card takes its height from the screenshot rather than
+              imposing one: a terminal capture is wide and short, and a fixed
+              box leaves it stranded in the middle of empty card. */}
+          <Img
+            src={staticFile(shots[0] ?? '')}
+            style={{ width: '100%', height: 'auto', display: 'block' }}
+          />
+        </div>
+      ) : (
+        shots.map((src, index) => (
+          <Card
+            key={src}
+            src={src}
+            radius={Ti.card.radius}
+            style={{
+              position: 'absolute',
+              left: slide.side * (index === 0 ? 0.8 : 5.2),
+              top: geometry.insetTop + geometry.height * (index === 0 ? 0.42 : 0.39),
+              width: slide.width * Ti.card.width,
+              height: geometry.height * Ti.card.height,
+              transform: `rotate(${Ti.card.tilt + index * 3}deg)`,
+            }}
+          />
+        ))
+      )}
 
-      {shots.length ? (
+      {shots.length > 1 ? (
         <PageArrow
           side="right"
           centre={geometry.insetTop + geometry.height * 0.48}
         />
       ) : null}
-      {of ? <Dots step={step} of={of} shape={shape} /> : null}
+      {/* Dots are a carousel's affordance. A story has no dots -- it has an
+          arrow that says another slide is coming. */}
+      {of && shape === 'story' ? (
+        step && step < of ? (
+          <div
+            style={{
+              position: 'absolute', right: slide.side,
+              bottom: slide.side + geometry.insetBottom,
+            }}
+          >
+            <NextArrow />
+          </div>
+        ) : null
+      ) : of ? (
+        <Dots step={step} of={of} shape={shape} />
+      ) : null}
     </AbsoluteFill>
   );
 };
@@ -671,7 +713,7 @@ const BA = slideFormat.beforeafter;
  */
 const BeforeAfter: React.FC<SlideProps> = ({
   image, background, focus, kicker, headline, body, emphasis, images, handle,
-  shape,
+  shape, steps,
 }) => {
   const geometry = shapeOf(shape);
   const shots = images ?? [];
@@ -698,11 +740,15 @@ const BeforeAfter: React.FC<SlideProps> = ({
             {kicker}
           </div>
         ) : null}
-        <div style={{ ...typeOf(BA.headline), color: BA.accent }}>{headline}</div>
+        {headline ? (
+          <div style={{ ...typeOf(BA.headline), color: BA.accent }}>{headline}</div>
+        ) : null}
         {body ? (
           <div style={{ ...typeOf(BA.body), color: slide.ink }}>{body}</div>
         ) : null}
       </div>
+
+      {steps?.length ? <Sequence steps={steps} shape={shape} /> : null}
 
       {shots.map((src, index) => (
         <Card
@@ -747,6 +793,47 @@ const BeforeAfter: React.FC<SlideProps> = ({
     </AbsoluteFill>
   );
 };
+
+/**
+ * A sequence down the middle of the frame, one step per line with an arrow
+ * between. It replaces the two cards rather than sitting beside them: the
+ * claim is the order, and there is nothing to photograph.
+ */
+const Sequence: React.FC<{ steps: string[]; shape?: SlideShape }> = ({
+  steps, shape,
+}) => (
+  <AbsoluteFill
+    style={{
+      paddingTop: shapeOf(shape).insetTop,
+      paddingBottom: shapeOf(shape).insetBottom,
+      display: 'flex', flexDirection: 'column',
+      alignItems: 'center', justifyContent: 'center',
+      textShadow: slide.lift,
+    }}
+  >
+    {steps.map((name, index) => (
+      <React.Fragment key={name}>
+        {index ? (
+          <div
+            style={{
+              color: BA.steps.dim, lineHeight: 1,
+              marginBlock: BA.steps.gap * 0.4,
+            }}
+          >
+            <svg width={BA.steps.arrow} height={BA.steps.arrow} viewBox="0 0 30 30">
+              <path
+                d="M15 2 V26 M7 19 L15 27 L23 19"
+                stroke={BA.steps.dim} strokeWidth={BA.steps.arrowWeight}
+                fill="none" strokeLinecap="round" strokeLinejoin="round"
+              />
+            </svg>
+          </div>
+        ) : null}
+        <div style={{ ...typeOf(BA.steps), color: slide.ink }}>{name}</div>
+      </React.Fragment>
+    ))}
+  </AbsoluteFill>
+);
 
 /** One of the two dates. */
 const Stamp: React.FC<{ text: string; y: number }> = ({ text, y }) => (
