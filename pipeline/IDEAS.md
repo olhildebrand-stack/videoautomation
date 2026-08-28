@@ -122,16 +122,19 @@ each one necessary — a rule without its reason gets argued with later.
 - **2026-08-28 — the on-screen bank is two people's niches, and only two of
   the five are the operator's.** `hooks/onscreen-hooks.md` came from the
   operator's mentor's dashboard and its 45 examples are grouped under five
-  headings. **1. video editing / Claude** and **4. the Claude workflow
-  itself** are the operator's. **2. websites / offer**, **3. AI cold-calling /
-  remodeler leads** and **5. websites / remodelers** are the mentor's — a
-  client-services business selling websites and cold-calling to remodelers,
-  which the operator is not in.
+  headings. **2. websites / offer**, **3. AI cold-calling / remodeler leads**
+  and **5. websites / remodelers** are the mentor's — a client-services
+  business the operator is not in. **1. video editing / Claude** and **4. the
+  Claude workflow itself** are subjects the operator has built content around,
+  and they are not the niche either: `ideas/BRAND.md` answer 1 says the niche
+  is custom AI systems for Swedish businesses, and the editing pipeline is a
+  demonstration of that rather than the thing being sold.
 
   This session read the five headings as one account's range and reported back
-  that three fifths of the channel was remodeler lead-gen. That is wrong, and
-  it is wrong in the direction that matters: an idea stage that believes it is
-  writing for remodelers will produce ideas nobody here can film.
+  that three fifths of the channel was remodeler lead-gen, then corrected to
+  the other two headings and was wrong again. Both errors run the same
+  direction: an idea stage that takes its subject from the bank writes for
+  whoever the bank's examples were written for.
 
   So: the bank is for *matching structures*, never for inferring who is
   watching. A hook source proves a shape worked, not that its subject is the
