@@ -888,6 +888,202 @@ export const slideFormat = {
       shadow: '0 6px 18px #00000059',
     },
   },
+  /* ---------------------------------------------------------------------
+   * The seven above all do the same thing underneath: a photograph, and type
+   * on top of it. These seven do not. Five carry no photograph at all, two
+   * put one behind glass, and three set their type on paper rather than on
+   * the dark. None of them is read off a reference -- they are what the
+   * reference set has no example of.
+   * ------------------------------------------------------------------- */
+
+  /**
+   * One number, big enough to be the picture.
+   *
+   * Sized so a four-character figure fills the frame edge to edge and a
+   * longer one runs past it and is clipped -- which is the point. A figure
+   * that sits comfortably inside its margins reads as a headline that happens
+   * to be large; one that the frame cannot contain reads as a quantity.
+   * Nothing else competes: a mono label above, one line below.
+   */
+  ticker: {
+    ground: '#0B0B0C',
+    ink: '#FFFFFF',
+    accent: '#F0562E',
+    figure: {
+      family: 'Inter', weight: 800, size: 480,
+      tracking: '-0.06em', leading: 0.82,
+    },
+    label: {
+      family: 'IBM Plex Mono', weight: 400, size: 34,
+      tracking: '0.22em', leading: 1.2,
+    },
+    body: {
+      family: 'Inter', weight: 400, size: 46,
+      tracking: '0em', leading: 1.3,
+    },
+  },
+  /**
+   * A hard horizontal edge: the photograph above it, a flat block below.
+   *
+   * No scrim, no gradient, no blend. Every other format that carries a
+   * photograph darkens it so type can sit on it; this one refuses to put type
+   * on the photograph at all, so the picture is never touched.
+   */
+  split: {
+    /** Where the edge falls. The picture gets the larger share. */
+    at: 0.56,
+    block: '#12212B',
+    ink: '#FFFFFF',
+    accent: '#7DD3C0',
+    headline: {
+      family: 'Inter', weight: 800, size: 76,
+      tracking: '-0.03em', leading: 1.06,
+    },
+    body: {
+      family: 'Inter', weight: 400, size: 42,
+      tracking: '0em', leading: 1.34,
+    },
+  },
+  /**
+   * The conversation itself, drawn rather than screenshotted.
+   *
+   * A screenshot of a thread carries someone's battery percentage, their
+   * unread count and their wallpaper; drawn, it carries only what was said.
+   * The cost is that it is no longer evidence, so this is for a thread worth
+   * reading, not a thread worth proving.
+   */
+  thread: {
+    blurPx: 26,
+    scrim: '#08111AD9',
+    ink: '#FFFFFF',
+    them: '#26313A',
+    me: '#0F7A5A',
+    radius: 30,
+    /** The one corner that stays tight, which is what makes it a bubble. */
+    tail: 8,
+    gap: 18,
+    width: 0.78,
+    body: {
+      family: 'Inter', weight: 400, size: 42,
+      tracking: '0em', leading: 1.28,
+    },
+    name: {
+      family: 'Inter', weight: 800, size: 30,
+      tracking: '0em', leading: 1.2,
+    },
+  },
+  /**
+   * A pull quote on paper.
+   *
+   * The only format that is not dark, and the only one whose type is the
+   * serif at size. The oversized mark is set behind the first line and bled
+   * off the left edge -- it is a texture, not punctuation to be read.
+   */
+  quote: {
+    ground: '#F4F1EA',
+    ink: '#16150F',
+    accent: '#CE6A4C',
+    mark: { size: 460, colour: '#CE6A4C2E' },
+    text: {
+      family: 'Playfair Display', weight: 700, size: 92,
+      tracking: '-0.01em', leading: 1.14,
+    },
+    who: {
+      family: 'IBM Plex Mono', weight: 400, size: 32,
+      tracking: '0.2em', leading: 1.2,
+    },
+    rule: '#16150F26',
+  },
+  /**
+   * Rows of label and value, with a total.
+   *
+   * Numbers in the mono, right-aligned so their digits stack; labels in the
+   * sans, left. A hairline between rows and nothing else -- the alignment is
+   * the design, and a box round it would only say "table" twice.
+   */
+  ledger: {
+    ground: '#0B0B0C',
+    ink: '#FFFFFF',
+    dim: '#8A8F94',
+    accent: '#3FDD52',
+    rule: '#FFFFFF1F',
+    heading: {
+      family: 'Inter', weight: 800, size: 72,
+      tracking: '-0.03em', leading: 1.06,
+    },
+    label: {
+      family: 'Inter', weight: 400, size: 44,
+      tracking: '0em', leading: 1.2,
+    },
+    value: {
+      family: 'IBM Plex Mono', weight: 400, size: 44,
+      tracking: '0em', leading: 1.2,
+    },
+    rowPad: 30,
+    totalSize: 64,
+  },
+  /**
+   * A strict grid of tiles, which is the collage's opposite.
+   *
+   * The collage scatters to say there is more where this came from. A grid
+   * says this is all of it, and it is countable -- which is the right claim
+   * for a list of things done, and the wrong one for proof.
+   */
+  grid: {
+    ground: '#0B0B0C',
+    tile: '#F4F1EA',
+    onTile: '#16150F',
+    dim: '#5F5C55',
+    ink: '#FFFFFF',
+    columns: 2,
+    gap: 22,
+    radius: 20,
+    ratio: 0.62,
+    heading: {
+      family: 'Inter', weight: 800, size: 68,
+      tracking: '-0.03em', leading: 1.06,
+    },
+    figure: {
+      family: 'Inter', weight: 800, size: 76,
+      tracking: '-0.03em', leading: 1,
+    },
+    caption: {
+      family: 'Inter', weight: 400, size: 32,
+      tracking: '0em', leading: 1.22,
+    },
+    pad: 28,
+  },
+  /**
+   * A rail down the left with the times on it.
+   *
+   * The rows are evenly spaced, not scaled to the real intervals: on a run of
+   * events minutes apart with one long wait among them, a true scale strands
+   * the short gaps into an unreadable clump. What makes it a timeline rather
+   * than a list is the rail and the times, not the spacing.
+   */
+  timeline: {
+    ground: '#12212B',
+    ink: '#FFFFFF',
+    dim: '#8FA3AE',
+    accent: '#7DD3C0',
+    rail: '#FFFFFF29',
+    dot: 20,
+    railWidth: 3,
+    gutter: 210,
+    gap: 64,
+    heading: {
+      family: 'Inter', weight: 800, size: 68,
+      tracking: '-0.03em', leading: 1.06,
+    },
+    at: {
+      family: 'IBM Plex Mono', weight: 400, size: 38,
+      tracking: '0.04em', leading: 1.2,
+    },
+    event: {
+      family: 'Inter', weight: 600, size: 46,
+      tracking: '-0.01em', leading: 1.22,
+    },
+  },
 } as const;
 
 export type SlideFormat = keyof typeof slideFormat;

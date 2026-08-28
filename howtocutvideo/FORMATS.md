@@ -149,8 +149,22 @@ sequence in the folder's `slides.json`, never per slide.
 | `beforeafter` | B's `over(4)` | a huge accent number, two cards, a long arrow between the dates |
 | `collage` | E | screenshots scattered over a blurred photo, green chips over the figures, white caption boxes |
 
-One of each is rendered into `stories/formats/out/`, built from the sources in
-`stories/formats/<name>/`.
+Seven more, improvised rather than read off anything. All fourteen render into
+`stories/formats/out/` from the sources in `stories/formats/<name>/`.
+
+| `format` | what it is | why it is not one of the seven above |
+| --- | --- | --- |
+| `ticker` | one figure, sized to fill the frame and clip | no photograph at all |
+| `split` | a hard edge: picture above, flat block below | type never sits on the picture |
+| `thread` | the conversation drawn, not screenshotted | carries what was said and nothing else |
+| `quote` | a serif pull quote on paper | the only light ground, the only serif at size |
+| `ledger` | label and value rows, mono, with a total | the numbers align, which is the design |
+| `grid` | six tiles, countable | the collage's opposite: this is all of it |
+| `timeline` | a rail with the times on it | order is the subject |
+
+The first seven all do the same thing underneath -- a photograph with type on
+it. Five of these carry no photograph, two put one behind glass, and three set
+their type on paper.
 
 **What the words in the references say is not part of the format.** They are
 someone else's captions. Only the layout, the type and the colour carry over.

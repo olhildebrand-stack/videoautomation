@@ -45,6 +45,14 @@ export type SlideProps = {
    * its number actually is, as a fraction of the frame.
    */
   chips?: { text: string; x: number; y: number }[];
+  /**
+   * ledger, grid, timeline: the rows they set. What the pair means is the
+   * format's business -- a line item and its cost, a figure and its caption,
+   * a time and what happened at it.
+   */
+  rows?: { label: string; value: string }[];
+  /** thread: what was said, and by whom. */
+  messages?: { text: string; from?: string; mine?: boolean }[];
   handle?: string;
   /**
    * This slide's picture is a video: cut the card's rectangle out of the
@@ -65,6 +73,13 @@ export const Slide: React.FC<SlideProps> = (props) => {
   if (props.format === 'titled') return <Titled {...props} />;
   if (props.format === 'beforeafter') return <BeforeAfter {...props} />;
   if (props.format === 'collage') return <Collage {...props} />;
+  if (props.format === 'ticker') return <Ticker {...props} />;
+  if (props.format === 'split') return <Split {...props} />;
+  if (props.format === 'thread') return <Thread {...props} />;
+  if (props.format === 'quote') return <Quote {...props} />;
+  if (props.format === 'ledger') return <Ledger {...props} />;
+  if (props.format === 'grid') return <Grid {...props} />;
+  if (props.format === 'timeline') return <Timeline {...props} />;
   return props.kind === 'cover' ? <Cover {...props} /> : <Body {...props} />;
 };
 
@@ -885,6 +900,413 @@ const Dots: React.FC<{ step?: number; of: number; shape?: SlideShape }> = ({
     ))}
   </div>
 );
+
+/* --------------------------------------------------------- format: ticker  */
+
+const K = slideFormat.ticker;
+
+/**
+ * One number, big enough to be the picture.
+ *
+ * Sized to fill the frame edge to edge, and clipped when the figure is long
+ * enough to run past it. Nothing else on the slide competes.
+ */
+const Ticker: React.FC<SlideProps> = ({ kicker, headline, body, shape }) => {
+  const geometry = shapeOf(shape);
+  return (
+    <AbsoluteFill
+      style={{
+        backgroundColor: K.ground,
+        paddingTop: geometry.insetTop + slide.side,
+        paddingBottom: geometry.insetBottom + slide.side,
+        paddingInline: slide.side,
+        display: 'flex', flexDirection: 'column', justifyContent: 'space-between',
+      }}
+    >
+      <div style={{ ...typeOf(K.label), color: K.ink, textTransform: 'uppercase' }}>
+        {kicker}
+      </div>
+      {/* Clipped on purpose: the figure runs past both edges. */}
+      <div style={{ overflow: 'hidden', marginInline: -slide.side }}>
+        <div
+          style={{
+            ...typeOf(K.figure), color: K.accent,
+            whiteSpace: 'nowrap', paddingInline: slide.side * 0.4,
+          }}
+        >
+          {headline}
+        </div>
+      </div>
+      <div style={{ ...typeOf(K.body), color: K.ink }}>{body}</div>
+    </AbsoluteFill>
+  );
+};
+
+/* ---------------------------------------------------------- format: split  */
+
+const Sp = slideFormat.split;
+
+/**
+ * A hard horizontal edge: the photograph above it, a flat block below.
+ *
+ * Every other format that carries a photograph darkens it so type can sit on
+ * it. This one refuses to put type on the photograph at all, so the picture
+ * is never touched.
+ */
+const Split: React.FC<SlideProps> = ({
+  image, background, focus, kicker, headline, body, emphasis, shape,
+}) => {
+  const geometry = shapeOf(shape);
+  return (
+    <AbsoluteFill style={{ backgroundColor: Sp.block }}>
+      <div style={{ height: geometry.height * Sp.at, overflow: 'hidden' }}>
+        <Fill src={image ?? background} focus={focus} />
+      </div>
+      <div
+        style={{
+          flex: 1,
+          paddingInline: slide.side,
+          paddingTop: slide.side,
+          paddingBottom: geometry.insetBottom + slide.side,
+          display: 'flex', flexDirection: 'column', justifyContent: 'flex-start',
+        }}
+      >
+        {kicker ? (
+          <div
+            style={{
+              ...typeOf(Sp.body), color: Sp.accent,
+              textTransform: 'uppercase', marginBottom: slide.side * 0.3,
+            }}
+          >
+            {kicker}
+          </div>
+        ) : null}
+        <div style={{ ...typeOf(Sp.headline), color: Sp.ink }}>{headline}</div>
+        {body ? (
+          <div
+            style={{
+              ...typeOf(Sp.body), color: Sp.ink, marginTop: slide.side * 0.5,
+            }}
+          >
+            {body}
+            {emphasis ? (
+              <span style={{ color: Sp.accent }}>{` ${emphasis}`}</span>
+            ) : null}
+          </div>
+        ) : null}
+      </div>
+    </AbsoluteFill>
+  );
+};
+
+/* --------------------------------------------------------- format: thread  */
+
+const Th = slideFormat.thread;
+
+/**
+ * The conversation itself, drawn rather than screenshotted.
+ *
+ * A screenshot of a thread carries someone's battery percentage, their unread
+ * count and their wallpaper. Drawn, it carries only what was said -- at the
+ * cost of no longer being evidence, so this is for a thread worth reading
+ * rather than a thread worth proving.
+ */
+const Thread: React.FC<SlideProps> = ({
+  image, background, focus, headline, messages, shape,
+}) => {
+  const geometry = shapeOf(shape);
+  return (
+    <AbsoluteFill style={{ backgroundColor: slide.ground }}>
+      <Fill src={image ?? background} focus={focus} blur={Th.blurPx} />
+      <AbsoluteFill style={{ backgroundColor: Th.scrim }} />
+      <AbsoluteFill
+        style={{
+          paddingTop: geometry.insetTop + slide.side,
+          paddingBottom: geometry.insetBottom + slide.side,
+          paddingInline: slide.side,
+          display: 'flex', flexDirection: 'column', justifyContent: 'center',
+          gap: Th.gap,
+        }}
+      >
+        {headline ? (
+          <div
+            style={{
+              ...typeOf(Th.name), color: Th.ink, opacity: 0.7,
+              textAlign: 'center', marginBottom: slide.side * 0.4,
+            }}
+          >
+            {headline}
+          </div>
+        ) : null}
+        {(messages ?? []).map((message, index) => (
+          <div
+            key={index}
+            style={{
+              alignSelf: message.mine ? 'flex-end' : 'flex-start',
+              maxWidth: `${Th.width * 100}%`,
+              backgroundColor: message.mine ? Th.me : Th.them,
+              color: Th.ink,
+              borderRadius: Th.radius,
+              borderBottomRightRadius: message.mine ? Th.tail : Th.radius,
+              borderBottomLeftRadius: message.mine ? Th.radius : Th.tail,
+              padding: slide.side * 0.42,
+            }}
+          >
+            {message.from ? (
+              <div style={{ ...typeOf(Th.name), opacity: 0.65 }}>{message.from}</div>
+            ) : null}
+            <div style={typeOf(Th.body)}>{message.text}</div>
+          </div>
+        ))}
+      </AbsoluteFill>
+    </AbsoluteFill>
+  );
+};
+
+/* ---------------------------------------------------------- format: quote  */
+
+const Q = slideFormat.quote;
+
+/**
+ * A pull quote on paper.
+ *
+ * The only format that is not dark, and the only one whose type is the serif
+ * at size. The mark is bled off the left edge and set behind the first line:
+ * it is a texture, not punctuation to be read.
+ */
+const Quote: React.FC<SlideProps> = ({ headline, body, kicker, shape }) => {
+  const geometry = shapeOf(shape);
+  return (
+    <AbsoluteFill style={{ backgroundColor: Q.ground }}>
+      <div
+        style={{
+          position: 'absolute',
+          left: -slide.side, top: geometry.insetTop + slide.side * 0.2,
+          fontFamily: Q.text.family, fontWeight: Q.text.weight,
+          fontSize: Q.mark.size, lineHeight: 1, color: Q.mark.colour,
+        }}
+      >
+        {'\u201C'}
+      </div>
+      <AbsoluteFill
+        style={{
+          paddingTop: geometry.insetTop + slide.side,
+          paddingBottom: geometry.insetBottom + slide.side,
+          paddingInline: slide.side,
+          display: 'flex', flexDirection: 'column', justifyContent: 'center',
+        }}
+      >
+        <div style={{ ...typeOf(Q.text), color: Q.ink }}>{headline}</div>
+        <div
+          style={{
+            height: 1, backgroundColor: Q.rule,
+            marginBlock: slide.side * 0.7, width: '38%',
+          }}
+        />
+        <div style={{ ...typeOf(Q.who), color: Q.accent, textTransform: 'uppercase' }}>
+          {kicker}
+        </div>
+        {body ? (
+          <div
+            style={{
+              ...typeOf(Q.who), color: Q.ink, opacity: 0.55,
+              marginTop: slide.side * 0.24,
+            }}
+          >
+            {body}
+          </div>
+        ) : null}
+      </AbsoluteFill>
+    </AbsoluteFill>
+  );
+};
+
+/* --------------------------------------------------------- format: ledger  */
+
+const Le = slideFormat.ledger;
+
+/**
+ * Rows of label and value, with a total.
+ *
+ * Numbers in the mono and right-aligned so their digits stack; labels in the
+ * sans, left. A hairline between rows and nothing else -- the alignment is
+ * the design, and a box round it would say "table" twice.
+ */
+const Ledger: React.FC<SlideProps> = ({ headline, rows, emphasis, shape }) => {
+  const geometry = shapeOf(shape);
+  const [totalLabel, totalValue] = (emphasis ?? '').split('/');
+  return (
+    <AbsoluteFill
+      style={{
+        backgroundColor: Le.ground,
+        paddingTop: geometry.insetTop + slide.side,
+        paddingBottom: geometry.insetBottom + slide.side,
+        paddingInline: slide.side,
+        display: 'flex', flexDirection: 'column', justifyContent: 'center',
+      }}
+    >
+      <div
+        style={{
+          ...typeOf(Le.heading), color: Le.ink, marginBottom: slide.side * 0.8,
+        }}
+      >
+        {headline}
+      </div>
+      {(rows ?? []).map((row) => (
+        <div
+          key={row.label}
+          style={{
+            display: 'flex', justifyContent: 'space-between', alignItems: 'baseline',
+            paddingBlock: Le.rowPad,
+            borderBottom: `1px solid ${Le.rule}`,
+          }}
+        >
+          <div style={{ ...typeOf(Le.label), color: Le.dim }}>{row.label}</div>
+          <div style={{ ...typeOf(Le.value), color: Le.ink }}>{row.value}</div>
+        </div>
+      ))}
+      {totalValue ? (
+        <div
+          style={{
+            display: 'flex', justifyContent: 'space-between', alignItems: 'baseline',
+            paddingTop: Le.rowPad * 1.6,
+          }}
+        >
+          <div style={{ ...typeOf(Le.label), color: Le.ink }}>{totalLabel}</div>
+          <div
+            style={{
+              ...typeOf(Le.value), fontSize: Le.totalSize, color: Le.accent,
+            }}
+          >
+            {totalValue}
+          </div>
+        </div>
+      ) : null}
+    </AbsoluteFill>
+  );
+};
+
+/* ----------------------------------------------------------- format: grid  */
+
+const G = slideFormat.grid;
+
+/**
+ * A strict grid of tiles, which is the collage's opposite.
+ *
+ * The collage scatters to say there is more where this came from. A grid says
+ * this is all of it and it is countable -- the right claim for a list of
+ * things done, and the wrong one for proof.
+ */
+const Grid: React.FC<SlideProps> = ({ headline, rows, shape }) => {
+  const geometry = shapeOf(shape);
+  const width = (slide.width - slide.side * 2 - G.gap * (G.columns - 1)) / G.columns;
+  return (
+    <AbsoluteFill
+      style={{
+        backgroundColor: G.ground,
+        paddingTop: geometry.insetTop + slide.side,
+        paddingBottom: geometry.insetBottom + slide.side,
+        paddingInline: slide.side,
+        display: 'flex', flexDirection: 'column', justifyContent: 'center',
+      }}
+    >
+      <div
+        style={{ ...typeOf(G.heading), color: G.ink, marginBottom: slide.side * 0.7 }}
+      >
+        {headline}
+      </div>
+      <div style={{ display: 'flex', flexWrap: 'wrap', gap: G.gap }}>
+        {(rows ?? []).map((row) => (
+          <div
+            key={row.label}
+            style={{
+              width, height: width * G.ratio,
+              backgroundColor: G.tile, borderRadius: G.radius,
+              padding: G.pad,
+              display: 'flex', flexDirection: 'column', justifyContent: 'space-between',
+            }}
+          >
+            <div style={{ ...typeOf(G.figure), color: G.onTile }}>{row.label}</div>
+            <div style={{ ...typeOf(G.caption), color: G.dim }}>{row.value}</div>
+          </div>
+        ))}
+      </div>
+    </AbsoluteFill>
+  );
+};
+
+/* ------------------------------------------------------- format: timeline  */
+
+const Tl = slideFormat.timeline;
+
+/**
+ * A rail down the left with the times on it.
+ *
+ * Evenly spaced rather than scaled to the real intervals -- see the token. The
+ * rail and the times are what make it a timeline rather than a list.
+ */
+const Timeline: React.FC<SlideProps> = ({ headline, rows, shape }) => {
+  const geometry = shapeOf(shape);
+  const entries = rows ?? [];
+  return (
+    <AbsoluteFill
+      style={{
+        backgroundColor: Tl.ground,
+        paddingTop: geometry.insetTop + slide.side,
+        paddingBottom: geometry.insetBottom + slide.side,
+        paddingInline: slide.side,
+        display: 'flex', flexDirection: 'column', justifyContent: 'center',
+      }}
+    >
+      <div
+        style={{ ...typeOf(Tl.heading), color: Tl.ink, marginBottom: slide.side * 0.9 }}
+      >
+        {headline}
+      </div>
+      {entries.map((row, index) => (
+        <div key={row.label} style={{ display: 'flex', alignItems: 'stretch' }}>
+          <div
+            style={{
+              width: Tl.gutter, flexShrink: 0, textAlign: 'right',
+              paddingRight: slide.side * 0.5,
+              ...typeOf(Tl.at), color: Tl.dim,
+            }}
+          >
+            {row.label}
+          </div>
+          {/* The rail runs through every entry but the last, so the line stops
+              at the final dot rather than trailing off the bottom. */}
+          <div
+            style={{
+              width: Tl.dot, flexShrink: 0, position: 'relative',
+              borderLeft: index === entries.length - 1
+                ? 'none'
+                : `${Tl.railWidth}px solid ${Tl.rail}`,
+              marginLeft: Tl.dot / 2,
+            }}
+          >
+            <div
+              style={{
+                position: 'absolute',
+                left: -Tl.dot / 2 - Tl.railWidth / 2, top: Tl.dot * 0.4,
+                width: Tl.dot, height: Tl.dot, borderRadius: Tl.dot,
+                backgroundColor: Tl.accent,
+              }}
+            />
+          </div>
+          <div
+            style={{
+              ...typeOf(Tl.event), color: Tl.ink,
+              paddingLeft: slide.side * 0.5, paddingBottom: Tl.gap,
+            }}
+          >
+            {row.value}
+          </div>
+        </div>
+      ))}
+    </AbsoluteFill>
+  );
+};
 
 /* ------------------------------------------------------------------ pieces */
 

@@ -1,0 +1,9 @@
+{ "shape": "story", "format": "split", "slides": [ {
+  "kind": "body",
+  "image": "01-cover.jpg",
+  "focus": "50% 28%",
+  "kicker": "hur det faktiskt går till",
+  "headline": "Jag spelar in\nen enda tagning.",
+  "body": "Sedan tar pipelinen över: den läser, väljer, klipper och skriver ut varför.",
+  "emphasis": "Jag tittar bara igenom."
+} ] }

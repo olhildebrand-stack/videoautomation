@@ -1,0 +1,11 @@
+{ "shape": "story", "format": "thread", "slides": [ {
+  "kind": "body",
+  "image": "01-cover.jpg",
+  "headline": "igår 23:41",
+  "messages": [
+    { "text": "hur lång tid tog den där videon egentligen", "from": "Emil" },
+    { "text": "12 minuter", "mine": true },
+    { "text": "12 MINUTER??", "from": "Emil" },
+    { "text": "jag klippte inte den. jag godkände den.", "mine": true }
+  ]
+} ] }
