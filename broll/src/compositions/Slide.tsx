@@ -480,7 +480,18 @@ const Labels: React.FC<SlideProps> = ({
   image, background, focus, headline, body, emphasis, shape,
 }) => {
   const geometry = shapeOf(shape);
-  const lines = [headline, body, emphasis].filter(Boolean) as string[];
+  // A newline starts a new box, it does not wrap inside one. The references
+  // stack short boxes -- "7", "and", "90" one under another -- and a box that
+  // held all three would be a different thing entirely. Text long enough to
+  // wrap still wraps inside its own box; that is a paragraph, and a paragraph
+  // is what a box holds.
+  const boxes = [
+    { text: headline, box: L.box, role: L.headline },
+    { text: body, box: L.box, role: L.body },
+    { text: emphasis, box: L.emphasisBox, role: L.body },
+  ].flatMap(({ text, box, role }, group) =>
+    (text || '').split('\n').filter(Boolean)
+      .map((line, i) => ({ line, box, role, opens: i === 0 && group > 0 })));
   return (
     <AbsoluteFill style={{ backgroundColor: slide.ground }}>
       <Fill src={image || background} focus={focus} />
@@ -494,15 +505,16 @@ const Labels: React.FC<SlideProps> = ({
           gap: L.gap,
         }}
       >
-        {lines.map((line, index) => (
+        {boxes.map(({ line, box, role, opens }, index) => (
           <div
             key={index}
             style={{
-              backgroundColor: L.box,
+              marginTop: opens ? L.groupGap - L.gap : 0,
+              backgroundColor: box,
               borderRadius: L.radius,
               paddingBlock: L.paddingBlock,
               paddingInline: L.paddingInline,
-              ...typeOf(index === 0 ? L.headline : L.body),
+              ...typeOf(role, geometry.typeScale),
               color: slide.ink,
               textAlign: L.align,
             }}

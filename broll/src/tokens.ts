@@ -653,20 +653,42 @@ export const slideFormat = {
      */
     scrim: 'transparent',
     accent: null,
+    /**
+     * Small, and only semibold. The reference stories set this at a fraction
+     * of the size a designed slide would, in the app's own text weight -- a
+     * quote about a remote closer runs fifty characters across one line, which
+     * is half the size this format shipped at. Big and extra-bold is how a
+     * label box stops reading as typed and starts reading as a graphic, which
+     * loses the only thing the format is for.
+     */
     headline: {
-      family: 'Inter', weight: 800, size: 44,
-      tracking: '-0.01em', leading: 1.24,
+      family: 'Inter', weight: 600, size: 28,
+      tracking: '-0.01em', leading: 1.28,
     },
     /** Same box, same weight, one step down: the app has no headline role. */
     body: {
-      family: 'Inter', weight: 800, size: 40,
-      tracking: '-0.01em', leading: 1.24,
+      family: 'Inter', weight: 600, size: 26,
+      tracking: '-0.01em', leading: 1.28,
     },
     box: '#000000',
+    /**
+     * The offer's own colour. Every reference that has something to give away
+     * puts that line -- and only that line -- in a coloured box while the rest
+     * stay black: the box is doing the work an accent colour would do in a
+     * designed slide. `emphasis` is the line that gets it.
+     */
+    emphasisBox: '#1A7A4E',
     radius: 8,
     paddingBlock: 10,
     paddingInline: 18,
     gap: 8,
+    /**
+     * Between one field and the next, rather than between two lines of the
+     * same one. The reference sets the offer well clear of the statement above
+     * it; at the line gap the coloured box reads as a fourth line of the same
+     * sentence rather than as the separate thing it is.
+     */
+    groupGap: 34,
   },
   /** C: the cover photograph, blurred, behind every slide in the set. */
   blurred: {

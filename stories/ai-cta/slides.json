@@ -14,7 +14,8 @@
       "image": "02.jpg",
       "focus": "50% 50%",
       "headline": "Svara på den här storien\nså visar jag\nhur vi fixar det",
-      "body": "Inget säljsamtal."
+      "body": "",
+      "emphasis": "Inget säljsamtal."
     }
   ]
 }
