@@ -55,9 +55,20 @@ pipeline/ideas/sources/*
 # reached a public repository through `stories/`, which nobody had thought of
 # yet. A folder invented next week is covered by this and by nothing else.
 #
-# Footage, audio and transcripts only. Images are left to the rules above on
-# purpose -- a diagram or a committed catalogue render is legitimately a .png,
-# and a blanket rule here would quietly swallow the documentation.
+# Pictures included, after all. The first draft of this backstop left images
+# to the folder rules above, reasoning that a diagram is legitimately a .png.
+# Within the hour an `editingassets/` appeared, untracked and unignored, and
+# would have gone up with the next `git add -A`. Naming places loses; the
+# place is always the thing nobody thought of. So images are ignored
+# everywhere and the documentation folder is named instead -- an allowlist of
+# one, which is a list somebody has to think about to grow.
+*.jpg
+*.jpeg
+*.png
+*.webp
+*.gif
+!pipeline/animations/**
+
 *.mp4
 *.mov
 *.m4v
