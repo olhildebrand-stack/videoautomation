@@ -564,6 +564,63 @@ def test_only_the_first_non_comment_line_is_used(tmp_path):
     assert p.load_hook(tmp_path) == "First choice"
 
 
+# --- captions over a video that is already cut -------------------------------
+
+@pytest.fixture
+def _captioned(monkeypatch):
+    """Everything but the orchestration stubbed: transcription needs a GPU and
+    the render needs a browser, and neither is what this is about."""
+    rendered = []
+    monkeypatch.setattr(p, "transcribe",
+                        lambda video, project: video.with_suffix(".words.json"))
+    monkeypatch.setattr(p, "render_captions",
+                        lambda v, t, out, *a, **k: rendered.append((v, t, out)))
+    monkeypatch.setattr(p, "probe_duration", lambda _: 41.0)
+    return rendered
+
+
+def _clips(tmp_path, *names):
+    out = []
+    for name in names:
+        clip = tmp_path / name
+        clip.write_bytes(b"mp4")
+        out.append(clip)
+    return out
+
+
+def test_captions_lands_beside_the_video_it_came_from(tmp_path, _captioned):
+    clip, = _clips(tmp_path, "1st.mp4")
+    assert p.caption_only([clip], None) == 0
+    assert _captioned == [(clip, tmp_path / "1st.words.json",
+                           tmp_path / "1st-captioned.mp4")]
+
+
+def test_every_video_named_is_captioned(tmp_path, _captioned):
+    """Four cuts of one recording differing only in the spoken hook is the
+    case this exists for, so one invocation has to do all four."""
+    clips = _clips(tmp_path, "1st.mp4", "2nd.mp4", "3rd.mp4", "4th.mp4")
+    assert p.caption_only(clips, None) == 0
+    assert [out.name for _, _, out in _captioned] == [
+        "1st-captioned.mp4", "2nd-captioned.mp4",
+        "3rd-captioned.mp4", "4th-captioned.mp4"]
+
+
+def test_an_out_dir_is_made_rather_than_demanded(tmp_path, _captioned):
+    clip, = _clips(tmp_path, "1st.mp4")
+    where = tmp_path / "captioned"
+    assert p.caption_only([clip], where) == 0
+    assert where.is_dir()
+    assert _captioned[0][2] == where / "1st-captioned.mp4"
+
+
+def test_a_missing_video_stops_before_anything_is_transcribed(tmp_path, _captioned):
+    """Transcription is minutes of GPU each. Finding the typo in the fourth
+    path after the first three have run is the whole cost of not checking."""
+    clips = _clips(tmp_path, "1st.mp4") + [tmp_path / "nope.mp4"]
+    assert p.caption_only(clips, None) == 2
+    assert _captioned == []
+
+
 # --- checkpoint 3: the hook -------------------------------------------------
 
 @pytest.fixture(autouse=True)

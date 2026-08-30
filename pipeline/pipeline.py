@@ -229,6 +229,33 @@ def build_hook_shortlist(state: PipelineState, project: Path, count: int) -> Non
     (project / "hooks.txt").write_text(render_file(candidates), encoding="utf-8")
 
 
+def caption_only(videos: list[Path], out_dir: Path | None) -> int:
+    """Burn captions over videos that are already cut.
+
+    Everything else in this file exists to decide where to cut. A video that
+    arrives already edited needs none of it -- no gates, no edit script, no
+    hook card, no overlays -- so this skips the state machine entirely rather
+    than driving one through stages it has nothing to do.
+
+    Several videos at once because the case this was written for is four cuts
+    of one recording differing only in the spoken hook, being tested against
+    each other.
+    """
+    for video in videos:
+        if not video.is_file():
+            say(f"No such video: {video}")
+            return 2
+    for video in videos:
+        # The video's own folder as the project: a vocabulary.txt or
+        # corrections.txt dropped beside the footage then applies to all of it.
+        transcript = transcribe(video, video.parent)
+        output = (out_dir or video.parent) / f"{video.stem}-captioned.mp4"
+        output.parent.mkdir(parents=True, exist_ok=True)
+        render_captions(video, transcript, output)
+        say(f"  {output}  ({probe_duration(output):.1f}s)")
+    return 0
+
+
 def me() -> str:
     """How this script was invoked, for printing runnable next steps.
 
@@ -1231,6 +1258,13 @@ def main() -> int:
                           help="read what the video is about from this file "
                                "instead of <project>/topic.txt, and copy it in")
 
+    p_captions = sub.add_parser(
+        "captions", help="burn captions over videos that are already cut")
+    p_captions.add_argument("video", type=Path, nargs="+")
+    p_captions.add_argument(
+        "--out-dir", type=Path,
+        help="where the captioned files go (default: beside each input)")
+
     p_hooks = sub.add_parser("hooks", help="match a fresh hook shortlist and show it")
     p_hooks.add_argument("--project", type=Path, required=True)
     p_hooks.add_argument(
@@ -1405,6 +1439,9 @@ def main() -> int:
         if args.brief_only:
             forwarded += ["--brief-only"]
         return subprocess.run(forwarded).returncode
+
+    if args.command == "captions":
+        return caption_only(args.video, args.out_dir)
 
     if args.command == "hooks":
         if not install_topic(args.project, args.topic):

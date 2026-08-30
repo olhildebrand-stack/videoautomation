@@ -49,6 +49,31 @@ pipeline/ideas/BRAND.md
 pipeline/ideas/sources/*
 !pipeline/ideas/sources/README.md
 
+# A backstop under all of the above, by extension rather than by folder.
+# Every rule so far names a place, and the place is what gets forgotten:
+# `videos/` was ignored from the first commit and the operator's photographs
+# reached a public repository through `stories/`, which nobody had thought of
+# yet. A folder invented next week is covered by this and by nothing else.
+#
+# Footage, audio and transcripts only. Images are left to the rules above on
+# purpose -- a diagram or a committed catalogue render is legitimately a .png,
+# and a blanket rule here would quietly swallow the documentation.
+*.mp4
+*.mov
+*.m4v
+*.mkv
+*.avi
+*.heic
+*.wav
+*.m4a
+*.mp3
+# A transcript is the words out of the operator's mouth, so it is as private
+# as the recording, wherever it is written. No negation for the two fixtures
+# already tracked: .gitignore does not apply to a file git already follows,
+# and re-admitting their folder would re-admit every real transcript
+# `render_captions` copies into it.
+*.words.json
+
 .venv-check/
 node_modules/
 __pycache__/

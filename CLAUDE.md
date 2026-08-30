@@ -32,6 +32,25 @@ over adding new manual instructions to a README.
 weights and Remotion's Chrome download are unavailable here. Renders in-session
 use `--browser-executable=/opt/pw-browsers/chromium_headless_shell-*/chrome-linux/headless_shell`.
 
+## The repository is public; the footage is not
+
+`olhildebrand-stack/videoautomation` is a **public** repository. The split is
+in `.gitignore` and explained per folder in `stories/README.md` and
+`howtocutvideo/README.md`; the one line to carry is that **the documentation
+and the learning are public, the material is not**.
+
+Two things that are easy to get wrong:
+
+- **A render of a photograph is the photograph.** A story slide is the
+  operator's picture with type over it, so the PNG is exactly as private as
+  the source — which is why the format catalogue under `stories/**/out/` is
+  local too, deliberate as it was.
+- **The ignore rules name places, and the place is what gets forgotten.**
+  `videos/` was ignored from the first commit; the photographs arrived through
+  `stories/` instead. There is an extension backstop at the foot of
+  `.gitignore` for that reason. When a change would put the operator's media
+  in the repository, say so before making it rather than after.
+
 ## The idea stage comes before the director
 
 `pipeline/IDEAS.md` is the stage that turns "I want to post something" into
