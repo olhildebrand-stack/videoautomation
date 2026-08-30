@@ -9,10 +9,12 @@ https://github.com/olhildebrand-stack/videoautomation
 git clone https://github.com/olhildebrand-stack/videoautomation.git
 ```
 
-**The repository is private.** You cannot clone it until the owner adds you as a
-collaborator on GitHub. If `git clone` returns *"Repository not found"*, that is
-what it means — the repository exists, you just cannot see it yet. Ask for
-access; do not go looking for a public mirror, there isn't one.
+**The repository is public, and it carries the tool and nothing else.** Clone it
+without asking anyone. What it deliberately does not carry: photographs, the
+renders made from them, and the reference footage the editorial thinking was
+read off. Those stay on the operator's machine — see `stories/README.md` and
+`howtocutvideo/README.md` for what is missing from each and why. Everything
+that runs is here.
 
 **Where to paste this brief: Claude Code, in a terminal, inside the clone.**
 
@@ -68,7 +70,7 @@ Four parts:
 | `transcribe/` | faster-whisper wrapper. Word-level timestamps, verbatim mode, hotword vocabulary, deterministic corrections. Python + venv. |
 | `pipeline/` | the orchestrator. Transcribe → direct → cut → grade → hook → captions → overlays → `final.mp4`. Python, no venv of its own. |
 | `broll/` | the renderer. Remotion (React + TypeScript). Captions, overlays, title cards, carousel slides. |
-| `stories/` | still-image carousels for posting, rendered through the same Remotion components. |
+| `stories/` | still-image carousels for posting, rendered through the same Remotion components. Definitions only — the photographs are not in the repository. |
 
 Read, in this order, before touching anything: `CLAUDE.md`, `pipeline/README.md`
 (the long one, and the most valuable file in the repo), `transcribe/README.md`,
@@ -247,9 +249,10 @@ What you *do* get, and should read as your examples:
   best single reference for the overlay vocabulary.
 - `transcribe/sample/test-sv.mp4` and `broll/public/transcripts/sample.words.json`
   — a tiny end-to-end sanity input.
-- `howtocutvideo/` — the reference reels, the transcript workflow
-  (`usingtranscript.txt`) and the findings written from analysing them. This is
-  the editorial thinking behind the whole thing.
+- `howtocutvideo/` — the findings written from analysing the reference reels and
+  the walkthrough tutorial. This is the editorial thinking behind the whole
+  thing. The footage and the transcript it was read off are not in the
+  repository; `howtocutvideo/README.md` says where they are.
 
 **Assume the original author knows things this repository does not say.** Much of
 the operating knowledge — which takes to trust, how the checkpoints feel in

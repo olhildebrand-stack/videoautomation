@@ -11,21 +11,43 @@ broll/public/slides/
 broll/props.generated.json
 broll/props.verify.json
 
-# Rendered carousels. The images and the words are committed; the stills are
-# whatever `python pipeline/slides.py` last made of them.
+# Carousels: the words are committed, the pictures are not. A `slides.json`
+# is the tool -- it names the format, the headline and where the crop sits --
+# but the photograph it points at is the operator's own material, and the
+# stills under out/ are whatever `python pipeline/slides.py` last made of
+# them. So the repository carries every definition and no picture, and a
+# clone renders a sample once its own photographs are dropped in beside it.
+#
 # Two levels deep, not one: a story can live at stories/<set>/<slide>/, and
-# `stories/*/out/` matched only the shallow case. The nested renders were
-# tracked, both sides edited them, and git cannot merge a PNG.
+# `stories/*/out/` matched only the shallow case.
 stories/**/out/
+stories/**/*.jpg
+stories/**/*.jpeg
+stories/**/*.png
+stories/**/*.webp
+stories/**/*.mp4
 
-# ...except the format samples. One render of each format, committed on
-# purpose: they are a catalogue to look at, like the references themselves,
-# and nobody should have to run a render to see what a format looks like.
-!stories/formats/out/
+# Reference material -- other people's reels, screenshots and tutorial
+# transcripts. Studied on the machine that downloaded them and never
+# redistributed from here. What was learned from them is written up in the
+# .md files beside them, and those ARE committed: the findings are ours, the
+# footage is not.
+howtocutvideo/videoreferences/
+howtocutvideo/imagereferences/
+howtocutvideo/backgroundreferences/
+howtocutvideo/claude-editing-tutorial.txt
+howtocutvideo/usingtranscript.txt
 
-# Reference reels are NOT ignored: reference/ and howtocutvideo/ are meant to
-# be committed, since analysing them is a job for the session, which only sees
-# what the repository carries.
+# The idea stage's inputs are the operator's business, not the tool. The
+# questionnaire ships as `BRAND.template.md`; the answered `BRAND.md` -- what
+# the business is, who buys, what a post actually did -- stays on the
+# operator's machine, and so does whatever raw material they feed the stage.
+# What is *learned* from that material goes in `pipeline/IDEAS.md` under
+# Learned rules, and that is committed. The folder is the evidence; IDEAS.md
+# is the finding.
+pipeline/ideas/BRAND.md
+pipeline/ideas/sources/*
+!pipeline/ideas/sources/README.md
 
 .venv-check/
 node_modules/

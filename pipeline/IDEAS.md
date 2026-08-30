@@ -68,7 +68,8 @@ needs two minutes is either two ideas or one that has not been cut yet.
 
 ## Before it produces anything
 
-`ideas/BRAND.md` has to be filled in. Until it is, everything this stage
+`ideas/BRAND.md` has to be filled in — copy it from `ideas/BRAND.template.md`;
+the answered file is gitignored. Until it is, everything this stage
 produces is a guess about somebody generic, and generic is the one thing that
 reliably does not get watched.
 

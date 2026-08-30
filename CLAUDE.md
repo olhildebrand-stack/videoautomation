@@ -45,10 +45,15 @@ this is it, which is why it lives beside the banks it has to read rather than
 in a repository of its own: the hooks bank especially, since a second copy of
 it somewhere else would drift and then neither could be trusted.
 
-**Fill `pipeline/ideas/BRAND.md` first.** The stage reads it before producing
+**Fill `pipeline/ideas/BRAND.md` first.** Copy it from
+`pipeline/ideas/BRAND.template.md`, which is the questionnaire; the answered
+`BRAND.md` is gitignored, because the answers are the operator's business and
+this repository carries the tool. The stage reads it before producing
 anything, and until it is answered every idea is a guess about somebody
 generic. Fill it in conversation, not as a form. Material the operator feeds
-in goes in `pipeline/ideas/sources/`.
+in goes in `pipeline/ideas/sources/`, which is local for the same reason —
+what is *learned* from it belongs in `IDEAS.md` under *Learned rules*, and
+that is committed.
 
 ## The editorial brain is a stage, not a chat
 
