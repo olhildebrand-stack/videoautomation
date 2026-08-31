@@ -6,16 +6,16 @@
       "kind": "cover",
       "image": "01-cover.jpg",
       "focus": "58% 50%",
-      "headline": "Ett lead hör av sig 21:14.\nDu svarar 09:30.\nDe har redan bokat\nmed någon annan.",
-      "body": "Det händer varje vecka. Du ser det aldrig hända."
+      "headline": "\"Jag har inte tid.\"\n\"Jag har inte kunskapen.\"",
+      "body": "Det har AI."
     },
     {
       "kind": "body",
       "image": "02.jpg",
       "focus": "50% 50%",
-      "headline": "Ett system som svarar\npå 2 minuter.\nDygnet runt.",
-      "body": "Svara på den här storien\nså visar jag hur vi fixar det",
-      "emphasis": "Inget säljsamtal."
+      "headline": "\"Men AI tar tid\natt lära sig.\"",
+      "body": "Låt mig göra det åt dig.",
+      "emphasis": "Svara på den här storien\nså visar jag hur vi fixar det"
     }
   ]
 }
