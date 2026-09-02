@@ -564,6 +564,28 @@ def test_only_the_first_non_comment_line_is_used(tmp_path):
     assert p.load_hook(tmp_path) == "First choice"
 
 
+# --- trimming one range out of a video ---------------------------------------
+
+def test_trim_cuts_the_range_it_was_given(tmp_path, monkeypatch):
+    seen = {}
+    monkeypatch.setattr(p, "cut", lambda src, segs, out: seen.update(segs=segs, out=out))
+    monkeypatch.setattr(p, "probe_duration", lambda _: 2.8)
+    clip, = _clips(tmp_path, "hook.mp4")
+    assert p.trim_video(clip, "4.5-7.25", tmp_path / "out.mp4") == 0
+    assert (seen["segs"][0].start, seen["segs"][0].end) == (4.5, 7.25)
+
+
+@pytest.mark.parametrize("span", ["abc", "9-4", "5", ""])
+def test_a_range_that_cannot_be_a_range_is_refused(tmp_path, monkeypatch, span):
+    """Encoding takes real seconds, and a reversed or malformed range produces
+    a file rather than an error if ffmpeg is left to find out."""
+    called = []
+    monkeypatch.setattr(p, "cut", lambda *a: called.append(a))
+    clip, = _clips(tmp_path, "hook.mp4")
+    assert p.trim_video(clip, span, tmp_path / "out.mp4") == 2
+    assert called == []
+
+
 # --- joining finished videos -------------------------------------------------
 
 def test_join_hands_ffmpeg_the_parts_in_the_order_given(tmp_path, monkeypatch):

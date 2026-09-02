@@ -25,7 +25,7 @@ import sys
 from pathlib import Path
 
 from cutlist import (
-    build_cutlist, clamp_slack, drop_fillers, drop_hallucinations,
+    Segment, build_cutlist, clamp_slack, drop_fillers, drop_hallucinations,
     merge_adjacent, read_words, tighten, words_between,
 )
 from ffmpeg_ops import FFmpegMissing, Grade, cut, grade, join, probe_duration
@@ -227,6 +227,32 @@ def build_hook_shortlist(state: PipelineState, project: Path, count: int) -> Non
     # A record of the whole shortlist, so a rejected option can be recovered
     # later without regenerating and hoping the match comes out the same.
     (project / "hooks.txt").write_text(render_file(candidates), encoding="utf-8")
+
+
+def trim_video(video: Path, span: str, output: Path) -> int:
+    """Keep one range of a video and throw the rest away.
+
+    The primitive that was missing. `cut` needs a project, an edit script and
+    two checkpoints, which is right for a video whose shape is in question and
+    absurd for a hook clip where the only question is which retake to keep.
+    Measure the range with `edges.py --gaps`, hand it to this, and the answer
+    is a file.
+    """
+    if not video.is_file():
+        say(f"No such video: {video}")
+        return 2
+    try:
+        first, last = (float(n) for n in span.split("-"))
+    except ValueError:
+        say(f"Range should read like 12.5-18.0, not {span!r}")
+        return 2
+    if last <= first:
+        say(f"{span}: the end has to come after the start.")
+        return 2
+    cut(video, [Segment(beat="trim", text="", start=first, end=last, score=1.0)],
+        output)
+    say(f"  {output}  ({probe_duration(output):.1f}s)")
+    return 0
 
 
 def join_videos(parts: list[Path], output: Path) -> int:
@@ -685,7 +711,6 @@ def step(state: PipelineState, project: Path) -> bool:
         segments = merge_adjacent(segments, words)
 
         if explicit:
-            from cutlist import Segment
             # Measure against the audio where the source is reachable. The
             # word timestamps slide early in proportion to the silence VAD
             # removed before decoding, so any cut derived from them slides too.
@@ -869,7 +894,6 @@ def step(state: PipelineState, project: Path) -> bool:
         return False
 
     if stage is Stage.CUTLIST_APPROVED:
-        from cutlist import Segment
         segments = [
             Segment(e["beat"], e["text"], e["start"], e["end"], e["score"])
             for e in state.cutlist
@@ -1275,6 +1299,12 @@ def main() -> int:
                           help="read what the video is about from this file "
                                "instead of <project>/topic.txt, and copy it in")
 
+    p_trim = sub.add_parser(
+        "trim", help="keep one range of a video and throw the rest away")
+    p_trim.add_argument("video", type=Path)
+    p_trim.add_argument("range", help="seconds, as 12.5-18.0")
+    p_trim.add_argument("--out", type=Path, required=True)
+
     p_join = sub.add_parser(
         "join", help="concatenate finished videos end to end")
     p_join.add_argument("video", type=Path, nargs="+")
@@ -1461,6 +1491,9 @@ def main() -> int:
         if args.brief_only:
             forwarded += ["--brief-only"]
         return subprocess.run(forwarded).returncode
+
+    if args.command == "trim":
+        return trim_video(args.video, getattr(args, "range"), args.out)
 
     if args.command == "join":
         return join_videos(args.video, args.out)
