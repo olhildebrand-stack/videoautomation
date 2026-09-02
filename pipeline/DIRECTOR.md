@@ -164,6 +164,26 @@ rewriting it: each entry is a mistake that is now impossible to repeat.
   no leave there is no span to spread across, and it stays up for the rest of
   the video -- which is exactly what happened.
 
+- **2026-08-31 -- a smeared region is a run of retakes, and the retake rule
+  still applies to it -- measured from the audio, not read from the text.**
+  `hemsidagratis` had two. In the first, the transcript showed one sentence
+  split across takes 5 and 6, and what the audio held was a false start ("och
+  sen krävs det") followed by the finished sentence. In the second, the
+  transcript showed three fragments of one sentence across takes 7, 8 and 9;
+  the audio held several attempts, and only the last three seconds were the
+  real one. Both times the director reasoned about which transcribed fragments
+  to chain, and both times the answer was that the fragments are not the
+  sentence -- they are what Whisper managed to catch of the attempts leading up
+  to it.
+
+  So where a beat lands in a region flagged **SPEECH NOT TRANSCRIBED HERE**,
+  do not chain its takes and do not argue from their wording. Say in `risks`
+  that the region needs `python pipeline/edges.py <raw> <from>-<to> --gaps`,
+  which reports the speech runs and the silence between them, and that the beat
+  is almost certainly the LAST run in the stretch. An explicit `start`/`end`
+  range over that run is the fix -- it skips matching, silence removal and
+  merging, which is what explicit ranges are for.
+
 - **2026-08-31 -- the retake rule, stated: this operator records toward the
   good take, so the LAST attempt is the one to keep.** It was referenced by
   the looping rule below and never written down, which left the choice to be
