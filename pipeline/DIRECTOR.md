@@ -164,6 +164,30 @@ rewriting it: each entry is a mistake that is now impossible to repeat.
   no leave there is no span to spread across, and it stays up for the rest of
   the video -- which is exactly what happened.
 
+- **2026-08-31 -- subtract before you chain. A gap of more than about 1.5s
+  between two takes means they are not one sentence, however well the words
+  join.** `hemsidagratis` chained WHAT'S NEEDED from a take ending 36.78 to a
+  take beginning 44.785. That is an eight-second hole in the middle of one
+  sentence, and nobody pauses for eight seconds mid-sentence. The cut spliced
+  straight across it.
+
+  The rule against chaining inside a smeared region already existed, and the
+  director cited the region and chained anyway -- "to keep the specific detail
+  rather than lose it". So this is not a missing rule; it is a rule that lost
+  an argument. It is not a trade-off and there is nothing to weigh: **compute
+  the gap between the takes before you chain them, and if it is over 1.5s, do
+  not.** Arithmetic cannot be talked out of, and judgement can.
+
+  And the thing that made chaining look right is the tell that it was wrong.
+  Take 5 ended "...och sen krävs det"; take 6 began "säkerhet och en stadig
+  back-end". They join into one clean sentence, which reads as proof they are
+  one sentence. It is the opposite: **the speaker abandoned the line and said
+  it again from earlier**, so of course the words continue -- an abandoned
+  attempt and its retake are the same sentence twice. Fluent continuity across
+  a long gap is evidence of a retake, never of a sentence. The real delivery
+  ran 40-47.5s, whole, and the transcript wrote down only its last three
+  seconds.
+
 - **2026-08-31 -- a smeared region is a run of retakes, and the retake rule
   still applies to it -- measured from the audio, not read from the text.**
   `hemsidagratis` had two. In the first, the transcript showed one sentence
@@ -281,8 +305,11 @@ rewriting it: each entry is a mistake that is now impossible to repeat.
 
   Otherwise, in that region:
 
-  - Never chain neighbouring takes into one beat. What reads as a sentence
-    split across them is one sentence the transcript failed to place.
+  - Never chain neighbouring takes into one beat, and check the arithmetic
+    before you are tempted: a gap over 1.5s settles it without judgement.
+    What reads as a sentence split across them is one sentence the transcript
+    failed to place -- or an abandoned attempt followed by its retake, which
+    joins up just as neatly and must not be spliced.
   - Prefer the **single longest** take that carries a complete thought, and
     accept that its text may look like a fragment -- the audio has the rest.
   - Say in `risks` which take you chose and that the region is unreliable, so
