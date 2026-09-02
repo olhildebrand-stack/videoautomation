@@ -98,6 +98,50 @@ def cut(source: Path, segments: list[Segment], output: Path, crf: int = 18) -> N
     ])
 
 
+def join(parts: list[Path], output: Path, crf: int = 18) -> None:
+    """Concatenate finished videos end to end.
+
+    `cut` concatenates segments of ONE recording, which is all the pipeline
+    needed while a video was one take. Testing three spoken hooks against one
+    body is two recordings, and no amount of trimming inside either reaches
+    across the gap.
+
+    The concat filter rather than the demuxer: the demuxer needs every input to
+    share a codec and a timebase exactly, and produces a broken file when they
+    do not. These come off a camera and a renderer, so they do not.
+
+    The filter has its own requirement -- identical width, height, SAR and
+    frame rate -- and fails outright when they differ, which a 1080x1920/30
+    hook in front of a 720x1280/25 body proved on the first real test of this
+    function. So every input is scaled into the FIRST one's frame, padded
+    rather than stretched, and resampled to its rate. The first part is the
+    hook, and the hook is what the finished video should look like.
+    """
+    output.parent.mkdir(parents=True, exist_ok=True)
+    width, height, fps = probe_video(parts[0])
+    chains, streams = [], ""
+    for i in range(len(parts)):
+        chains.append(
+            f"[{i}:v]scale={width}:{height}:force_original_aspect_ratio=decrease,"
+            f"pad={width}:{height}:(ow-iw)/2:(oh-ih)/2,setsar=1,fps={fps}[v{i}]"
+        )
+        chains.append(f"[{i}:a]aresample=async=1[a{i}]")
+        streams += f"[v{i}][a{i}]"
+    args = ["ffmpeg", "-v", "error", "-y"]
+    for part in parts:
+        args += ["-i", str(part)]
+    run(args + [
+        "-filter_complex",
+        ";".join(chains) + f";{streams}concat=n={len(parts)}:v=1:a=1[outv][outa]",
+        "-map", "[outv]", "-map", "[outa]",
+        "-c:v", "libx264", "-preset", "medium", "-crf", str(crf),
+        "-pix_fmt", "yuv420p",
+        "-c:a", "aac", "-b:a", "192k",
+        "-movflags", "+faststart",
+        str(output),
+    ])
+
+
 @dataclass
 class Grade:
     """A colour grade, expressed as ffmpeg filters.
@@ -139,6 +183,20 @@ def grade(source: Path, output: Path, settings: Grade, crf: int = 18) -> None:
         "-movflags", "+faststart",
         str(output),
     ])
+
+
+def probe_video(path: Path) -> tuple[int, int, str]:
+    """Width, height and frame rate, as ffmpeg's own fraction ('30000/1001')."""
+    result = subprocess.run(
+        [binary("ffprobe"), "-v", "error", "-select_streams", "v:0",
+         "-show_entries", "stream=width,height,r_frame_rate",
+         "-of", "csv=p=0:s=x", str(path)],
+        capture_output=True, text=True,
+    )
+    if result.returncode != 0:
+        raise FFmpegError(f"ffprobe failed on {path}")
+    width, height, rate = result.stdout.strip().split("x")
+    return int(width), int(height), rate
 
 
 def probe_duration(path: Path) -> float:

@@ -28,7 +28,7 @@ from cutlist import (
     build_cutlist, clamp_slack, drop_fillers, drop_hallucinations,
     merge_adjacent, read_words, tighten, words_between,
 )
-from ffmpeg_ops import FFmpegMissing, Grade, cut, grade, probe_duration
+from ffmpeg_ops import FFmpegMissing, Grade, cut, grade, join, probe_duration
 from remotion_ops import command as remotion_command
 from hookgen import (
     BANK as HOOK_BANK, BankUnavailable, SEED_TOPIC, as_dicts, generate,
@@ -227,6 +227,17 @@ def build_hook_shortlist(state: PipelineState, project: Path, count: int) -> Non
     # A record of the whole shortlist, so a rejected option can be recovered
     # later without regenerating and hoping the match comes out the same.
     (project / "hooks.txt").write_text(render_file(candidates), encoding="utf-8")
+
+
+def join_videos(parts: list[Path], output: Path) -> int:
+    """Stick finished videos together, in the order given."""
+    for part in parts:
+        if not part.is_file():
+            say(f"No such video: {part}")
+            return 2
+    join(parts, output)
+    say(f"  {output}  ({probe_duration(output):.1f}s)")
+    return 0
 
 
 def caption_only(videos: list[Path], out_dir: Path | None) -> int:
@@ -1264,6 +1275,11 @@ def main() -> int:
                           help="read what the video is about from this file "
                                "instead of <project>/topic.txt, and copy it in")
 
+    p_join = sub.add_parser(
+        "join", help="concatenate finished videos end to end")
+    p_join.add_argument("video", type=Path, nargs="+")
+    p_join.add_argument("--out", type=Path, required=True)
+
     p_captions = sub.add_parser(
         "captions", help="burn captions over videos that are already cut")
     p_captions.add_argument("video", type=Path, nargs="+")
@@ -1445,6 +1461,9 @@ def main() -> int:
         if args.brief_only:
             forwarded += ["--brief-only"]
         return subprocess.run(forwarded).returncode
+
+    if args.command == "join":
+        return join_videos(args.video, args.out)
 
     if args.command == "captions":
         return caption_only(args.video, args.out_dir)

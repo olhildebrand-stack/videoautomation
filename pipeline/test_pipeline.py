@@ -564,6 +564,28 @@ def test_only_the_first_non_comment_line_is_used(tmp_path):
     assert p.load_hook(tmp_path) == "First choice"
 
 
+# --- joining finished videos -------------------------------------------------
+
+def test_join_hands_ffmpeg_the_parts_in_the_order_given(tmp_path, monkeypatch):
+    """Order is the whole point: the hook goes in front of the body, and a
+    join that sorted or deduplicated would silently reorder the video."""
+    seen = {}
+    monkeypatch.setattr(p, "join", lambda parts, out: seen.update(parts=parts, out=out))
+    monkeypatch.setattr(p, "probe_duration", lambda _: 31.0)
+    clips = _clips(tmp_path, "hook.mp4", "body.mp4")
+    out = tmp_path / "final.mp4"
+    assert p.join_videos(clips, out) == 0
+    assert seen["parts"] == clips and seen["out"] == out
+
+
+def test_join_checks_every_part_before_encoding_any(tmp_path, monkeypatch):
+    called = []
+    monkeypatch.setattr(p, "join", lambda parts, out: called.append(parts))
+    clips = _clips(tmp_path, "hook.mp4") + [tmp_path / "gone.mp4"]
+    assert p.join_videos(clips, tmp_path / "final.mp4") == 2
+    assert called == []
+
+
 # --- captions over a video that is already cut -------------------------------
 
 @pytest.fixture
