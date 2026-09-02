@@ -164,6 +164,26 @@ rewriting it: each entry is a mistake that is now impossible to repeat.
   no leave there is no span to spread across, and it stays up for the rest of
   the video -- which is exactly what happened.
 
+- **2026-08-31 -- two beats can be two halves of ONE sentence, taken from two
+  different attempts at it. Check that no beat's line sits inside another
+  beat's range.** `hemsidagratis` put "Mycket går in i att göra en hemsida" in
+  PROBLEM at 30.71-32.62 and "Det krävs konkurrens..." in WHAT'S NEEDED at
+  41.8-47.5. One sentence, said twice: PROBLEM came from the abandoned attempt
+  and WHAT'S NEEDED from the good one, ten seconds apart, and the good one
+  contains the PROBLEM line as well -- so the cut said it, jumped, and said it
+  again.
+
+  This is what a retake looks like from inside the transcript, and it is
+  invisible if you read the beats one at a time: each is a fluent line that
+  earns its place. The check is between them. **Before you settle the beat
+  list, look for a short beat whose words also appear in a later beat's
+  sentence.** Where you find one, they are the same delivery twice, the
+  earlier is the discarded attempt, and the answer is one beat over the whole
+  of the later one -- not two beats stitched from both.
+
+  The operator's own words for it: "like this is one sentence they arent even
+  supposed to be split up".
+
 - **2026-08-31 -- subtract before you chain. A gap of more than about 1.5s
   between two takes means they are not one sentence, however well the words
   join.** `hemsidagratis` chained WHAT'S NEEDED from a take ending 36.78 to a
