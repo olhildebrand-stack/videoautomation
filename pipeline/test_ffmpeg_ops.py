@@ -68,3 +68,33 @@ def test_lut_is_applied_last_so_it_grades_the_corrected_image():
     chain = fo.Grade(lut=Path("look.cube")).to_filter()
     assert chain.index("eq=") < chain.index("lut3d")
     assert chain.endswith("lut3d='look.cube'")
+
+
+# --- probing geometry for a join --------------------------------------------
+
+def _ffprobe_saying(payload):
+    """Stand in for ffprobe, returning whatever JSON the test wants."""
+    class Result:
+        returncode = 0
+        stdout = payload
+    return lambda *a, **k: Result()
+
+
+def test_geometry_survives_a_stream_that_carries_no_dimensions(monkeypatch):
+    """The first version split ffprobe's CSV on 'x' and unpacked exactly three
+    fields. A real file came back with four and it raised. An mp4 can hold more
+    than one stream ffprobe calls video -- a cover image is one -- so the first
+    with real dimensions is the one that decides the join."""
+    import ffmpeg_ops
+    monkeypatch.setattr(ffmpeg_ops.subprocess, "run", _ffprobe_saying(
+        '{"streams":[{"r_frame_rate":"0/0"},'
+        '{"width":1080,"height":1920,"r_frame_rate":"30000/1001"}]}'))
+    assert ffmpeg_ops.probe_video(Path("x.mp4")) == (1080, 1920, "30000/1001")
+
+
+def test_a_file_with_no_usable_video_stream_says_so(monkeypatch):
+    import ffmpeg_ops
+    monkeypatch.setattr(ffmpeg_ops.subprocess, "run",
+                        _ffprobe_saying('{"streams":[]}'))
+    with pytest.raises(ffmpeg_ops.FFmpegError, match="no video stream"):
+        ffmpeg_ops.probe_video(Path("x.mp4"))

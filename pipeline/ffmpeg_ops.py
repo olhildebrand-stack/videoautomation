@@ -3,6 +3,7 @@
 
 from __future__ import annotations
 
+import json
 import os
 import shutil
 import subprocess
@@ -186,17 +187,30 @@ def grade(source: Path, output: Path, settings: Grade, crf: int = 18) -> None:
 
 
 def probe_video(path: Path) -> tuple[int, int, str]:
-    """Width, height and frame rate, as ffmpeg's own fraction ('30000/1001')."""
+    """Width, height and frame rate, as ffmpeg's own fraction ('30000/1001').
+
+    JSON, not CSV. The first version asked for three fields separated by 'x'
+    and unpacked exactly three, which held until a file came back with four --
+    an mp4 can carry more than one stream ffprobe is willing to call video, and
+    a separator is only unambiguous until it is not. Parsing a structure cannot
+    be surprised by an extra field; splitting a string can.
+    """
     result = subprocess.run(
-        [binary("ffprobe"), "-v", "error", "-select_streams", "v:0",
+        [binary("ffprobe"), "-v", "error", "-select_streams", "v",
          "-show_entries", "stream=width,height,r_frame_rate",
-         "-of", "csv=p=0:s=x", str(path)],
+         "-of", "json", str(path)],
         capture_output=True, text=True,
     )
     if result.returncode != 0:
         raise FFmpegError(f"ffprobe failed on {path}")
-    width, height, rate = result.stdout.strip().split("x")
-    return int(width), int(height), rate
+    streams = json.loads(result.stdout).get("streams") or []
+    # The first stream carrying real dimensions. A cover image is a video
+    # stream to ffprobe and would otherwise decide the geometry of the join.
+    for stream in streams:
+        if stream.get("width") and stream.get("height"):
+            return (int(stream["width"]), int(stream["height"]),
+                    stream.get("r_frame_rate") or "30/1")
+    raise FFmpegError(f"no video stream with dimensions in {path}")
 
 
 def probe_duration(path: Path) -> float:
