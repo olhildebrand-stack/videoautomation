@@ -69,6 +69,9 @@ class PipelineState:
     # The shortlist offered at checkpoint 3, and the one picked from it.
     hook_candidates: list[dict] = field(default_factory=list)
     hook: str = ""
+    # Chosen at the gate, not inferred from an empty hook: a project can
+    # carry a hook.txt from an earlier run, and "no card" has to beat it.
+    no_hook: bool = False
     # True when the bank's best candidate scored as noise.
     hook_weak: bool = False
     notes: list[str] = field(default_factory=list)

@@ -742,6 +742,54 @@ def test_zero_means_use_the_hook_written_by_hand(tmp_path, monkeypatch):
     assert load(tmp_path).hook == "En helt egen hook"
 
 
+def test_no_card_at_all_is_a_choice_the_gate_can_actually_make(tmp_path, monkeypatch):
+    """The gate offered 'render with no card at all' and had no way to do it:
+    hook 0 refuses without a hook.txt and approve demands a number, so the one
+    option the renderer already supported was the one that could not be
+    reached."""
+    state = _graded(tmp_path)
+    p.step(state, tmp_path)
+    save(tmp_path, state)
+    monkeypatch.setattr(p, "run", lambda *a, **k: 0)
+    monkeypatch.setattr(p.sys, "argv",
+                        ["p", "hook", "--none", "--project", str(tmp_path)])
+    assert p.main() == 0
+    after = load(tmp_path)
+    assert after.no_hook and after.hook == ""
+    assert after.stage_enum is Stage.HOOK_CHOSEN
+
+
+def test_no_card_beats_a_hook_file_left_over_from_before(tmp_path, monkeypatch):
+    """A project keeps hook.txt across a rebuild, and the render falls back to
+    it. Asking for no card has to win over that, or the choice is silent."""
+    state = _graded(tmp_path)
+    p.step(state, tmp_path)
+    save(tmp_path, state)
+    (tmp_path / "hook.txt").write_text("En gammal hook\n", encoding="utf-8")
+    monkeypatch.setattr(p, "run", lambda *a, **k: 0)
+    monkeypatch.setattr(p.sys, "argv",
+                        ["p", "hook", "--none", "--project", str(tmp_path)])
+    p.main()
+    seen = {}
+    monkeypatch.setattr(p, "render_captions",
+                        lambda v, t, o, hook="", cues=None: seen.update(hook=hook))
+    monkeypatch.setattr(p, "probe_duration", lambda _: 30.0)
+    monkeypatch.setattr(p, "build_cues", lambda *a, **k: [])
+    after = load(tmp_path)
+    after.graded_video = str(tmp_path / "g.mp4")
+    after.cut_transcript = str(tmp_path / "cut.words.json")
+    p.step(after, tmp_path)
+    assert seen["hook"] == ""
+
+
+def test_a_hook_command_with_no_number_says_what_the_options_are(tmp_path, monkeypatch):
+    state = _graded(tmp_path)
+    p.step(state, tmp_path)
+    save(tmp_path, state)
+    monkeypatch.setattr(p.sys, "argv", ["p", "hook", "--project", str(tmp_path)])
+    assert p.main() == 2
+
+
 def test_zero_with_no_hook_file_is_refused(tmp_path, monkeypatch):
     state = _graded(tmp_path)
     p.step(state, tmp_path)

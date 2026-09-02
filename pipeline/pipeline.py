@@ -564,7 +564,7 @@ def show_hook_gate(state: PipelineState, project: Path) -> None:
         say(f"  python {me()} hook 0 --project {project}")
         say()
         say(f"Or try again:  python {me()} hooks --project {project}")
-        say(f"Or no card at all: delete {project / 'hook.txt'} and pick nothing")
+        say(f"Or no card at all:  python {me()} hook --none --project {project}")
         return
     for i, c in enumerate(state.hook_candidates, 1):
         say(f"  {i}. {c['sv']}")
@@ -578,6 +578,7 @@ def show_hook_gate(state: PipelineState, project: Path) -> None:
     say(f"See more:      python {me()} hooks --count 10 --project {project}")
     say(f"Write your own: put it in {project / 'hook.txt'}, then")
     say(f"               python {me()} hook 0 --project {project}")
+    say(f"No card at all: python {me()} hook --none --project {project}")
 
 
 # --- stages -----------------------------------------------------------------
@@ -896,7 +897,7 @@ def step(state: PipelineState, project: Path) -> bool:
         output = project / "final.mp4"
         # state.hook is what was picked at the gate; hook.txt is the escape
         # hatch for a hook written by hand, and takes over when nothing was.
-        hook_text = state.hook or load_hook(project)
+        hook_text = "" if state.no_hook else (state.hook or load_hook(project))
         if hook_text:
             say(f'Hook: "{hook_text}"')
         else:
@@ -1235,7 +1236,12 @@ def main() -> int:
 
     p_hook = sub.add_parser("hook", help="pick a hook from the shortlist by number")
     p_hook.add_argument(
-        "number", type=int,
+        "--none", dest="no_hook", action="store_true",
+        help="render with no hook card at all -- the gate offered this and "
+             "had no way to do it",
+    )
+    p_hook.add_argument(
+        "number", type=int, nargs="?", default=None,
         help="1-based, as printed at checkpoint 3. 0 means 'use hook.txt as "
              "written' -- for a hook you supplied yourself",
     )
@@ -1459,6 +1465,16 @@ def main() -> int:
         state = load(args.project)
         if state is None:
             say(f"No pipeline at {args.project}")
+            return 2
+        if args.no_hook:
+            state.hook, state.no_hook = "", True
+            say("No hook card. Rendering the cut, the grade and the captions.")
+            state.advance_to(Stage.HOOK_CHOSEN)
+            save(args.project, state)
+            return run(args.project)
+        if args.number is None:
+            say(f"Pick 1-{len(state.hook_candidates)}, 0 for {args.project / 'hook.txt'}"
+                ", or --none for no card.")
             return 2
         if args.number == 0:
             chosen = load_hook(args.project)
