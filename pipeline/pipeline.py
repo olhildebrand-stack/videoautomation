@@ -266,6 +266,29 @@ def join_videos(parts: list[Path], output: Path) -> int:
     return 0
 
 
+def grade_only(videos: list[Path], out_dir: Path | None) -> int:
+    """Give the pipeline's own colour grade to a file it did not cut.
+
+    The body of a video is graded between the cut and the captions. A hook
+    clip prepared with `trim` skips that stage entirely, so a hook joined to a
+    graded body is visibly a different picture -- which is what the operator
+    saw on the first three-hook test.
+
+    Before captions, never after: a grade laid over a caption grades the
+    caption too.
+    """
+    for video in videos:
+        if not video.is_file():
+            say(f"No such video: {video}")
+            return 2
+    for video in videos:
+        output = (out_dir or video.parent) / f"{video.stem}-graded.mp4"
+        output.parent.mkdir(parents=True, exist_ok=True)
+        say(f"Grading {video.name} -> {output.name} ...")
+        grade(video, output, Grade())
+    return 0
+
+
 def caption_only(videos: list[Path], out_dir: Path | None) -> int:
     """Burn captions over videos that are already cut.
 
@@ -1305,6 +1328,13 @@ def main() -> int:
     p_trim.add_argument("range", help="seconds, as 12.5-18.0")
     p_trim.add_argument("--out", type=Path, required=True)
 
+    p_grade = sub.add_parser(
+        "grade", help="apply the pipeline's colour grade to a video it did not cut")
+    p_grade.add_argument("video", type=Path, nargs="+")
+    p_grade.add_argument(
+        "--out-dir", type=Path,
+        help="where the graded files go (default: beside each input)")
+
     p_join = sub.add_parser(
         "join", help="concatenate finished videos end to end")
     p_join.add_argument("video", type=Path, nargs="+")
@@ -1494,6 +1524,9 @@ def main() -> int:
 
     if args.command == "trim":
         return trim_video(args.video, getattr(args, "range"), args.out)
+
+    if args.command == "grade":
+        return grade_only(args.video, args.out_dir)
 
     if args.command == "join":
         return join_videos(args.video, args.out)

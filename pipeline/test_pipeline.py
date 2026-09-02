@@ -586,6 +586,34 @@ def test_a_range_that_cannot_be_a_range_is_refused(tmp_path, monkeypatch, span):
     assert called == []
 
 
+# --- grading a file the pipeline did not cut ---------------------------------
+
+def test_grade_uses_the_same_settings_the_body_gets(tmp_path, monkeypatch):
+    """A hook graded differently from the body is the mismatch this exists to
+    stop, so it must be the pipeline's own Grade() and not a variation."""
+    seen = []
+    monkeypatch.setattr(p, "grade", lambda src, out, settings: seen.append(settings))
+    clips = _clips(tmp_path, "hook1.mp4", "hook2.mp4")
+    assert p.grade_only(clips, None) == 0
+    assert seen == [p.Grade(), p.Grade()]
+
+
+def test_grade_lands_beside_the_video_and_says_it_is_graded(tmp_path, monkeypatch):
+    outs = []
+    monkeypatch.setattr(p, "grade", lambda src, out, settings: outs.append(out))
+    clip, = _clips(tmp_path, "hook1.mp4")
+    p.grade_only([clip], None)
+    assert outs == [tmp_path / "hook1-graded.mp4"]
+
+
+def test_grade_checks_every_file_before_encoding_any(tmp_path, monkeypatch):
+    called = []
+    monkeypatch.setattr(p, "grade", lambda *a: called.append(a))
+    clips = _clips(tmp_path, "hook1.mp4") + [tmp_path / "gone.mp4"]
+    assert p.grade_only(clips, None) == 2
+    assert called == []
+
+
 # --- joining finished videos -------------------------------------------------
 
 def test_join_hands_ffmpeg_the_parts_in_the_order_given(tmp_path, monkeypatch):
