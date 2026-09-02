@@ -164,6 +164,18 @@ rewriting it: each entry is a mistake that is now impossible to repeat.
   no leave there is no span to spread across, and it stays up for the rest of
   the video -- which is exactly what happened.
 
+- **2026-08-31 -- the retake rule, stated: this operator records toward the
+  good take, so the LAST attempt is the one to keep.** It was referenced by
+  the looping rule below and never written down, which left the choice to be
+  argued from the text each time -- and the text is the worst evidence there
+  is, because an early attempt is often the more fluent one. The operator says
+  it plainly: a line said three or four times over is a delivery settling, and
+  the version they meant is at the end of the run. So where several takes carry
+  the same sentence, keep the last complete one and drop the rest, and do not
+  talk yourself into an earlier take because it reads better. The two
+  exceptions are both below: a decoder loop, where the later one is not a
+  delivery at all, and a later attempt that stops at a stub.
+
 - **2026-08-26 -- two identical takes, back to back, with no gap: the second
   is the decoder looping, not a retake.** `aieditoradvancing` ended with the
   same nine words twice. Take 31 ran 1.9s; take 32 ran 1.3s for the same
