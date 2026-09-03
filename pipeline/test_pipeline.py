@@ -586,6 +586,43 @@ def test_a_range_that_cannot_be_a_range_is_refused(tmp_path, monkeypatch, span):
     assert called == []
 
 
+# --- a hook card over a finished video ---------------------------------------
+
+def test_the_card_renders_with_no_captions_under_it(tmp_path, monkeypatch):
+    """The video already carries its captions. Rendering the transcript again
+    would draw every line twice, so the card goes on over an empty one."""
+    import json
+    seen = {}
+
+    def fake(video, transcript, output, hook="", cues=None):
+        seen.update(hook=hook, cues=cues,
+                    words=json.loads(Path(transcript).read_text(encoding="utf-8")))
+
+    monkeypatch.setattr(p, "render_captions", fake)
+    monkeypatch.setattr(p, "probe_duration", lambda _: 31.0)
+    clip, = _clips(tmp_path, "hemsida-2.mp4")
+    assert p.hook_card(clip, "Du slösar tid på fel sak", tmp_path / "a.mp4") == 0
+    assert seen["hook"] == "Du slösar tid på fel sak"
+    assert seen["words"] == {"words": []}
+    assert seen["cues"] == []
+
+
+def test_a_card_with_no_text_is_refused(tmp_path, monkeypatch):
+    """Rendering one would take minutes and produce a copy of the input."""
+    called = []
+    monkeypatch.setattr(p, "render_captions", lambda *a, **k: called.append(a))
+    clip, = _clips(tmp_path, "hemsida-2.mp4")
+    assert p.hook_card(clip, "   ", tmp_path / "a.mp4") == 2
+    assert called == []
+
+
+def test_a_missing_video_is_refused_before_rendering(tmp_path, monkeypatch):
+    called = []
+    monkeypatch.setattr(p, "render_captions", lambda *a, **k: called.append(a))
+    assert p.hook_card(tmp_path / "gone.mp4", "En hook", tmp_path / "a.mp4") == 2
+    assert called == []
+
+
 # --- grading a file the pipeline did not cut ---------------------------------
 
 def test_grade_uses_the_same_settings_the_body_gets(tmp_path, monkeypatch):

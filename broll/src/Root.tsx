@@ -71,18 +71,22 @@ export const RemotionRoot: React.FC = () => (
       }}
       calculateMetadata={async ({ props }) => {
         const words = await loadTranscript(props.transcriptFile ?? TRANSCRIPT);
-        const fromTranscript = transcriptDurationInFrames(words, fps);
-        // The video is the ground truth for length. A transcript that runs
-        // past its own footage -- a stale file, a mis-set offset -- would
-        // otherwise leave the clip ending in black.
+        // The video is the ground truth for length, in BOTH directions. It
+        // used to be `Math.min` of the two, which guards a transcript running
+        // past its footage but also lets a SHORT transcript truncate the
+        // footage -- and an empty one cuts the clip to a second, since that is
+        // what transcriptDurationInFrames returns with no words. A hook card
+        // burned over a finished video is rendered against exactly that empty
+        // transcript, and came out one second long.
+        //
+        // The footage's own length needs no help from the transcript: it caps
+        // an overrunning one by being shorter, which was the whole point.
         const fromVideo = props.videoDurationSeconds
           ? Math.round(props.videoDurationSeconds * fps)
           : 0;
         return {
           props: { ...props, words },
-          durationInFrames: fromVideo
-            ? Math.min(fromTranscript, fromVideo)
-            : fromTranscript,
+          durationInFrames: fromVideo || transcriptDurationInFrames(words, fps),
         };
       }}
     />

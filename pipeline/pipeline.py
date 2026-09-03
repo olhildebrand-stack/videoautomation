@@ -21,6 +21,7 @@ import json
 import re
 import shutil
 import subprocess
+import tempfile
 import sys
 from pathlib import Path
 
@@ -262,6 +263,33 @@ def join_videos(parts: list[Path], output: Path) -> int:
             say(f"No such video: {part}")
             return 2
     join(parts, output)
+    say(f"  {output}  ({probe_duration(output):.1f}s)")
+    return 0
+
+
+def hook_card(video: Path, text: str, output: Path) -> int:
+    """Burn an on-screen hook card over a video that is already finished.
+
+    The card runs on its own five-second timer rather than off the transcript,
+    and the captions layer given no words draws nothing -- so the same renderer
+    that makes a captioned cut will put a card on a finished one and leave
+    everything under it alone.
+
+    Which is what a trial-reel test needs: one body, one verbal hook, and three
+    cards over the top of it, differing in nothing else.
+    """
+    if not video.is_file():
+        say(f"No such video: {video}")
+        return 2
+    if not text.strip():
+        say("A hook card with no text is just a re-encode. Give it a line.")
+        return 2
+    output.parent.mkdir(parents=True, exist_ok=True)
+    with tempfile.TemporaryDirectory() as scratch:
+        blank = Path(scratch) / "no-captions.words.json"
+        blank.write_text('{"words": []}', encoding="utf-8")
+        say(f'Hook: "{text}"')
+        render_captions(video, blank, output, text, [])
     say(f"  {output}  ({probe_duration(output):.1f}s)")
     return 0
 
@@ -1328,6 +1356,12 @@ def main() -> int:
     p_trim.add_argument("range", help="seconds, as 12.5-18.0")
     p_trim.add_argument("--out", type=Path, required=True)
 
+    p_card = sub.add_parser(
+        "hookcard", help="burn an on-screen hook card over a finished video")
+    p_card.add_argument("video", type=Path)
+    p_card.add_argument("text", help="the card's line, as it should read")
+    p_card.add_argument("--out", type=Path, required=True)
+
     p_grade = sub.add_parser(
         "grade", help="apply the pipeline's colour grade to a video it did not cut")
     p_grade.add_argument("video", type=Path, nargs="+")
@@ -1524,6 +1558,9 @@ def main() -> int:
 
     if args.command == "trim":
         return trim_video(args.video, getattr(args, "range"), args.out)
+
+    if args.command == "hookcard":
+        return hook_card(args.video, args.text, args.out)
 
     if args.command == "grade":
         return grade_only(args.video, args.out_dir)
