@@ -143,6 +143,48 @@ def join(parts: list[Path], output: Path, crf: int = 18) -> None:
     ])
 
 
+def mean_volume(path: Path) -> float:
+    """The mean level of a file's audio, in dBFS, via volumedetect."""
+    result = subprocess.run(
+        [binary("ffmpeg"), "-v", "info", "-i", str(path),
+         "-af", "volumedetect", "-f", "null", "-"],
+        capture_output=True, text=True,
+    )
+    for line in result.stderr.splitlines():
+        if "mean_volume:" in line:
+            return float(line.split("mean_volume:")[1].split("dB")[0])
+    raise FFmpegError(f"no audio level found in {path}")
+
+
+def score(video: Path, track: Path, output: Path, start: float,
+          gain_db: float, fade: float = 1.2) -> None:
+    """Lay music under a video's own audio, from `start` in the track.
+
+    The video is copied, not re-encoded: only the audio changes, and a fourth
+    generation of h264 for the sake of a background bed is a bad trade.
+
+    `normalize=0` on the mix matters. amix scales its inputs by default, so
+    adding a quiet music bed would pull the speech DOWN by 6dB -- the voice
+    getting quieter is the opposite of what adding background music is for.
+    """
+    output.parent.mkdir(parents=True, exist_ok=True)
+    length = probe_duration(video)
+    run([
+        "ffmpeg", "-v", "error", "-y",
+        "-i", str(video), "-i", str(track),
+        "-filter_complex",
+        f"[1:a]atrim=start={start}:duration={length},asetpts=PTS-STARTPTS,"
+        f"volume={gain_db:.2f}dB,"
+        f"afade=t=in:st=0:d={fade},"
+        f"afade=t=out:st={max(0.0, length - fade):.3f}:d={fade}[bed];"
+        f"[0:a][bed]amix=inputs=2:duration=first:normalize=0[out]",
+        "-map", "0:v", "-map", "[out]",
+        "-c:v", "copy", "-c:a", "aac", "-b:a", "192k",
+        "-movflags", "+faststart",
+        str(output),
+    ])
+
+
 @dataclass
 class Grade:
     """A colour grade, expressed as ffmpeg filters.

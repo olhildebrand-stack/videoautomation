@@ -78,6 +78,9 @@ pipeline/ideas/sources/*
 *.wav
 *.m4a
 *.mp3
+# ...and the folder they arrive in, so an unknown extension is covered too.
+# The tracks are licensed to the operator, not to whoever clones this.
+music/
 # A transcript is the words out of the operator's mouth, so it is as private
 # as the recording, wherever it is written. No negation for the two fixtures
 # already tracked: .gitignore does not apply to a file git already follows,

@@ -29,7 +29,10 @@ from cutlist import (
     Segment, build_cutlist, clamp_slack, drop_fillers, drop_hallucinations,
     merge_adjacent, read_words, tighten, words_between,
 )
-from ffmpeg_ops import FFmpegMissing, Grade, cut, grade, join, probe_duration
+from ffmpeg_ops import (
+    FFmpegMissing, Grade, cut, grade, join, mean_volume, probe_duration,
+    score,
+)
 from remotion_ops import command as remotion_command
 from hookgen import (
     BANK as HOOK_BANK, BankUnavailable, SEED_TOPIC, as_dicts, generate,
@@ -39,6 +42,7 @@ from director import DirectorUnavailable
 from brief import TARGET_SECONDS
 from jsonfile import BadJSON, read as read_json
 from cues import CHILD_KEYS, load_sheet, resolve as resolve_cues
+from music import best_start
 from edges import DEFAULT_SLACK, measure_best, trim_to_speech
 from sentences import (
     DEFAULT_END_TAIL, DEFAULT_HEAD, DEFAULT_TAIL, analyse, keepers,
@@ -264,6 +268,38 @@ def join_videos(parts: list[Path], output: Path) -> int:
             return 2
     join(parts, output)
     say(f"  {output}  ({probe_duration(output):.1f}s)")
+    return 0
+
+
+# How far under the speech the bed sits. The operator's brief was "very subtle,
+# it should not be overpowering at all", and 22dB is where a bed stops being
+# something you hear and becomes something you notice only when it stops.
+UNDER_SPEECH_DB = 22.0
+
+
+def add_music(video: Path, track: Path, output: Path, under: float) -> int:
+    """Put a bed of music under a finished video.
+
+    Two things are measured rather than chosen. Where in the track to start --
+    music.py finds the steadiest stretch nearest the track's own median level,
+    which is what "not the intro, not the drop" means once you have to write it
+    down. And how loud -- the bed sits a fixed distance under THIS video's own
+    speech, so three videos cut from three differently mastered mp3s come out
+    at the same subjective level.
+    """
+    for path in (video, track):
+        if not path.is_file():
+            say(f"No such file: {path}")
+            return 2
+    length = probe_duration(video)
+    start, level, move = best_start(track, length)
+    speech = mean_volume(video)
+    gain = (speech - under) - level
+    say(f"{track.name} -> {output.name}")
+    say(f"  from {start:.1f}s   bed {level:.1f} dBFS, moves {move:.1f} dB")
+    say(f"  speech {speech:.1f} dBFS, bed set {under:.0f} dB under it "
+        f"({gain:+.1f} dB)")
+    score(video, track, output, start, gain)
     return 0
 
 
@@ -1356,6 +1392,16 @@ def main() -> int:
     p_trim.add_argument("range", help="seconds, as 12.5-18.0")
     p_trim.add_argument("--out", type=Path, required=True)
 
+    p_music = sub.add_parser(
+        "music", help="lay a bed of music under a finished video")
+    p_music.add_argument("video", type=Path)
+    p_music.add_argument("track", type=Path)
+    p_music.add_argument("--out", type=Path, required=True)
+    p_music.add_argument(
+        "--under", type=float, default=UNDER_SPEECH_DB,
+        help="how many dB below the speech the bed sits (default "
+             f"{UNDER_SPEECH_DB:.0f}; lower is louder music)")
+
     p_card = sub.add_parser(
         "hookcard", help="burn an on-screen hook card over a finished video")
     p_card.add_argument("video", type=Path)
@@ -1558,6 +1604,9 @@ def main() -> int:
 
     if args.command == "trim":
         return trim_video(args.video, getattr(args, "range"), args.out)
+
+    if args.command == "music":
+        return add_music(args.video, args.track, args.out, args.under)
 
     if args.command == "hookcard":
         return hook_card(args.video, args.text, args.out)
