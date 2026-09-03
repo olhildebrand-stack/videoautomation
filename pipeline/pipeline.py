@@ -42,7 +42,7 @@ from director import DirectorUnavailable
 from brief import TARGET_SECONDS
 from jsonfile import BadJSON, read as read_json
 from cues import CHILD_KEYS, load_sheet, resolve as resolve_cues
-from music import best_start
+from music import NoTrack, best_start
 from edges import DEFAULT_SLACK, measure_best, trim_to_speech
 from sentences import (
     DEFAULT_END_TAIL, DEFAULT_HEAD, DEFAULT_TAIL, analyse, keepers,
@@ -292,7 +292,11 @@ def add_music(video: Path, track: Path, output: Path, under: float) -> int:
             say(f"No such file: {path}")
             return 2
     length = probe_duration(video)
-    start, level, move = best_start(track, length)
+    try:
+        start, level, move = best_start(track, length)
+    except NoTrack as exc:
+        say(f"error: {exc}")
+        return 2
     speech = mean_volume(video)
     gain = (speech - under) - level
     say(f"{track.name} -> {output.name}")

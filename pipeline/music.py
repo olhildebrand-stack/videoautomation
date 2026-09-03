@@ -25,6 +25,7 @@ from __future__ import annotations
 import argparse
 import math
 import subprocess
+import sys
 from array import array
 from pathlib import Path
 
@@ -39,12 +40,24 @@ SKIP_HEAD = 0.20
 SKIP_TAIL = 0.10
 
 
+class NoTrack(RuntimeError):
+    pass
+
+
 def levels(track: Path, rate: int = RATE) -> list[float]:
     """Loudness of each one-second window, in dBFS. Silence reads -90."""
-    raw = subprocess.run(
+    if not Path(track).is_file():
+        raise NoTrack(f"no such track: {track}")
+    done = subprocess.run(
         ["ffmpeg", "-v", "error", "-i", str(track), "-ac", "1",
          "-ar", str(rate), "-f", "s16le", "-"],
-        capture_output=True, check=True).stdout
+        capture_output=True)
+    if done.returncode != 0:
+        raise NoTrack(f"ffmpeg could not read {track}: "
+                      f"{done.stderr.decode(errors='replace').strip()[-200:]}")
+    raw = done.stdout
+    if not raw:
+        raise NoTrack(f"{track} has no audio in it")
     samples = array("h")
     samples.frombytes(raw[:len(raw) - len(raw) % 2])
     step = int(rate * WINDOW)
@@ -106,7 +119,11 @@ def main() -> int:
     parser.add_argument("--seconds", type=float, required=True,
                         help="how much of it you need")
     args = parser.parse_args()
-    start, level, move = best_start(args.track, args.seconds)
+    try:
+        start, level, move = best_start(args.track, args.seconds)
+    except NoTrack as exc:
+        print(f"error: {exc}")
+        return 2
     print(f"{args.track.name}")
     print(f"  start   {start:.1f}s")
     print(f"  level   {level:.1f} dBFS   (moves {move:.1f} dB across the window)")

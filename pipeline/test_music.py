@@ -61,3 +61,22 @@ def test_median_and_spread():
     assert median([4.0, 1.0, 2.0, 3.0]) == 2.5
     assert spread([5.0, 5.0, 5.0]) == 0.0
     assert spread([1.0, 3.0]) == 1.0
+
+
+# --- a track that cannot be read --------------------------------------------
+
+def test_a_missing_track_is_a_sentence_not_a_traceback(tmp_path, capsys, monkeypatch):
+    """It answered a typo'd filename with a CalledProcessError and forty lines
+    of stack, which tells the operator nothing they did not already know."""
+    monkeypatch.setattr(music.sys, "argv",
+                        ["m", str(tmp_path / "gone.mp3"), "--seconds", "31"])
+    assert music.main() == 2
+    assert "no such track" in capsys.readouterr().out
+
+
+def test_a_file_with_no_audio_says_so(tmp_path):
+    import pytest
+    empty = tmp_path / "notmusic.mp3"
+    empty.write_bytes(b"not an mp3")
+    with pytest.raises(music.NoTrack):
+        music.levels(empty)
