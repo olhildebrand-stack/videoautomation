@@ -496,3 +496,28 @@ def test_a_clean_recording_gets_no_audio_section():
     take = Take(index=0, sentence=0, start=0.0, end=1.0, text="x", words=[],
                 part=(1, 1), swallowed=False)
     assert smeared_windows([take]) == []
+
+
+# --- why the call failed -----------------------------------------------------
+
+def test_an_expired_login_reads_as_an_expired_login():
+    """The CLI reports failure by printing its whole result envelope, so this
+    arrived as `:0,"spawned_by_subagents":0,...` with the reason buried in the
+    middle. The operator cannot act on that; they can act on 'log in again'."""
+    from director import explain
+    blob = ('{"subtype":"success","result":"Failed to authenticate: OAuth '
+            'session expired and could not be refreshed","type":"result"}')
+    said = explain(1, "", blob)
+    assert said.startswith("Failed to authenticate")
+    assert "Log in again" in said
+    assert "spawned_by_subagents" not in said
+
+
+def test_any_other_failure_still_names_the_exit_code():
+    from director import explain
+    assert "exited 1" in explain(1, "", "some non-json splat")
+
+
+def test_stderr_wins_when_there_is_no_envelope():
+    from director import explain
+    assert "disk full" in explain(2, "disk full", "")

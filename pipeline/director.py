@@ -114,9 +114,7 @@ def ask(prompt: str, model: str, schema: dict | None = None,
             "here. Try again, or --brief-only to direct it by hand."
         ) from None
     if done.returncode != 0:
-        raise DirectorUnavailable(
-            f"`claude -p` exited {done.returncode}: "
-            f"{(done.stderr or done.stdout).strip()[-400:]}")
+        raise DirectorUnavailable(explain(done.returncode, done.stderr, done.stdout))
     try:
         envelope = json.loads(done.stdout)
     except json.JSONDecodeError as exc:
@@ -125,6 +123,29 @@ def ask(prompt: str, model: str, schema: dict | None = None,
     if envelope.get("is_error"):
         raise DirectorUnavailable(f"`claude -p` failed: {envelope.get('result')}")
     return json.loads(envelope["result"])
+
+
+def explain(code: int, stderr: str, stdout: str) -> str:
+    """Why the call failed, in a sentence the operator can act on.
+
+    The CLI reports a failure by printing its whole result envelope, so the
+    first version showed the last 400 characters of JSON. An expired login --
+    which is the common failure and the only one with an obvious fix -- arrived
+    as `:0,"spawned_by_subagents":0,...` with the actual reason buried in the
+    middle of it. The reason is in there under `result`; take that.
+    """
+    reason = (stderr or "").strip()
+    try:
+        reason = json.loads(stdout).get("result") or reason
+    except (json.JSONDecodeError, AttributeError):
+        reason = reason or stdout.strip()[-400:]
+    if "authenticate" in reason.lower() or "oauth" in reason.lower():
+        return (f"{reason}\n"
+                "  Log in again: run `claude` in a terminal, or `/login` "
+                "inside it.\n"
+                "  Nothing is lost -- the transcript and the checkpoint are "
+                "still in the project.")
+    return f"`claude -p` exited {code}: {reason}"
 
 
 def complaint(problems: list[str]) -> str:
