@@ -5,24 +5,25 @@
     {
       "kind": "cover",
       "image": "01-cover.jpg",
-      "focus": "50% 45%",
+      "focus": "50% 55%",
       "headline": "\"Jag vet inte var\njag ska börja.\"",
       "body": "Du har läst, testat och skrollat.\nMen ingen har tittat på\njust din verksamhet."
     },
     {
       "kind": "body",
       "image": "02.jpg",
-      "focus": "50% 45%",
+      "focus": "50% 40%",
       "headline": "\"Jag har inte tid.\"",
       "body": "Det är hela problemet.\nDu är för upptagen med att driva\nverksamheten för att förbättra den."
     },
     {
       "kind": "body",
       "image": "03.jpg",
-      "focus": "50% 45%",
+      "focus": "50% 30%",
       "headline": "30 minuter.\nJag gör tänkandet.\nDu får förslagen.",
       "body": "Kostnadsfritt. Inga förpliktelser.",
-      "emphasis": "Länken ligger i min bio"
+      "emphasis": "Svara \"förslag\" på den här storien",
+      "foot": "Det finns också en länk i min bio"
     }
   ]
 }

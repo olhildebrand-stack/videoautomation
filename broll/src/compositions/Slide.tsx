@@ -38,6 +38,13 @@ export type SlideProps = {
   body?: string;
   /** The one clause per slide allowed to leave the text colour. */
   emphasis?: string;
+  /**
+   * labels: a second, quieter line held at the FOOT of the frame and centred,
+   * away from the stack at the top. The reference stories put a smaller box
+   * down there for an aside -- a second way in, a note -- which reads as an
+   * afterthought precisely because it is not in the main column.
+   */
+  foot?: string;
   /** collage, titled, beforeafter: the screenshots they scatter or stack. */
   images?: string[];
   /**
@@ -477,7 +484,7 @@ const L = slideFormat.labels;
  * stories set it at a fraction of the size a designed slide would.
  */
 const Labels: React.FC<SlideProps> = ({
-  image, background, focus, headline, body, emphasis, shape,
+  image, background, focus, headline, body, emphasis, foot, shape,
 }) => {
   const geometry = shapeOf(shape);
   // A newline starts a new box, it does not wrap inside one. The references
@@ -523,6 +530,34 @@ const Labels: React.FC<SlideProps> = ({
           </div>
         ))}
       </div>
+      {foot ? (
+        <div
+          style={{
+            position: 'absolute',
+            left: slide.side, right: slide.side,
+            bottom: geometry.insetBottom + slide.side,
+            display: 'flex', flexDirection: 'column', alignItems: 'center',
+            gap: L.gap,
+          }}
+        >
+          {foot.split('\n').filter(Boolean).map((line, index) => (
+            <div
+              key={index}
+              style={{
+                backgroundColor: L.box,
+                borderRadius: L.radius,
+                paddingBlock: L.paddingBlock,
+                paddingInline: L.paddingInline,
+                ...typeOf(L.body, geometry.typeScale),
+                color: slide.ink,
+                textAlign: 'center',
+              }}
+            >
+              {line}
+            </div>
+          ))}
+        </div>
+      ) : null}
     </AbsoluteFill>
   );
 };
